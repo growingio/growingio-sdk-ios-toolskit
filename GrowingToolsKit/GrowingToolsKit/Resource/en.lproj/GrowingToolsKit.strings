@@ -1,0 +1,57 @@
+/* 
+  GrowingToolsKit.strings
+  Pods
+
+  Created by YoloMao on 2021/8/16.
+  
+*/
+
+{
+    "SDK工具" = "SDK";
+    "当前版本" = "Current Version";
+    "SDK自检" = "SDKCheck";
+    "SDK信息" = "SDKInfo";
+    "代码埋点" = "TrackList";
+    "埋点数据" = "EventsList";
+    "埋点跟踪" = "EventTrack";
+
+    //SDK信息
+    "复制" = "Copy";
+    "App信息" = "App Info";
+    "手机信息" = "iPhone Info";
+    "设备名称" = "Device Name";
+    "手机型号" = "Phone Model";
+    "系统版本" = "System Version";
+    "手机屏幕" = "Phone Screen";
+    "权限信息" = "Privacy Info";
+    "地理位置权限" = "Location";
+    "网络权限" = "Network";
+    "推送权限" = "Push";
+    "相机权限" = "Camera";
+    "麦克风权限" = "Microphone";
+    "相册权限" = "Photos";
+    "通讯录权限" = "Contacts";
+    "日历权限" = "Calendar";
+    "提醒事项权限" = "Notes";
+    "用户没有选择" = "Not Determined";
+    "用户已经授权" = "Authorized";
+    "用户没有授权" = "Denied";
+    "受限制" = "Restricted";
+    "受限制 - 永不或WLAN" = "Restricted - Off Or WLAN";
+    "无线局域网与蜂窝数据" = "WLAN & Cellular Data";
+    "使用App期间" = "While Using the App";
+    "始终" = "Always";
+    "用户关闭服务" = "Off";
+    //SDK
+    "SDK版本号" = "Version";
+    "SDK初始化" = "Initialization";
+    "调试模式" = "DebugEnabled";
+    "每日流量限制" = "CellularDataLimit";
+    "当前流量使用" = "CellularDataUsed";
+    "数据发送间隔" = "DataUploadInterval";
+    "会话后台留存时长" = "SessionInterval";
+    "是否采集数据" = "DataCollectionEnabled";
+    "事件过滤" = "ExcludeEvent";
+    "事件属性过滤" = "IgnoreField";
+    "曝光事件比例因子" = "ImpressionScale";
+}

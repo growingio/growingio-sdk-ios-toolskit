@@ -1,0 +1,28 @@
+//
+//  Prefix header
+//
+//  The contents of this file are implicitly included at the beginning of every source file.
+//
+
+#import <Availability.h>
+
+#ifndef __IPHONE_5_0
+#warning "This project uses features only available in iOS SDK 5.0 and later."
+#endif
+
+#define Autotracker 1
+
+#if Autotracker
+#import "GrowingAutotracker.h"
+#define GrowingSDK GrowingAutotracker
+#define GrowingSDKConfiguration GrowingAutotrackConfiguration
+#else
+#import "GrowingTracker.h"
+#define GrowingSDK GrowingTracker
+#define GrowingSDKConfiguration GrowingTrackConfiguration
+#endif
+
+#ifdef __OBJC__
+    @import UIKit;
+    @import Foundation;
+#endif
