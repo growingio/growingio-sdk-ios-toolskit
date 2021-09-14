@@ -1,8 +1,8 @@
 //
-//  GrowingTKEventsListPlugin.h
+//  GrowingTKDateUtil.h
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/9/7.
+//  Created by YoloMao on 2021/9/14.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,28 +17,25 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTKPluginProtocol.h"
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class GrowingTKDatabase;
+@interface GrowingTKDateUtil : NSObject
 
-@interface GrowingTKEventsListPlugin : NSObject <GrowingTKPluginProtocol>
+@property (nonatomic, strong) NSDateFormatter *defaultFormatter;
 
-#pragma mark - GrowingTKPluginProtocol
++ (instancetype)sharedInstance;
 
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSString *icon;
-@property (nonatomic, strong) NSString *pluginName;
-@property (nonatomic, strong) NSString *atModule;
-@property (nonatomic, strong) NSString *key;
+// yyyyMMdd
+- (NSString *)dayForTimestamp:(double)timestamp;
 
-+ (instancetype)plugin;
-- (void)pluginDidLoad;
+// HH:mm:ss
+- (NSString *)timeForTimestamp:(double)timestamp;
 
-#pragma mark - Event Track
+- (BOOL)isToday:(double)timestamp;
 
-@property (nonatomic, strong) GrowingTKDatabase *db;
+- (BOOL)isYesterday:(double)timestamp;
 
 @end
 

@@ -203,7 +203,7 @@
     self.checkLabel.text = checkMessage;
 }
 
-- (void)showInfo:(NSString *)title message:(NSString *)infoMessage {
+- (void)showInfo:(NSString *)title message:(NSString *)infoMessage bad:(BOOL)isBad {
     self.checkLabel.hidden = YES;
     self.circleView.hidden = YES;
     self.titleLabel.hidden = NO;
@@ -211,6 +211,7 @@
     
     self.titleLabel.text = title;
     self.valueLabel.text = infoMessage;
+    self.valueLabel.textColor = isBad ? UIColor.growingtk_tertiaryBackgroundColor : UIColor.growingtk_labelColor;
 }
 
 @end

@@ -303,7 +303,7 @@
     });
 }
 
-#pragma mark - UITableView Datasource & Delegate
+#pragma mark - UITableView DataSource & Delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return self.dataArray.count;

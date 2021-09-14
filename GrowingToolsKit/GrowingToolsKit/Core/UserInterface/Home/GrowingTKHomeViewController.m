@@ -28,8 +28,6 @@
 #import "UIView+GrowingTK.h"
 #import "UIViewController+GrowingTK.h"
 
-#define MAIN_VIEW_TOP (GrowingTKSizeFrom750(160) + IPHONE_STATUSBAR_HEIGHT)
-
 @interface GrowingTKHomeViewController ()
 
 @property (nonatomic, assign) UIStatusBarStyle kStatusBarStyle;
@@ -40,6 +38,9 @@
 @property (nonatomic, strong) GrowingTKPluginsListViewController *pluginsList;
 @property (nonatomic, strong) GrowingTKSDKCheckViewController *checkSelf;
 @property (nonatomic, strong) UIViewController *currentChild;
+
+@property (nonatomic, strong) NSLayoutConstraint *triangleViewCenterXConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *triangleViewCenterXConstraint2;
 
 @end
 
@@ -55,6 +56,33 @@
     [self.view addSubview:self.pluginsButton];
     [self.view addSubview:self.checkButton];
     [self.view addSubview:self.mainView];
+
+    CGFloat mainViewTopMargin = GrowingTKSizeFrom750(160) + IPHONE_STATUSBAR_HEIGHT;
+    CGFloat triangleHeight = 30.f;
+
+    [NSLayoutConstraint activateConstraints:@[
+        [self.mainView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:mainViewTopMargin],
+        [self.mainView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
+        [self.mainView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+        [self.mainView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+        [self.checkButton.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-10.0f],
+        [self.checkButton.topAnchor constraintEqualToAnchor:self.view.topAnchor
+                                                   constant:IPHONE_STATUSBAR_HEIGHT + 5.0f],
+        [self.checkButton.heightAnchor constraintEqualToConstant:self.checkButton.growingtk_height],
+        [self.checkButton.widthAnchor constraintEqualToConstant:self.checkButton.growingtk_width],
+        [self.pluginsButton.trailingAnchor constraintEqualToAnchor:self.checkButton.leadingAnchor constant:-15.0f],
+        [self.pluginsButton.centerYAnchor constraintEqualToAnchor:self.checkButton.centerYAnchor],
+        [self.pluginsButton.heightAnchor constraintEqualToConstant:self.pluginsButton.growingtk_height],
+        [self.pluginsButton.widthAnchor constraintEqualToConstant:self.pluginsButton.growingtk_width],
+        [self.triangleView.bottomAnchor constraintEqualToAnchor:self.mainView.topAnchor constant:10.0f],
+        [self.triangleView.heightAnchor constraintEqualToConstant:triangleHeight],
+        [self.triangleView.widthAnchor constraintEqualToConstant:triangleHeight]
+    ]];
+
+    self.triangleViewCenterXConstraint =
+        [self.triangleView.centerXAnchor constraintEqualToAnchor:self.pluginsButton.centerXAnchor];
+    self.triangleViewCenterXConstraint2 =
+        [self.triangleView.centerXAnchor constraintEqualToAnchor:self.checkButton.centerXAnchor];
 
     [self showCheckSelf];
 }
@@ -92,7 +120,11 @@
         return;
     }
     [self showChildController:self.pluginsList];
-    self.triangleView.growingtk_centerX = self.pluginsButton.growingtk_centerX;
+
+    self.triangleViewCenterXConstraint.active = YES;
+    self.triangleViewCenterXConstraint2.active = NO;
+    [self.triangleView setNeedsUpdateConstraints];
+    [self.view layoutIfNeeded];
 }
 
 - (void)showCheckSelf {
@@ -102,7 +134,11 @@
         return;
     }
     [self showChildController:self.checkSelf];
-    self.triangleView.growingtk_centerX = self.checkButton.growingtk_centerX;
+
+    self.triangleViewCenterXConstraint.active = NO;
+    self.triangleViewCenterXConstraint2.active = YES;
+    [self.triangleView setNeedsUpdateConstraints];
+    [self.view layoutIfNeeded];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
@@ -138,8 +174,8 @@
 
 - (UIView *)mainView {
     if (!_mainView) {
-        _mainView = [[UIView alloc]
-            initWithFrame:CGRectMake(0, MAIN_VIEW_TOP, GrowingTKScreenWidth, GrowingTKScreenHeight - MAIN_VIEW_TOP)];
+        _mainView = [[UIView alloc] initWithFrame:CGRectZero];
+        _mainView.translatesAutoresizingMaskIntoConstraints = NO;
         _mainView.backgroundColor = UIColor.whiteColor;
     }
 
@@ -149,10 +185,7 @@
 - (UIButton *)pluginsButton {
     if (!_pluginsButton) {
         _pluginsButton = [GrowingTKModuleButton moduleButtonWithType:GrowingTKModulePlugins];
-        _pluginsButton.frame = CGRectMake(GrowingTKScreenWidth - _pluginsButton.growingtk_width * 2 - 25,
-                                          IPHONE_STATUSBAR_HEIGHT + 5,
-                                          _pluginsButton.growingtk_width,
-                                          _pluginsButton.growingtk_width);
+        _pluginsButton.translatesAutoresizingMaskIntoConstraints = NO;
         [_pluginsButton addTarget:self action:@selector(showPluginsList) forControlEvents:UIControlEventTouchUpInside];
     }
 
@@ -162,10 +195,7 @@
 - (UIButton *)checkButton {
     if (!_checkButton) {
         _checkButton = [GrowingTKModuleButton moduleButtonWithType:GrowingTKModuleCheckSelf];
-        _checkButton.frame = CGRectMake(GrowingTKScreenWidth - _checkButton.growingtk_width - 10,
-                                        IPHONE_STATUSBAR_HEIGHT + 5,
-                                        _checkButton.growingtk_width,
-                                        _checkButton.growingtk_width);
+        _checkButton.translatesAutoresizingMaskIntoConstraints = NO;
         [_checkButton addTarget:self action:@selector(showCheckSelf) forControlEvents:UIControlEventTouchUpInside];
     }
 
@@ -174,9 +204,8 @@
 
 - (UIImageView *)triangleView {
     if (!_triangleView) {
-        CGFloat triangleHeight = 30.f;
-        _triangleView = [[UIImageView alloc]
-            initWithFrame:CGRectMake(0, MAIN_VIEW_TOP - triangleHeight + 10, triangleHeight, triangleHeight)];
+        _triangleView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        _triangleView.translatesAutoresizingMaskIntoConstraints = NO;
         _triangleView.tintColor = UIColor.blackColor;
         if (@available(iOS 13.0, *)) {
             _triangleView.image =

@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (UIEdgeInsets)growingtk_safeAreaInset;
 
+- (UILayoutGuide *)growingtk_safeAreaLayoutGuide;
+
 - (CGRect)growingtk_fullscreen;
 
 + (UIViewController *)growingtk_rootViewControllerForKeyWindow;

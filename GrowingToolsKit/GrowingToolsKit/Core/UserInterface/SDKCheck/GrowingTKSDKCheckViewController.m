@@ -21,6 +21,7 @@
 #import "GrowingTKCheckSelfView.h"
 #import "GrowingTKDefine.h"
 #import "UIColor+GrowingTK.h"
+#import "UIViewController+GrowingTK.h"
 
 @interface GrowingTKSDKCheckViewController ()
 
@@ -33,9 +34,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     [self.view addSubview:self.checkView];
-    
+
     UILabel *label = [[UILabel alloc] init];
     label.text = @"GOALS";
     label.font = [UIFont systemFontOfSize:15 weight:UIFontWeightBold];
@@ -43,7 +44,7 @@
     label.textAlignment = NSTextAlignmentCenter;
     label.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:label];
-    
+
     UILabel *label2 = [[UILabel alloc] init];
     label2.text = @"为用户提供最好的埋点服务";
     label2.font = [UIFont systemFontOfSize:10];
@@ -51,61 +52,15 @@
     label2.textAlignment = NSTextAlignmentCenter;
     label2.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:label2];
-    
-    id view = self.view;
-    if (@available(iOS 11.0, *)) {
-        view = self.view.safeAreaLayoutGuide;
-    }
+
     [NSLayoutConstraint activateConstraints:@[
-        [NSLayoutConstraint constraintWithItem:self.checkView
-                                     attribute:NSLayoutAttributeCenterX
-                                     relatedBy:NSLayoutRelationEqual
-                                        toItem:view
-                                     attribute:NSLayoutAttributeCenterX
-                                    multiplier:1.0
-                                      constant:0.0],
-        [NSLayoutConstraint constraintWithItem:self.checkView
-                                     attribute:NSLayoutAttributeCenterY
-                                     relatedBy:NSLayoutRelationEqual
-                                        toItem:view
-                                     attribute:NSLayoutAttributeCenterY
-                                    multiplier:1.0
-                                      constant:0.0],
-        [NSLayoutConstraint constraintWithItem:self.checkView
-                                     attribute:NSLayoutAttributeWidth
-                                     relatedBy:NSLayoutRelationEqual
-                                        toItem:view
-                                     attribute:NSLayoutAttributeWidth
-                                    multiplier:1.0
-                                      constant:0.0],
-        [NSLayoutConstraint constraintWithItem:label2
-                                     attribute:NSLayoutAttributeCenterX
-                                     relatedBy:NSLayoutRelationEqual
-                                        toItem:view
-                                     attribute:NSLayoutAttributeCenterX
-                                    multiplier:1.0
-                                      constant:0.0],
-        [NSLayoutConstraint constraintWithItem:label2
-                                     attribute:NSLayoutAttributeBottom
-                                     relatedBy:NSLayoutRelationEqual
-                                        toItem:view
-                                     attribute:NSLayoutAttributeBottom
-                                    multiplier:1.0
-                                      constant:-30.0],
-        [NSLayoutConstraint constraintWithItem:label
-                                     attribute:NSLayoutAttributeCenterX
-                                     relatedBy:NSLayoutRelationEqual
-                                        toItem:view
-                                     attribute:NSLayoutAttributeCenterX
-                                    multiplier:1.0
-                                      constant:0.0],
-        [NSLayoutConstraint constraintWithItem:label
-                                     attribute:NSLayoutAttributeBottom
-                                     relatedBy:NSLayoutRelationEqual
-                                        toItem:label2
-                                     attribute:NSLayoutAttributeTop
-                                    multiplier:1.0
-                                      constant:-10.0]
+        [self.checkView.centerXAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.centerXAnchor],
+        [self.checkView.centerYAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.centerYAnchor],
+        [self.checkView.widthAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.widthAnchor],
+        [label2.centerXAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.centerXAnchor],
+        [label2.bottomAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.bottomAnchor constant:-30.0f],
+        [label.centerXAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.centerXAnchor],
+        [label.bottomAnchor constraintEqualToAnchor:label2.topAnchor constant:-10.0f]
     ]];
 }
 

@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GrowingTKCheckInfoTableViewCell : UITableViewCell
 
 - (void)showCheck:(NSString *)checkMessage;
-- (void)showInfo:(NSString *)title message:(NSString *)infoMessage;
+- (void)showInfo:(NSString *)title message:(NSString *)infoMessage bad:(BOOL)isBad;
 
 @end
 

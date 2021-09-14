@@ -1,8 +1,8 @@
 //
-//  GrowingTKEventsListPlugin.h
+//  GrowingTKEventsListTableViewCell.h
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/9/7.
+//  Created by YoloMao on 2021/9/13.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,28 +17,15 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTKPluginProtocol.h"
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class GrowingTKDatabase;
+@class GrowingTKEventPersistence;
 
-@interface GrowingTKEventsListPlugin : NSObject <GrowingTKPluginProtocol>
+@interface GrowingTKEventsListTableViewCell : UITableViewCell
 
-#pragma mark - GrowingTKPluginProtocol
-
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSString *icon;
-@property (nonatomic, strong) NSString *pluginName;
-@property (nonatomic, strong) NSString *atModule;
-@property (nonatomic, strong) NSString *key;
-
-+ (instancetype)plugin;
-- (void)pluginDidLoad;
-
-#pragma mark - Event Track
-
-@property (nonatomic, strong) GrowingTKDatabase *db;
+- (void)showEvent:(GrowingTKEventPersistence *)event;
 
 @end
 

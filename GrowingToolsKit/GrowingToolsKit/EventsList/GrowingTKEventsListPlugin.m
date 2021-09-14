@@ -19,8 +19,76 @@
 
 #import "GrowingTKEventsListPlugin.h"
 #import "GrowingTKEventsListViewController.h"
+#import "GrowingTKDatabase.h"
+#import "GrowingTKEventPersistence.h"
+#import "GrowingTKSDKUtil.h"
+#import <objc/runtime.h>
+#import <objc/message.h>
+#import "NSObject+GrowingTKSwizzle.h"
+
+@interface GrowingTKEventsListPlugin ()
+
+@end
 
 @implementation GrowingTKEventsListPlugin
+
+#pragma mark - Init
+
+- (instancetype)init {
+    if (self = [super init]) {
+        _db = [GrowingTKDatabase databaseWithPath:GrowingTKDatabase.defaultPath error:nil];
+        [_db cleanExpiredEventIfNeeded];
+
+        [self hookEvents];
+    }
+    return self;
+}
+
+- (void)hookEvents {
+    if (GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration) {
+    // *************** SDK 3.0 ***************
+    sdk3AvoidKVCCrash : {
+        Class class = NSClassFromString(@"GrowingEventPersistence");
+        if (!class) {
+            return;
+        }
+        Method originMethod = class_getInstanceMethod(class, NSSelectorFromString(@"valueForUndefinedKey:"));
+        IMP swizzledImplementation = (IMP)growingtk_valueForUndefinedKey;
+        if (!class_addMethod(class, method_getName(originMethod), swizzledImplementation, "@@:@")) {
+            method_setImplementation(originMethod, swizzledImplementation);
+        }
+    }
+    sdk3EventTrack : {
+        Class class = NSClassFromString(@"GrowingEventDatabase");
+        if (!class) {
+            return;
+        }
+
+        __block NSInvocation *invocation = nil;
+        SEL selector = NSSelectorFromString(@"setEvent:forKey:");
+        id block = ^(id obj, id event, NSString *key) {
+            return growingtk_eventTrack(invocation, obj, event, key);
+        };
+        invocation = [class growingtk_swizzleMethod:selector withBlock:block error:nil];
+    }
+        // *************** SDK 3.0 ***************
+    } else {
+        // *************** SDK 2.0 ***************
+
+        // *************** SDK 2.0 ***************
+    }
+}
+
+#pragma mark - GrowingTKPluginProtocol
+
++ (instancetype)plugin {
+    static GrowingTKEventsListPlugin *instance;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[GrowingTKEventsListPlugin alloc] init];
+    });
+    return instance;
+}
 
 - (NSString *)name {
     return GrowingTKLocalizedString(@"埋点数据");
@@ -45,6 +113,29 @@
 - (void)pluginDidLoad {
     GrowingTKEventsListViewController *controller = [[GrowingTKEventsListViewController alloc] init];
     [GrowingTKHomeWindow openPlugin:controller];
+}
+
+#pragma mark - Event Track
+
+static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSString *key) {
+    [invocation setArgument:&event atIndex:2];
+    [invocation setArgument:&key atIndex:3];
+    [invocation invokeWithTarget:obj];
+
+    if (event) {
+        GrowingTKEventPersistence *e =
+            [[GrowingTKEventPersistence alloc] initWithUUID:[event valueForKey:@"eventUUID"]
+                                                  eventType:[event valueForKey:@"eventType"]
+                                                 jsonString:[event valueForKey:@"rawJsonString"]
+                                                     isSend:NO];
+        [GrowingTKEventsListPlugin.plugin.db insertEvent:e];
+    } else {
+        [GrowingTKEventsListPlugin.plugin.db updateEventDidSend:key];
+    }
+}
+
+static id growingtk_valueForUndefinedKey(NSString *key) {
+    return @"";
 }
 
 @end

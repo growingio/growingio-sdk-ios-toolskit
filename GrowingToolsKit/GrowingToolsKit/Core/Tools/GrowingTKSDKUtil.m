@@ -214,7 +214,7 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
     } else {
         return @"";
     }
-#pragma clang diagnostic push
+#pragma clang diagnostic pop
     return @"";
 }
 
@@ -239,7 +239,7 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
     } else {
         return @"";
     }
-#pragma clang diagnostic push
+#pragma clang diagnostic pop
     return @"";
 }
 
@@ -266,6 +266,8 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 #pragma mark - Notification
 
 - (void)applicationDidFinishLaunching {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     Class session = NSClassFromString(@"GrowingSession");
     if (session) {
         SEL selector = NSSelectorFromString(@"currentSession");
@@ -274,6 +276,7 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
             self.delayInitialized = (s == nil);
         }
     }
+#pragma clang diagnostic pop
 }
 
 #pragma mark - Setter & Getter

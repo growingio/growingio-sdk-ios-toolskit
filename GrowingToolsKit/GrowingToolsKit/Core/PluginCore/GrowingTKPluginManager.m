@@ -147,8 +147,15 @@ NSString *GrowingTKDefaultModuleName(void) {
     }[@(pluginType)];
 
     Class class = NSClassFromString(classString);
-    id<GrowingTKPluginProtocol> plugin = [[class alloc] init];
-    return plugin;
+    SEL sharedInstance = NSSelectorFromString(@"plugin");
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    if ([class respondsToSelector:sharedInstance]) {
+        return (id<GrowingTKPluginProtocol>)[class performSelector:sharedInstance];
+    }
+#pragma clang diagnostic pop
+    
+    return (id<GrowingTKPluginProtocol>)[[class alloc] init];
 }
 
 @end

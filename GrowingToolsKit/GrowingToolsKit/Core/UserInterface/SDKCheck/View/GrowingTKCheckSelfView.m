@@ -180,13 +180,15 @@ static CGFloat const CheckButtonHeight = 130.0f;
             @"check": @(0),
             @"checkMessage": @"正在获取SDK初始化状态",
             @"title": GrowingTKLocalizedString(@"SDK初始化"),
-            @"value": sdk.initializationDescription
+            @"value": sdk.initializationDescription,
+            @"bad" : @(!(sdk.isInitialized))
         }],
         [NSMutableDictionary dictionaryWithDictionary:@{
             @"check": @(0),
             @"checkMessage": @"正在获取URL Scheme配置",
             @"title": @"URL Scheme",
-            @"value": sdk.urlScheme
+            @"value": sdk.urlScheme.length > 0 ? sdk.urlScheme : @"未配置",
+            @"bad" : @(sdk.urlScheme.length == 0)
         }]
     ]];
 
@@ -220,7 +222,8 @@ static CGFloat const CheckButtonHeight = 130.0f;
                      @"check": @(0),
                      @"checkMessage": @"是否调试",
                      @"title": GrowingTKLocalizedString(@"调试模式"),
-                     @"value": debugEnabled
+                     @"value": debugEnabled,
+                     @"bad" : @(sdk.debugEnabled)
                  }]];
 
         NSString *dataCollectionEnabled = sdk.dataCollectionEnabled ? @"YES" : @"NO";
@@ -228,7 +231,8 @@ static CGFloat const CheckButtonHeight = 130.0f;
                      @"check": @(0),
                      @"checkMessage": @"是否允许采集数据",
                      @"title": GrowingTKLocalizedString(@"是否采集数据"),
-                     @"value": dataCollectionEnabled
+                     @"value": dataCollectionEnabled,
+                     @"bad" : @(!(sdk.dataCollectionEnabled))
                  }]];
     }
 
@@ -237,7 +241,7 @@ static CGFloat const CheckButtonHeight = 130.0f;
     [self insertNext:sdkInfo];
 }
 
-#pragma mark - UITableView Datasource & Delegate
+#pragma mark - UITableView DataSource & Delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
@@ -252,7 +256,7 @@ static CGFloat const CheckButtonHeight = 130.0f;
         [tableView dequeueReusableCellWithIdentifier:@"GrowingTKCheckInfoTableViewCell" forIndexPath:indexPath];
     NSDictionary *dic = self.datasource[indexPath.row];
     if (((NSNumber *)dic[@"check"]).boolValue) {
-        [cell showInfo:dic[@"title"] message:dic[@"value"]];
+        [cell showInfo:dic[@"title"] message:dic[@"value"] bad:dic[@"bad"] ? ((NSNumber *)dic[@"bad"]).boolValue : NO];
     } else {
         [cell showCheck:dic[@"checkMessage"]];
     }

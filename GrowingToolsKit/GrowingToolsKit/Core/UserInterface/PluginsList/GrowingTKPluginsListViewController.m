@@ -59,7 +59,7 @@ UICollectionViewDelegateFlowLayout>
     self.collectionView.frame = self.growingtk_fullscreen;
 }
 
-#pragma mark - UICollectionView Datasource & Deleagate
+#pragma mark - UICollectionView DataSource & Delegate
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return self.dataSource.count;

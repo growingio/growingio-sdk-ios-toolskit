@@ -43,7 +43,7 @@
     self.tableView.frame = self.growingtk_fullscreen;
 }
 
-#pragma mark - UITableView Datasource & Delegate
+#pragma mark - UITableView DataSource & Delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;

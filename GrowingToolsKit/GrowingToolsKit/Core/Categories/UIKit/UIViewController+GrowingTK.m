@@ -51,6 +51,13 @@
     return UIEdgeInsetsZero;
 }
 
+- (UILayoutGuide *)growingtk_safeAreaLayoutGuide {
+    if (@available(iOS 11.0, *)) {
+        return self.view.safeAreaLayoutGuide;
+    }
+    return self.view.layoutMarginsGuide;
+}
+
 - (UIEdgeInsets)growingtk_safeAreaInset {
     return [self growingtk_safeAreaInset:self.view];
 }
