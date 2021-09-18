@@ -18,12 +18,14 @@
 //  limitations under the License.
 
 #import "GrowingTKEventDetailViewController.h"
+#import "GrowingTKEventPersistence.h"
 #import "UIViewController+GrowingTK.h"
 #import "UIImage+GrowingTK.h"
 #import "UIColor+GrowingTK.h"
 
 @interface GrowingTKEventDetailViewController ()
 
+@property (nonatomic, strong) UILabel *typeLabel;
 @property (nonatomic, strong) UITextView *textView;
 @property (nonatomic, strong) UIButton *closeButton;
 
@@ -36,12 +38,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    [self.view addSubview:self.typeLabel];
     [self.view addSubview:self.closeButton];
     [self.view addSubview:self.textView];
 
     CGFloat margin = 12.0f;
     CGFloat closeButtonSideLength = 30.0f;
     [NSLayoutConstraint activateConstraints:@[
+        [self.typeLabel.centerYAnchor constraintEqualToAnchor:self.closeButton.centerYAnchor],
+        [self.typeLabel.leadingAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.leadingAnchor
+                                                     constant:margin * 1.5],
         [self.closeButton.topAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.topAnchor
                                                    constant:margin],
         [self.closeButton.trailingAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.trailingAnchor
@@ -50,38 +56,81 @@
         [self.closeButton.heightAnchor constraintEqualToConstant:closeButtonSideLength],
         [self.textView.topAnchor constraintEqualToAnchor:self.closeButton.bottomAnchor constant:margin],
         [self.textView.bottomAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.bottomAnchor],
-        [self.textView.leadingAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.leadingAnchor],
+        [self.textView.leadingAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.leadingAnchor
+                                                    constant:margin],
         [self.textView.trailingAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.trailingAnchor]
     ]];
 
-    self.textView.text = self.beautifulJsonString;
+    self.typeLabel.text = [self.event.eventType uppercaseString];
+    self.textView.attributedText = self.beautifulJsonString;
 }
 
 #pragma mark - Private Method
 
-- (NSString *)beautifulJsonString {
-    NSString *beautifulJsonString = @"";
-    if (self.rawJsonString.length == 0) {
+- (NSAttributedString *)beautifulJsonString {
+    NSMutableAttributedString *beautifulJsonString = [[NSMutableAttributedString alloc] init];
+    if (self.event.rawJsonString.length == 0) {
         return beautifulJsonString;
     }
 
-    NSData *jsonData = [self.rawJsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *jsonData = [self.event.rawJsonString dataUsingEncoding:NSUTF8StringEncoding];
     id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
     if (![NSJSONSerialization isValidJSONObject:jsonObject]) {
         return beautifulJsonString;
     }
 
-    jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject options:NSJSONWritingPrettyPrinted error:nil];
-    if (!jsonData) {
+    if (![jsonObject isKindOfClass:[NSDictionary class]]) {
         return beautifulJsonString;
     }
+    
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.lineSpacing = 5.0f;
+    style.firstLineHeadIndent = 20.0f;
+    style.headIndent = 0.0f;
+    style.lineBreakMode = NSLineBreakByCharWrapping;
+    
+    NSDictionary *dic = (NSDictionary *)jsonObject;
+    NSDictionary<NSAttributedStringKey, id> *punctuationAttributes = @{
+        NSForegroundColorAttributeName: [UIColor growingtk_colorWithHex:@"#495560"],
+        NSFontAttributeName: [UIFont systemFontOfSize:GrowingTKSizeFrom750(32)]
+    };
+    NSDictionary<NSAttributedStringKey, id> *keyAttributes = @{
+        NSForegroundColorAttributeName: [UIColor growingtk_colorWithHex:@"#92288F"],
+        NSFontAttributeName: [UIFont systemFontOfSize:GrowingTKSizeFrom750(32)],
+        NSParagraphStyleAttributeName :style
+    };
+    NSDictionary<NSAttributedStringKey, id> *stringValueAttributes = @{
+        NSForegroundColorAttributeName: [UIColor growingtk_colorWithHex:@"#49BA57"],
+        NSFontAttributeName: [UIFont systemFontOfSize:GrowingTKSizeFrom750(32)]
+    };
+    NSDictionary<NSAttributedStringKey, id> *numberValueAttributes = @{
+        NSForegroundColorAttributeName: [UIColor growingtk_colorWithHex:@"#25AAE2"],
+        NSFontAttributeName: [UIFont systemFontOfSize:GrowingTKSizeFrom750(32)]
+    };
 
-    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    jsonString = [jsonString stringByReplacingOccurrencesOfString:@"\\/" withString:@"/"];
-    NSArray *lines = [jsonString componentsSeparatedByString:@"\n"];
-    for (NSString *line in lines) {
-        beautifulJsonString = [NSString stringWithFormat:@"%@ %@\n", beautifulJsonString, line];
+    typedef NSMutableAttributedString * (^CreateStringBlock)(NSString *, NSDictionary<NSAttributedStringKey, id> *);
+    CreateStringBlock createString = ^(NSString *string, NSDictionary<NSAttributedStringKey, id> *attributes) {
+        return [[NSMutableAttributedString alloc] initWithString:string attributes:attributes];
+    };
+
+    [beautifulJsonString appendAttributedString:createString(@"{\n", punctuationAttributes)];
+    for (NSString *key in dic.allKeys) {
+        NSString *keyString = [NSString stringWithFormat:@"\"%@\"", key];
+        [beautifulJsonString appendAttributedString:createString(keyString, keyAttributes)];
+
+        [beautifulJsonString appendAttributedString:createString(@":", punctuationAttributes)];
+
+        NSString *valueString = [dic[key] isKindOfClass:[NSNumber class]]
+                                    ? [NSString stringWithFormat:@"%@", dic[key]]
+                                    : [NSString stringWithFormat:@"\"%@\"", dic[key]];
+        NSDictionary<NSAttributedStringKey, id> *valueAttributes =
+            [dic[key] isKindOfClass:[NSNumber class]] ? numberValueAttributes : stringValueAttributes;
+        [beautifulJsonString appendAttributedString:createString(valueString, valueAttributes)];
+
+        NSString *dotString = (key != dic.allKeys.lastObject) ? @",\n" : @"\n";
+        [beautifulJsonString appendAttributedString:createString(dotString, punctuationAttributes)];
     }
+    [beautifulJsonString appendAttributedString:createString(@"}", punctuationAttributes)];
     return beautifulJsonString;
 }
 
@@ -93,12 +142,23 @@
 
 #pragma mark - Getter & Setter
 
+- (UILabel *)typeLabel {
+    if (!_typeLabel) {
+        _typeLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        _typeLabel.font = [UIFont systemFontOfSize:GrowingTKSizeFrom750(40) weight:UIFontWeightSemibold];
+        _typeLabel.textColor = UIColor.growingtk_primaryBackgroundColor;
+        _typeLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    }
+    return _typeLabel;
+}
+
 - (UITextView *)textView {
     if (!_textView) {
         _textView = [[UITextView alloc] initWithFrame:CGRectZero];
         _textView.font = [UIFont systemFontOfSize:GrowingTKSizeFrom750(32)];
         _textView.textColor = UIColor.growingtk_labelColor;
         _textView.editable = NO;
+        _textView.selectable = NO;
         _textView.translatesAutoresizingMaskIntoConstraints = NO;
     }
     return _textView;

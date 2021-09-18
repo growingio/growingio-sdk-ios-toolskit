@@ -31,7 +31,7 @@
 @interface GrowingTKEventsListViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSMutableDictionary *datasource;
+@property (nonatomic, strong) NSMutableArray *datasource;
 
 @end
 
@@ -56,7 +56,8 @@
 
     if (@available(iOS 10.0, *)) {
         UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
-        refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:GrowingTKLocalizedString(@"下拉刷新")];
+        refreshControl.attributedTitle =
+            [[NSAttributedString alloc] initWithString:GrowingTKLocalizedString(@"下拉刷新")];
         [refreshControl addTarget:self action:@selector(refreshAction) forControlEvents:UIControlEventValueChanged];
         self.tableView.refreshControl = refreshControl;
     }
@@ -65,33 +66,35 @@
 #pragma mark - Private Method
 
 - (void)refreshData {
-    self.datasource = [NSMutableDictionary dictionary];
-    
+    self.datasource = [NSMutableArray array];
     NSArray *events = GrowingTKEventsListPlugin.plugin.db.getAllEvents.reverseObjectEnumerator.allObjects;
+    NSMutableArray *dayKeys = [NSMutableArray array];
+    NSMutableArray *dayEvents = [NSMutableArray array];
     NSString *today = GrowingTKLocalizedString(@"今日");
     NSString *yesterday = GrowingTKLocalizedString(@"昨日");
-    
-    __weak typeof(self) weakSelf = self;
+
     void (^block)(NSString *, GrowingTKEventPersistence *) = ^(NSString *key, GrowingTKEventPersistence *event) {
-        __strong typeof(weakSelf) self = weakSelf;
-        if (self.datasource[key]) {
-            NSMutableArray *array = self.datasource[key];
+        if ([dayKeys containsObject:key]) {
+            NSMutableArray *array = dayEvents[[dayKeys indexOfObject:key]];
             [array addObject:event];
-        }else {
-            NSMutableArray *array = [NSMutableArray array];
-            [array addObject:event];
-            self.datasource[key] = array;
+        } else {
+            [dayKeys addObject:key];
+            [dayEvents addObject:@[event].mutableCopy];
         }
     };
-    
+
     for (GrowingTKEventPersistence *event in events) {
         if ([GrowingTKDateUtil.sharedInstance isToday:event.timestamp]) {
             block(today, event);
-        }else if ([GrowingTKDateUtil.sharedInstance isYesterday:event.timestamp]) {
+        } else if ([GrowingTKDateUtil.sharedInstance isYesterday:event.timestamp]) {
             block(yesterday, event);
-        }else {
+        } else {
             block(event.day, event);
         }
+    }
+
+    for (int i = 0; i < dayKeys.count; i++) {
+        [self.datasource addObject:@{dayKeys[i]: dayEvents[i]}];
     }
 }
 
@@ -117,14 +120,16 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return ((NSMutableArray *)self.datasource[[self.datasource.allKeys objectAtIndex:section]]).count;
+    NSDictionary *dic = (NSDictionary *)self.datasource[section];
+    NSArray *array = dic[dic.allKeys.firstObject];
+    return array.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     GrowingTKEventsListTableViewCell *cell =
         [tableView dequeueReusableCellWithIdentifier:@"GrowingTKEventsListTableViewCell" forIndexPath:indexPath];
-    NSString *dayKey = [self.datasource.allKeys objectAtIndex:indexPath.section];
-    GrowingTKEventPersistence *event = ((NSMutableArray *)self.datasource[dayKey])[indexPath.row];
+    NSDictionary *dic = (NSDictionary *)self.datasource[indexPath.section];
+    GrowingTKEventPersistence *event = ((NSArray *)dic[dic.allKeys.firstObject])[indexPath.row];
     [cell showEvent:event];
     return cell;
 }
@@ -134,7 +139,7 @@
     view.backgroundColor = UIColor.growingtk_primaryBackgroundColor;
 
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(16, 8, GrowingTKScreenWidth - 32, 24)];
-    label.text = [self.datasource.allKeys objectAtIndex:section];
+    label.text = ((NSDictionary *)self.datasource[section]).allKeys.firstObject;
     label.font = [UIFont systemFontOfSize:GrowingTKSizeFrom750(32)];
     label.textColor = UIColor.whiteColor;
     [view addSubview:label];
@@ -157,9 +162,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     GrowingTKEventDetailViewController *controller = [[GrowingTKEventDetailViewController alloc] init];
-    NSString *dayKey = [self.datasource.allKeys objectAtIndex:indexPath.section];
-    GrowingTKEventPersistence *event = ((NSMutableArray *)self.datasource[dayKey])[indexPath.row];
-    controller.rawJsonString = event.rawJsonString;
+    NSDictionary *dic = (NSDictionary *)self.datasource[indexPath.section];
+    GrowingTKEventPersistence *event = ((NSArray *)dic[dic.allKeys.firstObject])[indexPath.row];
+    controller.event = event;
     [self presentViewController:controller animated:YES completion:nil];
 }
 
@@ -176,16 +181,16 @@
         }
         _tableView.delegate = self;
         _tableView.dataSource = self;
-        _tableView.tableFooterView = [UIView new];
+        _tableView.sectionFooterHeight = 0.01f;
         [_tableView registerClass:[GrowingTKEventsListTableViewCell class]
             forCellReuseIdentifier:@"GrowingTKEventsListTableViewCell"];
     }
     return _tableView;
 }
 
-- (NSMutableDictionary *)datasource {
+- (NSMutableArray *)datasource {
     if (!_datasource) {
-        _datasource = [NSMutableDictionary dictionary];
+        _datasource = [NSMutableArray array];
     }
     return _datasource;
 }

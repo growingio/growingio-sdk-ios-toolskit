@@ -21,9 +21,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class GrowingTKEventPersistence;
+
 @interface GrowingTKEventDetailViewController : GrowingTKBaseViewController
 
-@property (nonatomic, copy) NSString *rawJsonString;
+@property (nonatomic, strong) GrowingTKEventPersistence *event;
 
 @end
 
