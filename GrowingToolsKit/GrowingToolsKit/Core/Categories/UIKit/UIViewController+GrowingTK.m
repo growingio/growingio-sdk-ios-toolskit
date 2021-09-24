@@ -87,11 +87,11 @@
 }
 
 + (UIViewController *)growingtk_rootViewControllerForKeyWindow {
-    return GrowingTKUtil.getKeyWindow.rootViewController;
+    return GrowingTKUtil.keyWindow.rootViewController;
 }
 
 + (UIViewController *)growingtk_topViewControllerForKeyWindow {
-    UIViewController *controller = [self growingtk_topViewController:GrowingTKUtil.getKeyWindow.rootViewController];
+    UIViewController *controller = [self growingtk_topViewController:GrowingTKUtil.keyWindow.rootViewController];
     while (controller.presentedViewController) {
         [self growingtk_topViewController:controller.presentedViewController];
     }

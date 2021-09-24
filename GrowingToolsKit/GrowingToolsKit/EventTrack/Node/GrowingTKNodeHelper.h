@@ -1,8 +1,8 @@
 //
-//  GrowingTKEventTrackTableViewCell.m
+//  GrowingTKNodeHelper.h
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/8/24.
+//  Created by YoloMao on 2021/9/22.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,19 +17,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTKEventTrackTableViewCell.h"
+#import <Foundation/Foundation.h>
 
-@implementation GrowingTKEventTrackTableViewCell
+NS_ASSUME_NONNULL_BEGIN
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-}
+@interface GrowingTKNodeHelper : NSObject
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
++ (BOOL)checkShouldMask:(UIView *)view;
 
 @end
+
+NS_ASSUME_NONNULL_END

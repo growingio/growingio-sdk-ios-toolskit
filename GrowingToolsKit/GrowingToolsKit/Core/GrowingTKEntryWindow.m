@@ -132,6 +132,8 @@ static GrowingTKEntryWindow *instance = nil;
 }
 
 - (void)entryClick {
+    [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKHomeWillShowNotification object:nil];
+    
     [self toggle:self.moduleType
         completion:^(BOOL finished) {
             if (finished) {

@@ -21,7 +21,7 @@
 
 @implementation GrowingTKUtil
 
-+ (UIWindow *)getKeyWindow {
++ (UIWindow *)keyWindow {
     UIWindow *keyWindow = nil;
     if ([[UIApplication sharedApplication].delegate respondsToSelector:@selector(window)]) {
         keyWindow = [[UIApplication sharedApplication].delegate window];

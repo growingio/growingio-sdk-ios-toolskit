@@ -51,6 +51,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(hideHome)
+                                                 name:GrowingTKHomeShouldHideNotification
+                                               object:nil];
+
     self.view.backgroundColor = UIColor.growingtk_black_alpha;
     [self.view addSubview:self.triangleView];
     [self.view addSubview:self.pluginsButton];
@@ -140,6 +145,14 @@
     [self.triangleView setNeedsUpdateConstraints];
     [self.view layoutIfNeeded];
 }
+
+- (void)hideHome {
+    [[GrowingTKHomeWindow sharedInstance] toggle];
+    [[GrowingTKEntryWindow sharedInstance]
+        toggle:self.currentChild == self.pluginsList ? GrowingTKModulePlugins : GrowingTKModuleCheckSelf];
+}
+
+#pragma mark - Override
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return self.kStatusBarStyle;

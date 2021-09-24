@@ -18,7 +18,6 @@
 //  limitations under the License.
 
 #import "GrowingTKEventTrackPlugin.h"
-#import "GrowingTKEventTrackSwitchViewController.h"
 #import "GrowingTKEventTrackWindow.h"
 
 @interface GrowingTKEventTrackPlugin ()
@@ -61,32 +60,28 @@
 }
 
 - (void)pluginDidLoad {
-    GrowingTKEventTrackSwitchViewController *controller = [[GrowingTKEventTrackSwitchViewController alloc] init];
-    [GrowingTKHomeWindow openPlugin:controller];
+    [self showTrackView];
 }
 
 #pragma mark - Event Track
 
 - (void)showTrackView {
     [self.trackView show];
+    [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKHomeShouldHideNotification object:nil];
 }
 
 - (void)hideTrackView {
     [self.trackView hide];
 }
 
-- (void)setEventTrack:(BOOL)eventTrack {
-    _eventTrack = eventTrack;
-    eventTrack ? [self showTrackView] : [self hideTrackView];
-}
-
 - (GrowingTKEventTrackWindow *)trackView {
     if (!_trackView) {
-        CGRect frame = CGRectMake(GrowingTKSizeFrom750(30),
-                                  GrowingTKScreenHeight - GrowingTKSizeFrom750(180) - GrowingTKSizeFrom750(30),
-                                  GrowingTKScreenWidth - 2 * GrowingTKSizeFrom750(30),
-                                  GrowingTKSizeFrom750(180));
-        _trackView = [[GrowingTKEventTrackWindow alloc] initWithFrame:frame];
+        _trackView = [[GrowingTKEventTrackWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(hideTrackView)
+                                                     name:GrowingTKHomeWillShowNotification
+                                                   object:nil];
     }
     return _trackView;
 }

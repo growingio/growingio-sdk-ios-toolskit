@@ -22,9 +22,9 @@
 #import "UIImage+GrowingTK.h"
 #import "UIColor+GrowingTK.h"
 
-#define MODULE_BUTTON_CONTAINER_MARGIN 7.0f
-#define MODULE_BUTTON_IMAGE_MARGIN_PLUGINS 5.0f
-#define MODULE_BUTTON_IMAGE_MARGIN_CHECKSELF 3.0f
+#define MODULE_BUTTON_CONTAINER_PADDING 7.0f
+#define MODULE_BUTTON_IMAGE_PADDING_PLUGINS 5.0f
+#define MODULE_BUTTON_IMAGE_PADDING_CHECKSELF 3.0f
 
 #define MODULE_BUTTON_IMAGE_PLUGINS [UIImage growingtk_imageNamed:@"growingtk_plugins"]
 #define MODULE_BUTTON_IMAGE_CHECKSELF [UIImage growingtk_imageNamed:@"growingtk_logo"]
@@ -39,10 +39,10 @@
 
 + (instancetype)moduleButtonWithType:(GrowingTKModule)module {
     CGFloat sideLength = ENTRY_SIDELENGTH;
-    CGFloat margin = MODULE_BUTTON_CONTAINER_MARGIN;
-    CGFloat containViewSideLength = sideLength - margin * 2;
-    CGFloat imageMargin =
-        module == GrowingTKModulePlugins ? MODULE_BUTTON_IMAGE_MARGIN_PLUGINS : MODULE_BUTTON_IMAGE_MARGIN_CHECKSELF;
+    CGFloat padding = MODULE_BUTTON_CONTAINER_PADDING;
+    CGFloat containViewSideLength = sideLength - padding * 2;
+    CGFloat imagePadding =
+        module == GrowingTKModulePlugins ? MODULE_BUTTON_IMAGE_PADDING_PLUGINS : MODULE_BUTTON_IMAGE_PADDING_CHECKSELF;
 
     GrowingTKModuleButton *button = [GrowingTKModuleButton buttonWithType:UIButtonTypeCustom];
     button.frame = CGRectMake(0, 0, sideLength, sideLength);
@@ -51,17 +51,17 @@
     button.layer.masksToBounds = YES;
 
     UIView *view =
-        [[UIView alloc] initWithFrame:CGRectMake(margin, margin, containViewSideLength, containViewSideLength)];
+        [[UIView alloc] initWithFrame:CGRectMake(padding, padding, containViewSideLength, containViewSideLength)];
     view.backgroundColor = UIColor.growingtk_secondaryBackgroundColor;
     view.layer.cornerRadius = containViewSideLength / 2;
     view.layer.masksToBounds = YES;
     view.userInteractionEnabled = NO;
     [button addSubview:view];
 
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(imageMargin,
-                                                                           imageMargin,
-                                                                           containViewSideLength - imageMargin * 2,
-                                                                           containViewSideLength - imageMargin * 2)];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(imagePadding,
+                                                                           imagePadding,
+                                                                           containViewSideLength - imagePadding * 2,
+                                                                           containViewSideLength - imagePadding * 2)];
     imageView.image = module == GrowingTKModulePlugins ? MODULE_BUTTON_IMAGE_PLUGINS : MODULE_BUTTON_IMAGE_CHECKSELF;
     [view addSubview:imageView];
     button.kImageView = imageView;
@@ -71,28 +71,28 @@
 
 - (void)toggle:(GrowingTKModule)module {
     CGFloat sideLength = ENTRY_SIDELENGTH;
-    CGFloat margin = MODULE_BUTTON_CONTAINER_MARGIN;
-    CGFloat containViewSideLength = sideLength - margin * 2;
-    CGFloat imageMargin = MODULE_BUTTON_IMAGE_MARGIN_PLUGINS;
+    CGFloat padding = MODULE_BUTTON_CONTAINER_PADDING;
+    CGFloat containViewSideLength = sideLength - padding * 2;
+    CGFloat imagePadding = MODULE_BUTTON_IMAGE_PADDING_PLUGINS;
     UIImage *image = MODULE_BUTTON_IMAGE_PLUGINS;
 
     switch (module) {
         case GrowingTKModulePlugins: {
-            imageMargin = MODULE_BUTTON_IMAGE_MARGIN_PLUGINS;
+            imagePadding = MODULE_BUTTON_IMAGE_PADDING_PLUGINS;
             image = MODULE_BUTTON_IMAGE_PLUGINS;
         } break;
         case GrowingTKModuleCheckSelf: {
-            imageMargin = MODULE_BUTTON_IMAGE_MARGIN_CHECKSELF;
+            imagePadding = MODULE_BUTTON_IMAGE_PADDING_CHECKSELF;
             image = MODULE_BUTTON_IMAGE_CHECKSELF;
         } break;
         default:
             break;
     }
 
-    self.kImageView.frame = CGRectMake(imageMargin,
-                                       imageMargin,
-                                       containViewSideLength - imageMargin * 2,
-                                       containViewSideLength - imageMargin * 2);
+    self.kImageView.frame = CGRectMake(imagePadding,
+                                       imagePadding,
+                                       containViewSideLength - imagePadding * 2,
+                                       containViewSideLength - imagePadding * 2);
     self.kImageView.image = image;
 }
 

@@ -18,13 +18,33 @@
 //  limitations under the License.
 
 #import "GrowingTKEventTrackViewController.h"
+#import "GrowingTKEventTrackPlugin.h"
 #import "UIImage+GrowingTK.h"
 #import "UIColor+GrowingTK.h"
+#import "UIView+GrowingTK.h"
+#import "UIViewController+GrowingTK.h"
+#import "GrowingTKNodeHelper.h"
+#import "GrowingTKViewNode.h"
+#import "GrowingTKUtil.h"
+#import "GrowingTKNode.h"
+#import "WKWebView+GrowingTKNode.h"
+
+#define CIRCLE_SIZE GrowingTKSizeFrom750(100)
+#define MASK_BORDER_COLOR [UIColor growingtk_colorWithHex:@"0xFF4824" alpha:0.9f]
+#define MASK_BACKGROUND_COLOR [UIColor growingtk_colorWithHex:@"0xFF4824" alpha:0.3f]
 
 @interface GrowingTKEventTrackViewController ()
 
+@property (nonatomic, strong) UIView *maskView;
+@property (nonatomic, strong) UIView *circleView;
+@property (nonatomic, strong) UIView *infoView;
 @property (nonatomic, strong) UIButton *closeBtn;
 @property (nonatomic, strong) UILabel *infoLabel;
+
+@property (nonatomic, strong) NSLayoutConstraint *infoViewTopConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *infoViewLeadingConstraint;
+
+@property (nonatomic, strong) UIView *latestMaskedView;
 
 @end
 
@@ -35,89 +55,275 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initUI];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(webViewNodeInfoNotification:)
+                                                 name:GrowingTKWebViewNodeInfoNotification
+                                               object:nil];
 }
 
+#pragma mark - Private Method
+
 - (void)initUI {
-    self.view.backgroundColor = [UIColor growingtk_colorWithHex:@"54545899"];
+    self.view.backgroundColor = UIColor.clearColor;
 
+    [self.view addSubview:self.infoView];
+    [self.infoView addSubview:self.closeBtn];
+    [self.infoView addSubview:self.infoLabel];
+    [self.view addSubview:self.maskView];
+    [self.view addSubview:self.circleView];
+
+    CGFloat infoViewMargin = GrowingTKSizeFrom750(24);
+    self.infoViewTopConstraint = [self.infoView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor
+                                                                            constant:-infoViewMargin];
+    self.infoViewLeadingConstraint = [self.infoView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor
+                                                                                 constant:infoViewMargin];
+
+    [NSLayoutConstraint activateConstraints:@[
+        self.infoViewTopConstraint,
+        self.infoViewLeadingConstraint,
+        [self.infoView.widthAnchor constraintEqualToAnchor:self.view.widthAnchor constant:-infoViewMargin * 2],
+    ]];
+
+    CGFloat closeBtnMargin = GrowingTKSizeFrom750(12);
+    CGFloat closeBtnSideLength = GrowingTKSizeFrom750(44);
+    [NSLayoutConstraint activateConstraints:@[
+        [self.closeBtn.topAnchor constraintEqualToAnchor:self.infoView.topAnchor constant:closeBtnMargin],
+        [self.closeBtn.trailingAnchor constraintEqualToAnchor:self.infoView.trailingAnchor constant:-closeBtnMargin],
+        [self.closeBtn.heightAnchor constraintEqualToConstant:closeBtnSideLength],
+        [self.closeBtn.widthAnchor constraintEqualToConstant:closeBtnSideLength]
+    ]];
+
+    CGFloat infoLabelMargin = GrowingTKSizeFrom750(24);
+    [NSLayoutConstraint activateConstraints:@[
+        [self.infoLabel.topAnchor constraintEqualToAnchor:self.infoView.topAnchor constant:infoLabelMargin],
+        [self.infoLabel.bottomAnchor constraintEqualToAnchor:self.infoView.bottomAnchor constant:-infoLabelMargin],
+        [self.infoLabel.leadingAnchor constraintEqualToAnchor:self.infoView.leadingAnchor constant:infoLabelMargin],
+        [self.infoLabel.trailingAnchor constraintEqualToAnchor:self.infoView.trailingAnchor constant:-infoLabelMargin]
+    ]];
+}
+
+- (void)reset {
     dispatch_async(dispatch_get_main_queue(), ^{
-        CGSize viewSize = self.view.window.bounds.size;
-
-        CGFloat closeWidth = GrowingTKSizeFrom750(44);
-        CGFloat closeHeight = GrowingTKSizeFrom750(44);
-        self.closeBtn =
-            [[UIButton alloc] initWithFrame:CGRectMake(viewSize.width - closeWidth - GrowingTKSizeFrom750(16),
-                                                       GrowingTKSizeFrom750(16),
-                                                       closeWidth,
-                                                       closeHeight)];
-        [self.closeBtn setBackgroundImage:self.closeBtnImage forState:UIControlStateNormal];
-        [self.closeBtn addTarget:self
-                          action:@selector(closeButtonAction:)
-                forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:self.closeBtn];
-
-        self.infoLabel =
-            [[UILabel alloc] initWithFrame:CGRectMake(GrowingTKSizeFrom750(32),
-                                                      0,
-                                                      viewSize.width - GrowingTKSizeFrom750(32 + 16) - closeWidth,
-                                                      viewSize.height)];
-        self.infoLabel.backgroundColor = [UIColor clearColor];
-        self.infoLabel.textColor = [UIColor growingtk_colorWithHex:@"EBEBF599"];
-        self.infoLabel.font = [UIFont systemFontOfSize:GrowingTKSizeFrom750(24)];
-        self.infoLabel.numberOfLines = 0;
-        [self.view addSubview:self.infoLabel];
-
-        NSString *string = @"测试测试测试测试测试\n测试测试测试测试测试\n测试测试测试测试测试\n测试测试测试测试测试\n测"
-                           @"试测试测试测试测试\n测试测试测试测试测试\n";
-
-        NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
-        style.lineSpacing = GrowingTKSizeFrom750(12);
-
-        style.lineBreakMode = NSLineBreakByTruncatingTail;
-
-        NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:string];
-        [attrString addAttributes:@{
-            NSParagraphStyleAttributeName: style,
-            NSFontAttributeName: [UIFont systemFontOfSize:GrowingTKSizeFrom750(24)],
-            NSForegroundColorAttributeName: [UIColor growingtk_black_2]
-        }
-                            range:NSMakeRange(0, string.length)];
-        self.infoLabel.attributedText = attrString;
+        CGFloat infoViewMargin = GrowingTKSizeFrom750(24);
+        self.infoViewTopConstraint.constant = -infoViewMargin;
+        self.infoViewLeadingConstraint.constant = infoViewMargin;
+        
+        [self resetInfoLabelText:@"请拖动中间的圆点选择控件"];
+        self.circleView.center = self.view.center;
+        self.maskView.frame = CGRectZero;
     });
+}
+
+- (void)resetCircleViewFrame {
+    CGFloat circleSize = CIRCLE_SIZE;
+    CGFloat padding = GrowingTKSizeFrom750(6);
+    CGRect bounds = self.view.bounds;
+    CGRect frame = self.circleView.frame;
+
+    frame.origin.x = MAX(bounds.origin.x + padding, frame.origin.x);
+    frame.origin.y = MAX(bounds.origin.y + padding, frame.origin.y);
+    frame.origin.x = MIN(bounds.origin.x + bounds.size.width - padding - circleSize, frame.origin.x);
+    frame.origin.y = MIN(bounds.origin.y + bounds.size.height - padding - circleSize, frame.origin.y);
+
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         self.circleView.frame = frame;
+                     }];
+    
+}
+
+- (void)resetInfoLabelText:(NSString *)text {
+    NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
+    style.lineSpacing = GrowingTKSizeFrom750(8);
+    style.lineBreakMode = NSLineBreakByCharWrapping;
+    NSMutableAttributedString *attrString =
+        [[NSMutableAttributedString alloc] initWithString:text attributes:@{NSParagraphStyleAttributeName: style}];
+    self.infoLabel.attributedText = attrString;
+}
+
+- (void)updateMask:(UIView *)view {
+    if (!view) {
+        self.maskView.frame = CGRectZero;
+        if ([self.latestMaskedView isKindOfClass:[WKWebView class]]
+            && ((id<GrowingTKNode>)self.latestMaskedView).growingtk_hybrid) {
+            WKWebView *webView = (WKWebView *)self.latestMaskedView;
+            [webView growingtk_nodeUpdateMask:NO point:CGPointZero];
+        }
+        self.latestMaskedView = nil;
+        return;
+    }
+    
+    self.latestMaskedView = view;
+    id <GrowingTKNode>node = (id<GrowingTKNode>)view;
+    UIColor * borderColor = MASK_BORDER_COLOR;
+    UIColor * backgroundColor = MASK_BACKGROUND_COLOR;
+
+    if ([node isKindOfClass:[WKWebView class]] && node.growingtk_hybrid) {
+        // WebView
+        WKWebView *webView = (WKWebView *)node;
+        [webView growingtk_nodeUpdateMask:YES point:self.circleView.center];
+    }else {
+        self.maskView.frame = node.growingNodeFrame;
+        self.maskView.layer.borderColor = borderColor.CGColor;
+        self.maskView.backgroundColor = backgroundColor;
+    }
 }
 
 #pragma mark - Action
 
-- (void)closeButtonAction:(UIButton *)sender {
-}
+- (void)circleViewPan:(UIPanGestureRecognizer *)sender {
+    UIView *panView = sender.view;
+    switch (sender.state) {
+        case UIGestureRecognizerStateBegan: {
+            self.circleView.alpha = 0.2f;
+        } break;
+        case UIGestureRecognizerStateChanged: {
+            CGPoint translation = [sender translationInView:panView];
+            [sender setTranslation:CGPointZero inView:panView];
+            panView.center = CGPointMake(panView.center.x + translation.x, panView.center.y + translation.y);
+            
+            UIView *view = [GrowingTKUtil.keyWindow hitTest:panView.center withEvent:nil];
+            
+            BOOL shouldMask = [GrowingTKNodeHelper checkShouldMask:view];
+            while (!shouldMask) {
+                UIResponder *next = view.nextResponder;
+                if (!next || ![next isKindOfClass:[UIView class]]) {
+                    break;
+                }
+                
+                if ([next isKindOfClass:NSClassFromString(@"WKContentView")]) {
+                    while (![next isKindOfClass:[WKWebView class]]) {
+                        next = next.nextResponder;
+                    }
+                }
 
-- (void)viewWillTransitionToSize:(CGSize)size
-       withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-    dispatch_async(dispatch_get_main_queue(),
-                   ^{
-                   });
-}
+                view = (UIView *)next;
+                shouldMask = [GrowingTKNodeHelper checkShouldMask:view];
+            }
 
-#pragma mark - Dark Mode
-
-- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
-    [super traitCollectionDidChange:previousTraitCollection];
-    if (@available(iOS 13.0, *)) {
-        if ([self.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:previousTraitCollection]) {
-            [self.closeBtn setImage:self.closeBtnImage forState:UIControlStateNormal];
+            if (view && shouldMask) {
+                [self updateMask:view];
+            }else {
+                [self updateMask:nil];
+            }
+        } break;
+        case UIGestureRecognizerStateEnded:
+        case UIGestureRecognizerStateCancelled: {
+            if (self.latestMaskedView) {
+                if ([self.latestMaskedView isKindOfClass:[WKWebView class]]
+                    && ((id<GrowingTKNode>)self.latestMaskedView).growingtk_hybrid) {
+                    WKWebView *webView = (WKWebView *)self.latestMaskedView;
+                    [webView growingtk_nodeUpdateInfo];
+                }else {
+                    GrowingTKViewNode *node = [[GrowingTKViewNode alloc] initWithView:self.latestMaskedView];
+                    [self resetInfoLabelText:node.toString];
+                }
+            }
+            
+            [self resetCircleViewFrame];
+            self.circleView.alpha = 1.0f;
+            [self updateMask:nil];
         }
+
+        default:
+            break;
     }
 }
 
-- (UIImage *)closeBtnImage {
-    if (@available(iOS 13.0, *)) {
-        return UITraitCollection.currentTraitCollection.userInterfaceStyle == UIUserInterfaceStyleDark
-                   ? [UIImage growingtk_imageNamed:@"growingtk_close_gray"]
-                   : [UIImage growingtk_imageNamed:@"growingtk_close_gray"];
-    } else {
-        return [UIImage growingtk_imageNamed:@"growingtk_close_gray"];
+- (void)infoViewPan:(UIPanGestureRecognizer *)sender {
+    UIView *panView = sender.view;
+
+    if (!panView.hidden) {
+        CGPoint offsetPoint = [sender translationInView:panView];
+        [sender setTranslation:CGPointZero inView:panView];
+        self.infoViewLeadingConstraint.constant += offsetPoint.x;
+        self.infoViewTopConstraint.constant += offsetPoint.y;
+        [self.infoView setNeedsUpdateConstraints];
     }
+}
+
+- (void)closeButtonAction:(UIButton *)sender {
+    [GrowingTKEventTrackPlugin.plugin hideTrackView];
+}
+
+#pragma mark - Notification
+
+- (void)webViewNodeInfoNotification:(NSNotification *)not {
+    NSString *info = not.userInfo[@"info"];
+    [self resetInfoLabelText:info];
+}
+
+#pragma mark - Getter & Setter
+
+- (UIView *)maskView {
+    if (!_maskView) {
+        _maskView = [[UIView alloc] initWithFrame:CGRectZero];
+        _maskView.layer.borderWidth = 1;
+        _maskView.layer.borderColor = MASK_BORDER_COLOR.CGColor;
+        _maskView.backgroundColor = MASK_BACKGROUND_COLOR;
+        _maskView.layer.cornerRadius = 5.0f;
+        _maskView.translatesAutoresizingMaskIntoConstraints = NO;
+    }
+    return _maskView;
+}
+
+- (UIView *)circleView {
+    if (!_circleView) {
+        CGFloat circleSize = CIRCLE_SIZE;
+        CGFloat padding = GrowingTKSizeFrom750(12);
+        CGFloat contentSize = CIRCLE_SIZE - padding * 2;
+        _circleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, circleSize, circleSize)];
+        _circleView.layer.cornerRadius = circleSize / 2.0f;
+        _circleView.backgroundColor = [UIColor growingtk_colorWithHex:@"FF4824" alpha:0.3f];
+
+        UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(padding, padding, contentSize, contentSize)];
+        contentView.layer.cornerRadius = contentSize / 2.0f;
+        contentView.backgroundColor = [UIColor growingtk_primaryBackgroundColor];
+        [_circleView addSubview:contentView];
+
+        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self
+                                                                              action:@selector(circleViewPan:)];
+        [_circleView addGestureRecognizer:pan];
+    }
+    return _circleView;
+}
+
+- (UIView *)infoView {
+    if (!_infoView) {
+        _infoView = [[UIView alloc] initWithFrame:CGRectZero];
+        _infoView.backgroundColor = [UIColor growingtk_colorWithHex:@"0x000000" alpha:0.5f];
+        _infoView.layer.cornerRadius = GrowingTKSizeFrom750(8);
+        _infoView.layer.borderWidth = 1.0f;
+        _infoView.layer.borderColor = [UIColor growingtk_colorWithHex:@"0x999999" alpha:0.2].CGColor;
+        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self
+                                                                              action:@selector(infoViewPan:)];
+        [_infoView addGestureRecognizer:pan];
+        _infoView.translatesAutoresizingMaskIntoConstraints = NO;
+    }
+    return _infoView;
+}
+
+- (UIButton *)closeBtn {
+    if (!_closeBtn) {
+        _closeBtn = [[UIButton alloc] initWithFrame:CGRectZero];
+        [_closeBtn setBackgroundImage:[UIImage growingtk_imageNamed:@"growingtk_close_gray"]
+                             forState:UIControlStateNormal];
+        [_closeBtn addTarget:self action:@selector(closeButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        _closeBtn.translatesAutoresizingMaskIntoConstraints = NO;
+    }
+    return _closeBtn;
+}
+
+- (UILabel *)infoLabel {
+    if (!_infoLabel) {
+        _infoLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        _infoLabel.textColor = [UIColor whiteColor];
+        _infoLabel.font = [UIFont systemFontOfSize:GrowingTKSizeFrom750(24)];
+        _infoLabel.numberOfLines = 0;
+        _infoLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    }
+    return _infoLabel;
 }
 
 @end

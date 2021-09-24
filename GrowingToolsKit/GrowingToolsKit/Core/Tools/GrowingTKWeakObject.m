@@ -1,8 +1,8 @@
 //
-//  GrowingTKEventTrackSwitchTableViewCell.h
+//  GrowingTKWeakObject.m
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/8/24.
+//  Created by YoloMao on 2021/9/23.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,14 +17,15 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <UIKit/UIKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
+#import "GrowingTKWeakObject.h"
 
-@interface GrowingTKEventTrackSwitchTableViewCell : UITableViewCell
+@implementation GrowingTKWeakObject
 
-- (void)renderUIWithIndex:(NSUInteger)index;
++ (GrowingTKWeakObject *)weakObject:(id)obj {
+    GrowingTKWeakObject *box = [[GrowingTKWeakObject alloc] init];
+    box.obj = obj;
+    return box;
+}
 
 @end
-
-NS_ASSUME_NONNULL_END

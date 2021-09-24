@@ -36,40 +36,25 @@
                 }
             }
         }
-        self.backgroundColor = [UIColor whiteColor];
-        self.layer.cornerRadius = GrowingTKSizeFrom750(8);
-        self.layer.borderWidth = 1.0f;
-        self.layer.borderColor = [UIColor growingtk_colorWithHex:@"0x999999" alpha:0.2].CGColor;
+        self.backgroundColor = UIColor.clearColor;
         self.windowLevel = UIWindowLevelAlert;
         self.rootViewController = [[GrowingTKEventTrackViewController alloc] init];
-
-        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
-        [self addGestureRecognizer:pan];
     }
     return self;
 }
 
 - (void)show {
     self.hidden = NO;
+    [((GrowingTKEventTrackViewController *)self.rootViewController) reset];
 }
 
 - (void)hide {
     self.hidden = YES;
 }
 
-#pragma mark - Action
-
-- (void)pan:(UIPanGestureRecognizer *)sender {
-    UIView *panView = sender.view;
-
-    if (!panView.hidden) {
-        CGPoint offsetPoint = [sender translationInView:sender.view];
-        [sender setTranslation:CGPointZero inView:sender.view];
-        CGFloat newX = panView.growingtk_centerX + offsetPoint.x;
-        CGFloat newY = panView.growingtk_centerY + offsetPoint.y;
-        CGPoint centerPoint = CGPointMake(newX, newY);
-        panView.center = centerPoint;
-    }
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    UIView *view = [super hitTest:point withEvent:event];
+    return (view == self || view == self.rootViewController.view) ? nil : view;
 }
 
 @end

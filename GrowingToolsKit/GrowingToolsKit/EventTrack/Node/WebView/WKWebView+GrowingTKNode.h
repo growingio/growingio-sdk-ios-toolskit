@@ -1,8 +1,8 @@
 //
-//  GrowingTKEventTrackSwitchViewController.h
+//  WKWebView+GrowingTKNode.h
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/8/24.
+//  Created by YoloMao on 2021/9/23.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,11 +17,16 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTKBaseViewController.h"
+#import <WebKit/WebKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingTKEventTrackSwitchViewController : GrowingTKBaseViewController
+FOUNDATION_EXTERN NSString *const GrowingTKWebViewNodeInfoNotification;
+
+@interface WKWebView (GrowingTKNode)
+
+- (void)growingtk_nodeUpdateMask:(BOOL)shouldMask point:(CGPoint)point;
+- (void)growingtk_nodeUpdateInfo;
 
 @end
 

@@ -34,11 +34,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)plugin;
 - (void)pluginDidLoad;
 
-#pragma mark - Event Track
-
-@property (nonatomic, assign, getter=isEventTrack) BOOL eventTrack;
-
-- (void)showTrackView;
 - (void)hideTrackView;
 
 @end
