@@ -1,8 +1,8 @@
 //
-//  GrowingTKNode.h
+//  GrowingTKTriangleView.h
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/9/23.
+//  Created by YoloMao on 2021/9/26.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,30 +17,13 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol GrowingTKNode <NSObject>
+@interface GrowingTKTriangleView : UIView
 
-@required
-
-/// 是否不进行track
-- (BOOL)growingNodeDonotTrack;
-
-/// 是否不进行圈选
-- (BOOL)growingNodeDonotCircle;
-
-/// 是否可交互
-- (BOOL)growingNodeUserInteraction;
-
-/// 当前node的frame
-- (CGRect)growingNodeFrame;
-
-@optional
-
-/// 是否已注入ToolsKit Hybrid JS
-- (BOOL)growingtk_hybrid;
+@property (nonatomic, strong) UIColor *triangleColor;
 
 @end
 

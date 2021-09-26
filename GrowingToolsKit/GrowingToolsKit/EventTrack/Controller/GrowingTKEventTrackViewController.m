@@ -28,6 +28,7 @@
 #import "GrowingTKUtil.h"
 #import "GrowingTKNode.h"
 #import "WKWebView+GrowingTKNode.h"
+#import "GrowingTKMagnifierView.h"
 
 #define CIRCLE_SIZE GrowingTKSizeFrom750(100)
 #define MASK_BORDER_COLOR [UIColor growingtk_colorWithHex:@"0xFF4824" alpha:0.9f]
@@ -37,6 +38,7 @@
 
 @property (nonatomic, strong) UIView *maskView;
 @property (nonatomic, strong) UIView *circleView;
+@property (nonatomic, strong) GrowingTKMagnifierView *magnifierView;
 @property (nonatomic, strong) UIView *infoView;
 @property (nonatomic, strong) UIButton *closeBtn;
 @property (nonatomic, strong) UILabel *infoLabel;
@@ -151,6 +153,7 @@
             [webView growingtk_nodeUpdateMask:NO point:CGPointZero];
         }
         self.latestMaskedView = nil;
+        [self removeMagnifier];
         return;
     }
     
@@ -167,7 +170,21 @@
         self.maskView.frame = node.growingNodeFrame;
         self.maskView.layer.borderColor = borderColor.CGColor;
         self.maskView.backgroundColor = backgroundColor;
+        [self showMagnifierWithView:view point:self.circleView.center];
     }
+}
+
+- (void)showMagnifierWithView:(UIView *)view point:(CGPoint)point {
+    if (!self.magnifierView) {
+        self.magnifierView = [[GrowingTKMagnifierView alloc] initWithView:view point:point];
+        [self.view addSubview:self.magnifierView];
+    }else {
+        [self.magnifierView refreshWithView:view point:point];
+    }
+}
+
+- (void)removeMagnifier {
+    self.magnifierView.frame = CGRectZero;
 }
 
 #pragma mark - Action
