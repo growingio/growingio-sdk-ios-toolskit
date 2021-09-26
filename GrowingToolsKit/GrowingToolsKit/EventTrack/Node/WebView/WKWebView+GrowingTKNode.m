@@ -200,22 +200,23 @@ static void growingtk_webView_addUserScripts(WKWebView *webView) {
     }
 }
 
-static void *const hybridKey = &hybridKey;
 - (void)setGrowingtk_hybrid:(BOOL)growingtk_hybrid {
-    objc_setAssociatedObject(self, hybridKey, @(growingtk_hybrid), OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, @selector(growingtk_hybrid), @(growingtk_hybrid), OBJC_ASSOCIATION_ASSIGN);
 }
 
 - (BOOL)growingtk_hybrid {
-    return ((NSNumber *)objc_getAssociatedObject(self, hybridKey)).boolValue;
+    return ((NSNumber *)objc_getAssociatedObject(self, _cmd)).boolValue;
 }
 
-static void *const handlerKey = &handlerKey;
 - (void)setGrowingtk_scriptMessageHandler:(GrowingTKPrivateScriptMessageHandler *)growingtk_scriptMessageHandler {
-    objc_setAssociatedObject(self, handlerKey, growingtk_scriptMessageHandler, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self,
+                             @selector(growingtk_scriptMessageHandler),
+                             growingtk_scriptMessageHandler,
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (GrowingTKPrivateScriptMessageHandler *)growingtk_scriptMessageHandler {
-    return objc_getAssociatedObject(self, handlerKey);
+    return objc_getAssociatedObject(self, _cmd);
 }
 
 @end
@@ -252,9 +253,11 @@ static void *const handlerKey = &handlerKey;
         }
 
         NSArray *array = dic[@"e"];
+        NSString *domain = dic[@"d"] ?: @"";
         NSString *h5Path = dic[@"p"] ?: @"";
         GrowingTKViewNode *node = [[GrowingTKViewNode alloc] initWithH5Node:array.firstObject
                                                                     webView:self.webView
+                                                                     domain:domain
                                                                      h5Path:h5Path];
 
         [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKWebViewNodeInfoNotification

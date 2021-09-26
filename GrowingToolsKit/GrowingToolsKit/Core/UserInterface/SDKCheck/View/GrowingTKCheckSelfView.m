@@ -189,6 +189,20 @@ static CGFloat const CheckButtonHeight = 130.0f;
             @"title": @"URL Scheme",
             @"value": sdk.urlScheme.length > 0 ? sdk.urlScheme : @"未配置",
             @"bad" : @(sdk.urlScheme.length == 0)
+        }],
+        [NSMutableDictionary dictionaryWithDictionary:@{
+            @"check": @(0),
+            @"checkMessage": @"是否适配URL Scheme",
+            @"title": @"适配URL Scheme",
+            @"value": sdk.isAdaptToURLScheme ? @"是" : @"否",
+            @"bad" : @(!sdk.isAdaptToURLScheme)
+        }],
+        [NSMutableDictionary dictionaryWithDictionary:@{
+            @"check": @(0),
+            @"checkMessage": @"是否适配Deep Link",
+            @"title": @"适配Deep Link",
+            @"value": sdk.isAdaptToDeepLink ? @"是" : @"否",
+            @"bad" : @(!sdk.isAdaptToDeepLink)
         }]
     ]];
 

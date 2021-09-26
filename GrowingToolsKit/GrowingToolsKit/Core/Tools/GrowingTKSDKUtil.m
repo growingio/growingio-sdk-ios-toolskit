@@ -36,6 +36,8 @@
 @property (nonatomic, assign, readwrite) BOOL isInitialized;
 @property (nonatomic, assign, readwrite) double initializationTime;
 @property (nonatomic, assign, readwrite) BOOL delayInitialized;
+@property (nonatomic, assign, readwrite, getter=isAdaptToURLScheme) BOOL adaptToURLScheme;
+@property (nonatomic, assign, readwrite, getter=isAdaptToDeepLink) BOOL adaptToDeepLink;
 
 // Tracker
 @property (nonatomic, copy, readwrite) NSString *projectId;
@@ -72,7 +74,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[GrowingTKSDKUtil alloc] init];
-        
+
         [[NSNotificationCenter defaultCenter] addObserver:instance
                                                  selector:@selector(applicationDidFinishLaunching)
                                                      name:UIApplicationDidFinishLaunchingNotification
@@ -186,11 +188,10 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 }
 
 - (NSString *)initializationDescription {
-    return self.isInitialized
-               ? (self.delayInitialized
-                      ? [NSString stringWithFormat:@"延迟初始化(耗时: %.2fms)", self.initializationTime]
-                      : [NSString stringWithFormat:@"已初始化(耗时: %.2fms)", self.initializationTime])
-               : @"未初始化";
+    return self.isInitialized ? (self.delayInitialized
+                                     ? [NSString stringWithFormat:@"延迟初始化(耗时: %.2fms)", self.initializationTime]
+                                     : [NSString stringWithFormat:@"已初始化(耗时: %.2fms)", self.initializationTime])
+                              : @"未初始化";
 }
 
 - (NSString *)excludeEventDescription {
@@ -261,6 +262,24 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
         }
     } else {
     }
+}
+
+#pragma mark - Private Method
+
+- (Class)sceneDelegate {
+    NSDictionary *sceneManifest = [[NSBundle mainBundle] infoDictionary][@"UIApplicationSceneManifest"];
+    NSArray *rols = [sceneManifest objectForKey:@"UISceneConfigurations"][@"UIWindowSceneSessionRoleApplication"];
+    if (rols.count == 0) {
+        return nil;
+    }
+    for (NSDictionary *dic in rols) {
+        NSString *classname = dic[@"UISceneDelegateClassName"];
+        if (classname) {
+            Class cls = NSClassFromString(classname);
+            return cls;
+        }
+    }
+    return nil;
 }
 
 #pragma mark - Notification
@@ -404,6 +423,50 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
         return [NSString stringWithFormat:@"%.2fKB", (double)size / 1000];
     } else {
         return @"";
+    }
+}
+
+- (BOOL)isAdaptToURLScheme {
+    Class sceneDelegate = self.sceneDelegate;
+    if (self.isSDK3rdGeneration) {
+        if (sceneDelegate) {
+            SEL sel = @selector(scene:openURLContexts:);
+            Method method = class_getInstanceMethod(sceneDelegate, sel);
+            return method ? YES : NO;
+        } else {
+            NSObject *delegate = [UIApplication sharedApplication].delegate;
+            if ([delegate respondsToSelector:@selector(application:openURL:options:)]) {
+                return YES;
+            } else if ([delegate respondsToSelector:@selector(application:openURL:sourceApplication:annotation:)]) {
+                return YES;
+            } else if ([delegate respondsToSelector:@selector(application:handleOpenURL:)]) {
+                return YES;
+            } else {
+                return NO;
+            }
+        }
+    } else {
+        return YES;
+    }
+}
+
+- (BOOL)isAdaptToDeepLink {
+    Class sceneDelegate = self.sceneDelegate;
+    if (self.isSDK3rdGeneration) {
+        if (sceneDelegate) {
+            SEL sel = @selector(scene:continueUserActivity:);
+            Method method = class_getInstanceMethod(sceneDelegate, sel);
+            return method ? YES : NO;
+        } else {
+            NSObject *delegate = [UIApplication sharedApplication].delegate;
+            if ([delegate respondsToSelector:@selector(application:continueUserActivity:restorationHandler:)]) {
+                return YES;
+            } else {
+                return NO;
+            }
+        }
+    } else {
+        return YES;
     }
 }
 

@@ -74,119 +74,31 @@
         self.checkLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.checkLabel];
         
+        CGFloat margin = 12.0f;
+        CGFloat padding = 2.0f;
         [NSLayoutConstraint activateConstraints:@[
-            [NSLayoutConstraint constraintWithItem:self.titleLabel
-                                         attribute:NSLayoutAttributeTop
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self.contentView
-                                         attribute:NSLayoutAttributeTop
-                                        multiplier:1.0
-                                          constant:4.0],
-            [NSLayoutConstraint constraintWithItem:self.titleLabel
-                                         attribute:NSLayoutAttributeLeading
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self.contentView
-                                         attribute:NSLayoutAttributeLeading
-                                        multiplier:1.0
-                                          constant:16.0],
-            [NSLayoutConstraint constraintWithItem:self.titleLabel
-                                         attribute:NSLayoutAttributeWidth
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self.contentView
-                                         attribute:NSLayoutAttributeWidth
-                                        multiplier:0.3
-                                          constant:0.0],
-            [NSLayoutConstraint constraintWithItem:self.titleLabel
-                                         attribute:NSLayoutAttributeHeight
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:nil
-                                         attribute:NSLayoutAttributeNotAnAttribute
-                                        multiplier:1.0
-                                          constant:20.0],
-            [NSLayoutConstraint constraintWithItem:self.valueLabel
-                                         attribute:NSLayoutAttributeTop
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self.contentView
-                                         attribute:NSLayoutAttributeTop
-                                        multiplier:1.0
-                                          constant:4.0],
-            [NSLayoutConstraint constraintWithItem:self.valueLabel
-                                         attribute:NSLayoutAttributeTrailing
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self.contentView
-                                         attribute:NSLayoutAttributeTrailing
-                                        multiplier:1.0
-                                          constant:-16.0],
-            [NSLayoutConstraint constraintWithItem:self.valueLabel
-                                         attribute:NSLayoutAttributeBottom
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self.contentView
-                                         attribute:NSLayoutAttributeBottom
-                                        multiplier:1.0
-                                          constant:-4.0],
-            [NSLayoutConstraint constraintWithItem:self.valueLabel
-                                         attribute:NSLayoutAttributeLeading
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self.titleLabel
-                                         attribute:NSLayoutAttributeTrailing
-                                        multiplier:1.0
-                                          constant:20.0],
-            [NSLayoutConstraint constraintWithItem:self.valueLabel
-                                         attribute:NSLayoutAttributeHeight
-                                         relatedBy:NSLayoutRelationGreaterThanOrEqual
-                                            toItem:nil
-                                         attribute:NSLayoutAttributeNotAnAttribute
-                                        multiplier:1.0
-                                          constant:20.0],
-            [NSLayoutConstraint constraintWithItem:self.checkLabel
-                                         attribute:NSLayoutAttributeTop
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self.contentView
-                                         attribute:NSLayoutAttributeTop
-                                        multiplier:1.0
-                                          constant:4.0],
-            [NSLayoutConstraint constraintWithItem:self.checkLabel
-                                         attribute:NSLayoutAttributeHeight
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:nil
-                                         attribute:NSLayoutAttributeNotAnAttribute
-                                        multiplier:1.0
-                                          constant:20.0],
+            [self.titleLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:padding],
+            [self.titleLabel.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:margin],
+            [self.titleLabel.widthAnchor constraintEqualToAnchor:self.contentView.widthAnchor multiplier:0.32],
+            [self.titleLabel.heightAnchor constraintEqualToConstant:20.0],
+            [self.valueLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:padding],
+            [self.valueLabel.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-margin],
+            [self.valueLabel.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant:-padding],
+            [self.valueLabel.leadingAnchor constraintEqualToAnchor:self.titleLabel.trailingAnchor constant:20.0],
+            [self.valueLabel.heightAnchor constraintGreaterThanOrEqualToConstant:20.0],
+            [self.checkLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:padding],
+            [self.checkLabel.heightAnchor constraintEqualToConstant:20.0],
+            [self.circleView.widthAnchor constraintEqualToConstant:6.0],
+            [self.circleView.heightAnchor constraintEqualToConstant:6.0],
+            [self.circleView.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
+            [self.circleView.trailingAnchor constraintEqualToAnchor:self.checkLabel.leadingAnchor constant:-8.0],
             [NSLayoutConstraint constraintWithItem:self.checkLabel
                                          attribute:NSLayoutAttributeLeading
                                          relatedBy:NSLayoutRelationEqual
                                             toItem:self.contentView
                                          attribute:NSLayoutAttributeCenterX
                                         multiplier:0.6
-                                          constant:0.0],
-            [NSLayoutConstraint constraintWithItem:self.circleView
-                                         attribute:NSLayoutAttributeWidth
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:nil
-                                         attribute:NSLayoutAttributeNotAnAttribute
-                                        multiplier:1.0
-                                          constant:6.0],
-            [NSLayoutConstraint constraintWithItem:self.circleView
-                                         attribute:NSLayoutAttributeHeight
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:nil
-                                         attribute:NSLayoutAttributeNotAnAttribute
-                                        multiplier:1.0
-                                          constant:6.0],
-            [NSLayoutConstraint constraintWithItem:self.circleView
-                                         attribute:NSLayoutAttributeCenterY
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self.contentView
-                                         attribute:NSLayoutAttributeCenterY
-                                        multiplier:1.0
-                                          constant:0.0],
-            [NSLayoutConstraint constraintWithItem:self.circleView
-                                         attribute:NSLayoutAttributeTrailing
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self.checkLabel
-                                         attribute:NSLayoutAttributeLeading
-                                        multiplier:1.0
-                                          constant:-8.0]
+                                          constant:0.0]
         ]];
     }
     return self;

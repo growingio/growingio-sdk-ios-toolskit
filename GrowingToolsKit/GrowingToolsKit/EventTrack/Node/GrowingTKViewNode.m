@@ -68,13 +68,14 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
             if ([cls respondsToSelector:selector]) {
                 id node = ((id(*)(id, SEL, id))objc_msgSend)(cls, selector, view);
                 _view = [node valueForKey:@"view"];
+                _viewName = NSStringFromClass(_view.class);
                 _viewContent = [node valueForKey:@"viewContent"] ?: @"";
                 _xPath = [node valueForKey:@"xPath"];
                 _originXPath = [node valueForKey:@"originXPath"];
                 _nodeType = [node valueForKey:@"nodeType"];
                 _index = ((NSNumber *)[node valueForKey:@"index"]).intValue;
                 _position = ((NSNumber *)[node valueForKey:@"position"]).intValue;
-                _hasListParent = [node valueForKey:@"hasListParent"];
+                _hasListParent = ((NSNumber *)[node valueForKey:@"hasListParent"]).boolValue;
             }
         }
     } else {
@@ -83,9 +84,13 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
     return self;
 }
 
-- (instancetype)initWithH5Node:(NSDictionary *)nodeDic webView:(UIView *)webView h5Path:(NSString *)h5Path {
+- (instancetype)initWithH5Node:(NSDictionary *)nodeDic
+                       webView:(UIView *)webView
+                        domain:(NSString *)domain
+                        h5Path:(NSString *)h5Path {
     if (self = [super init]) {
         _view = webView;
+        _viewName = domain;
         _path = h5Path;
         _viewContent = nodeDic[@"v"] ?: @"";
         _xPath = nodeDic[@"x"] ?: @"";
@@ -105,18 +110,17 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 #pragma mark - Public Method
 
 - (NSString *)toString {
-    return [NSString stringWithFormat:@"控件: %@\n"
-                                      @"内容: %@\n"
-                                      @"列表: %@\n"
-                                      @"位置: %@\n"
-                                      @"path: %@\n"
-                                      @"xpath: %@",
-                                      NSStringFromClass(self.view.class),
-                                      self.viewContent,
-                                      self.hasListParent ? @"是" : @"否",
-                                      @(self.index),
-                                      self.path,
-                                      self.xPath];
+    NSMutableArray *array = [NSMutableArray array];
+    [array addObject:[NSString stringWithFormat:@"当前: %@", self.viewName]];
+    if (self.viewContent.length > 0) {
+        [array addObject:[NSString stringWithFormat:@"内容: %@", self.viewContent]];
+    }
+    if (self.hasListParent) {
+        [array addObject:[NSString stringWithFormat:@"列表: %@", @"是"]];
+        [array addObject:[NSString stringWithFormat:@"位置: %@", @(self.index)]];
+    }
+    [array addObject:[NSString stringWithFormat:@"xpath: %@%@", self.path, self.xPath]];
+    return [array componentsJoinedByString:@"\n"];
 }
 
 #pragma mark - Private Method

@@ -96,7 +96,9 @@
         @{@"title": @"SDK", @"value": sdk.nameDescription},
         @{@"title": GrowingTKLocalizedString(@"SDK版本号"), @"value": sdk.version},
         @{@"title": GrowingTKLocalizedString(@"SDK初始化"), @"value": sdk.initializationDescription},
-        @{@"title": @"URL Scheme", @"value": sdk.urlScheme}
+        @{@"title": @"URL Scheme", @"value": sdk.urlScheme},
+        @{@"title": @"适配URL Scheme", @"value": (sdk.isAdaptToURLScheme ? @"是" : @"否")},
+        @{@"title": @"适配Deep Link", @"value": (sdk.isAdaptToDeepLink ? @"是" : @"否")}
     ]];
 
     if (sdk.isInitialized) {

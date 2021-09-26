@@ -55,7 +55,7 @@
 
     [NSLayoutConstraint activateConstraints:@[
         [self.checkView.centerXAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.centerXAnchor],
-        [self.checkView.centerYAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.centerYAnchor],
+        [self.checkView.centerYAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.centerYAnchor constant:-30.0f],
         [self.checkView.widthAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.widthAnchor],
         [label2.centerXAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.centerXAnchor],
         [label2.bottomAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.bottomAnchor constant:-30.0f],

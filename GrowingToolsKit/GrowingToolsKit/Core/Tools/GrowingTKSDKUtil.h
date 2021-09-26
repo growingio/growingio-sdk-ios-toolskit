@@ -35,6 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) BOOL isInitialized;
 @property (nonatomic, assign, readonly) double initializationTime;
 @property (nonatomic, assign, readonly) BOOL delayInitialized;
+@property (nonatomic, assign, readonly, getter=isAdaptToURLScheme) BOOL adaptToURLScheme;
+@property (nonatomic, assign, readonly, getter=isAdaptToDeepLink) BOOL adaptToDeepLink;
 
 // Tracker
 @property (nonatomic, copy, readonly) NSString *projectId;

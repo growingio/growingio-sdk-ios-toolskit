@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GrowingTKViewNode : NSObject
 
 @property (nonatomic, weak, readonly) UIView *view;
+@property (nonatomic, copy, readonly) NSString *viewName;
 @property (nonatomic, copy, readonly) NSString *viewContent;
 @property (nonatomic, copy, readonly) NSString *path;
 @property (nonatomic, copy, readonly) NSString *xPath;
@@ -41,7 +42,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithView:(UIView *)view;
 
-- (instancetype)initWithH5Node:(NSDictionary *)nodeDic webView:(UIView *)webView h5Path:(NSString *)h5Path;
+- (instancetype)initWithH5Node:(NSDictionary *)nodeDic
+                       webView:(UIView *)webView
+                        domain:(NSString *)domain
+                        h5Path:(NSString *)h5Path;
 
 - (NSString *)toString;
 
