@@ -76,7 +76,7 @@
     [self.view addSubview:self.circleView];
 
     CGFloat infoViewMargin = GrowingTKSizeFrom750(24);
-    self.infoViewTopConstraint = [self.infoView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor
+    self.infoViewTopConstraint = [self.infoView.bottomAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.bottomAnchor
                                                                             constant:-infoViewMargin];
     self.infoViewLeadingConstraint = [self.infoView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor
                                                                                  constant:infoViewMargin];

@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "WKWebView+GrowingTKNode.h"
-#import "WKWebView+GrowingTKHybridJS.h"
+#import "GrowingTKHybridJS.h"
 #import "GrowingTKSDKUtil.h"
 #import "GrowingTKViewNode.h"
 #import "NSObject+GrowingTKSwizzle.h"
@@ -30,18 +30,18 @@ static NSString *const GrowingTKWebViewBridge = @"GrowingToolsKit_WKWebView";
 
 @interface GrowingTKPrivateScriptMessageHandler : NSObject <WKScriptMessageHandler>
 
-@property (nonatomic, weak, readonly) WKWebView *webView;
-
-- (instancetype)initWithWKWebView:(WKWebView *)webView;
++ (instancetype)sharedInstance;
 
 @end
 
 @interface WKWebView (GrowingTKNode)
 
 @property (nonatomic, assign) BOOL growingtk_hybrid;
-@property (nonatomic, strong) GrowingTKPrivateScriptMessageHandler *growingtk_scriptMessageHandler;
 
 @end
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincomplete-implementation"
 
 @implementation WKWebView (GrowingTKNode)
 
@@ -72,20 +72,14 @@ static void _growingtk_nodeUpdateInfo(WKWebView *self, SEL _cmd) {
     [self evaluateJavaScript:js completionHandler:nil];
 }
 
-static void growingtk_webView_addScriptMessageHandler(WKWebView *webView) {
-    GrowingTKPrivateScriptMessageHandler *scriptMessageHandler = webView.growingtk_scriptMessageHandler;
-    if (!scriptMessageHandler) {
-        return;
-    }
-
-    WKUserContentController *contentController = webView.configuration.userContentController;
+static void growingtk_webView_addScriptMessageHandler(WKUserContentController *contentController) {
+    GrowingTKPrivateScriptMessageHandler *scriptMessageHandler = [GrowingTKPrivateScriptMessageHandler sharedInstance];
     [contentController removeScriptMessageHandlerForName:GrowingTKWebViewBridge];
     [contentController addScriptMessageHandler:scriptMessageHandler name:GrowingTKWebViewBridge];
 }
 
-static void growingtk_webView_addUserScripts(WKWebView *webView) {
+static void growingtk_webView_addUserScripts(WKUserContentController *contentController) {
     @try {
-        WKUserContentController *contentController = webView.configuration.userContentController;
         NSArray<WKUserScript *> *userScripts = contentController.userScripts;
 
         // Hybrid JS
@@ -95,6 +89,7 @@ static void growingtk_webView_addUserScripts(WKWebView *webView) {
                 if ([obj.source containsString:@"_vds_ios"] || [obj.source containsString:@"_vds_hybrid_config"]
                     /*|| [obj.source containsString:@"gio_hybrid.min.js"]*/) {
                     isContainHybridScript = YES;
+                    *stop = YES;
                 }
             }];
 
@@ -105,12 +100,12 @@ static void growingtk_webView_addUserScripts(WKWebView *webView) {
                                                       forMainFrameOnly:NO]];
 
                 [contentController
-                    addUserScript:[[WKUserScript alloc] initWithSource:webView.growingtk_configHybridScript
+                    addUserScript:[[WKUserScript alloc] initWithSource:[GrowingTKHybridJS configHybridScript]
                                                          injectionTime:WKUserScriptInjectionTimeAtDocumentStart
                                                       forMainFrameOnly:NO]];
 
                 [contentController
-                    addUserScript:[[WKUserScript alloc] initWithSource:webView.growingtk_hybridJSScript
+                    addUserScript:[[WKUserScript alloc] initWithSource:[GrowingTKHybridJS hybridJSScript]
                                                          injectionTime:WKUserScriptInjectionTimeAtDocumentEnd
                                                       forMainFrameOnly:NO]];
             }
@@ -121,10 +116,11 @@ static void growingtk_webView_addUserScripts(WKWebView *webView) {
         [userScripts enumerateObjectsUsingBlock:^(WKUserScript *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
             if ([obj.source containsString:@"start circle"]) {
                 isContainCircleScript = YES;
+                *stop = YES;
             }
         }];
         if (!isContainCircleScript) {
-            [contentController addUserScript:[[WKUserScript alloc] initWithSource:webView.growingtk_hybridJSCircleScript
+            [contentController addUserScript:[[WKUserScript alloc] initWithSource:[GrowingTKHybridJS hybridJSCircleScript]
                                                                     injectionTime:WKUserScriptInjectionTimeAtDocumentEnd
                                                                  forMainFrameOnly:NO]];
         }
@@ -132,30 +128,29 @@ static void growingtk_webView_addUserScripts(WKWebView *webView) {
     }
 }
 
-- (instancetype)growingtk_initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration {
-    WKWebView *webview = [self growingtk_initWithFrame:frame configuration:configuration];
-    webview.growingtk_scriptMessageHandler = [[GrowingTKPrivateScriptMessageHandler alloc] initWithWKWebView:webview];
-    return webview;
+static BOOL growingtk_webView_addBridge(WKWebView *webView) {
+    BOOL dontTrack = ((BOOL(*)(id, SEL))objc_msgSend)(webView, NSSelectorFromString(@"growingViewDontTrack"));
+    if (dontTrack) {
+        return NO;
+    }
+    WKUserContentController *contentController = webView.configuration.userContentController;
+    growingtk_webView_addScriptMessageHandler(contentController);
+    growingtk_webView_addUserScripts(contentController);
+    return YES;
 }
 
 - (WKNavigation *)growingtk_loadRequest:(NSURLRequest *)request {
-    growingtk_webView_addScriptMessageHandler(self);
-    growingtk_webView_addUserScripts(self);
-    self.growingtk_hybrid = YES;
+    self.growingtk_hybrid = growingtk_webView_addBridge(self);
     return [self growingtk_loadRequest:request];
 }
 
 - (WKNavigation *)growingtk_loadHTMLString:(NSString *)string baseURL:(NSURL *)baseURL {
-    growingtk_webView_addScriptMessageHandler(self);
-    growingtk_webView_addUserScripts(self);
-    self.growingtk_hybrid = YES;
+    self.growingtk_hybrid = growingtk_webView_addBridge(self);
     return [self growingtk_loadHTMLString:string baseURL:baseURL];
 }
 
 - (WKNavigation *)growingtk_loadFileURL:(NSURL *)URL allowingReadAccessToURL:(NSURL *)readAccessURL {
-    growingtk_webView_addScriptMessageHandler(self);
-    growingtk_webView_addUserScripts(self);
-    self.growingtk_hybrid = YES;
+    self.growingtk_hybrid = growingtk_webView_addBridge(self);
     return [self growingtk_loadFileURL:URL allowingReadAccessToURL:readAccessURL];
 }
 
@@ -163,9 +158,7 @@ static void growingtk_webView_addUserScripts(WKWebView *webView) {
                             MIMEType:(NSString *)MIMEType
                characterEncodingName:(NSString *)characterEncodingName
                              baseURL:(NSURL *)baseURL {
-    growingtk_webView_addScriptMessageHandler(self);
-    growingtk_webView_addUserScripts(self);
-    self.growingtk_hybrid = YES;
+    self.growingtk_hybrid = growingtk_webView_addBridge(self);
     return [self growingtk_loadData:data MIMEType:MIMEType characterEncodingName:characterEncodingName baseURL:baseURL];
 }
 
@@ -179,9 +172,6 @@ static void growingtk_webView_addUserScripts(WKWebView *webView) {
 
     if (GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration) {
         // *************** SDK 3.0 ***************
-        [cls growingtk_swizzleMethod:@selector(initWithFrame:configuration:)
-                          withMethod:@selector(growingtk_initWithFrame:configuration:)
-                               error:nil];
         [cls growingtk_swizzleMethod:@selector(loadRequest:) withMethod:@selector(growingtk_loadRequest:) error:nil];
         [cls growingtk_swizzleMethod:@selector(loadHTMLString:baseURL:)
                           withMethod:@selector(growingtk_loadHTMLString:baseURL:)
@@ -208,27 +198,17 @@ static void growingtk_webView_addUserScripts(WKWebView *webView) {
     return ((NSNumber *)objc_getAssociatedObject(self, _cmd)).boolValue;
 }
 
-- (void)setGrowingtk_scriptMessageHandler:(GrowingTKPrivateScriptMessageHandler *)growingtk_scriptMessageHandler {
-    objc_setAssociatedObject(self,
-                             @selector(growingtk_scriptMessageHandler),
-                             growingtk_scriptMessageHandler,
-                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (GrowingTKPrivateScriptMessageHandler *)growingtk_scriptMessageHandler {
-    return objc_getAssociatedObject(self, _cmd);
-}
-
 @end
 
 @implementation GrowingTKPrivateScriptMessageHandler
 
-- (instancetype)initWithWKWebView:(WKWebView *)webView {
-    self = [super init];
-    if (self) {
-        _webView = webView;
-    }
-    return self;
++ (instancetype)sharedInstance {
+    static id instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[self alloc] init];
+    });
+    return instance;
 }
 
 - (void)userContentController:(WKUserContentController *)userContentController
@@ -256,7 +236,7 @@ static void growingtk_webView_addUserScripts(WKWebView *webView) {
         NSString *domain = dic[@"d"] ?: @"";
         NSString *h5Path = dic[@"p"] ?: @"";
         GrowingTKViewNode *node = [[GrowingTKViewNode alloc] initWithH5Node:array.firstObject
-                                                                    webView:self.webView
+                                                                    webView:message.webView
                                                                      domain:domain
                                                                      h5Path:h5Path];
 
@@ -267,3 +247,5 @@ static void growingtk_webView_addUserScripts(WKWebView *webView) {
 }
 
 @end
+
+#pragma clang diagnostic pop

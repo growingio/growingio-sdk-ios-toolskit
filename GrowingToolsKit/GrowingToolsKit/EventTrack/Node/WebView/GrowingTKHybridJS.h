@@ -1,8 +1,8 @@
 //
-//  WKWebView+GrowingTKHybridJS.h
+//  GrowingTKHybridJS.h
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/9/24.
+//  Created by YoloMao on 2021/9/28.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,17 +17,15 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <WebKit/WebKit.h>
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface WKWebView (GrowingTKHybridJS)
+@interface GrowingTKHybridJS : NSObject
 
-- (NSString *)growingtk_configHybridScript;
-
-- (NSString *)growingtk_hybridJSScript;
-
-- (NSString *)growingtk_hybridJSCircleScript;
++ (NSString *)configHybridScript;
++ (NSString *)hybridJSScript;
++ (NSString *)hybridJSCircleScript;
 
 @end
 

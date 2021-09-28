@@ -2569,7 +2569,7 @@
     22: [
         function (t, e, r) {
             var n, i, o, s, a, u, d, h;
-            i = window._vds_ios, i && (h = null != (a = window.webkit) && null != (u = a.messageHandlers) ? u.GrowingIO_WKWebView : void 0, d = !h), o = window._vds_bridge ? !0 : void 0, s = i ? !0 : void 0, n = window._vds_bridge || i, e.exports = {
+            i = window._vds_ios, i && (h = null != (a = window.webkit) && null != (u = a.messageHandlers) ? u.GrowingToolsKit_WKWebView : void 0, d = !h), o = window._vds_bridge ? !0 : void 0, s = i ? !0 : void 0, n = window._vds_bridge || i, e.exports = {
                 isAndroid: o,
                 isiOS: i,
                 enabled: n,
@@ -2835,7 +2835,8 @@
                         if ("vst" !== t.t) return "cstm" === t.t && window._vds_bridge.saveCustomEvent ? window._vds_bridge.saveCustomEvent(JSON.stringify(t)) : window._vds_bridge.saveEvent(JSON.stringify(t))
                     } else if (i.isiOS) return this.sendQueue(t)
                 }, t.prototype.sendQueue = function (t) {
-                    return i.withUIWebView ? this.nativeQueueReady ? this.sendWithIframe([t]) : this.messageQueue.push(t) : i.withWKWebView ? window.webkit.messageHandlers.GrowingIO_WKWebView.postMessage([t]) : void 0
+                    return void 0
+//                    return i.withUIWebView ? this.nativeQueueReady ? this.sendWithIframe([t]) : this.messageQueue.push(t) : i.withWKWebView ? window.webkit.messageHandlers.GrowingIO_WKWebView.postMessage([t]) : void 0
                 }, t.prototype.sendWithIframe = function (t) {
                     var e;
                     return this.nativeQueueReady = !1, e = "https://api.growingio.com/growinghybridsdk-" + this.eventCounter+++"?" + encodeURIComponent(JSON.stringify(t)), this.dataIframe ? this.dataIframe.src = e : (this.dataIframe = document.createElement("iframe"), this.dataIframe.style.display = "none", this.dataIframe.style.position = "fixed", this.dataIframe.style.width = 0, this.dataIframe.style.height = 0, this.dataIframe.style.border = "none", this.dataIframe.src = e, document.body.appendChild(this.dataIframe))

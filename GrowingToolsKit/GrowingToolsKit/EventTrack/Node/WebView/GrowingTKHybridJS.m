@@ -1,8 +1,8 @@
 //
-//  WKWebView+GrowingTKHybridJS.m
+//  GrowingTKHybridJS.m
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/9/24.
+//  Created by YoloMao on 2021/9/28.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,25 +17,25 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "WKWebView+GrowingTKHybridJS.h"
+#import "GrowingTKHybridJS.h"
 #import "GrowingTKDefine.h"
 #import "NSBundle+GrowingTK.h"
 
-@implementation WKWebView (GrowingTKHybridJS)
+@implementation GrowingTKHybridJS
 
-- (NSString *)growingtk_configHybridScript {
++ (NSString *)configHybridScript {
     NSString *configString = [NSString
         stringWithFormat:
             @"{\"enableHT\":%@,\"disableImp\":%@,\"phoneWidth\":%f,\"phoneHeight\":%f,\"protocolVersion\":%d}",
             @"false",
-            @"false",
+            @"true",
             [UIScreen mainScreen].bounds.size.width,
             [UIScreen mainScreen].bounds.size.height,
             1];
     return [NSString stringWithFormat:@"window._vds_hybrid_config = %@", configString];
 }
 
-- (NSString *)growingtk_hybridJSScript {
++ (NSString *)hybridJSScript {
     NSBundle *bundle = [NSBundle growingtk_resourcesBundle:NSClassFromString(GrowingToolsKitName)];
     NSString *jsPath = [bundle pathForResource:@"app_hybrid" ofType:@"js"];
     NSData *jsData = [NSData dataWithContentsOfFile:jsPath];
@@ -43,7 +43,7 @@
     return jsString;
 }
 
-- (NSString *)growingtk_hybridJSCircleScript {
++ (NSString *)hybridJSCircleScript {
     NSBundle *bundle = [NSBundle growingtk_resourcesBundle:NSClassFromString(GrowingToolsKitName)];
     NSString *jsPath = [bundle pathForResource:@"app_circle_plugin" ofType:@"js"];
     NSData *jsData = [NSData dataWithContentsOfFile:jsPath];
