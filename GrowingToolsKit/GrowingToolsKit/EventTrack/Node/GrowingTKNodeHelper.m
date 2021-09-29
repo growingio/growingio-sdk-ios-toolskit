@@ -22,6 +22,39 @@
 
 @implementation GrowingTKNodeHelper
 
++ (nullable UIView *)realHitView:(UIView *)view point:(CGPoint)hitPoint {
+    id <GrowingTKNode>node = (id <GrowingTKNode>)view;
+    NSArray *childs = node.growingNodeChilds;
+    if (childs.count > 0) {
+        for (int i = 0; i < childs.count; i++) {
+            id <GrowingTKNode>child = childs[i];
+            if (CGRectContainsPoint(child.growingNodeFrame, hitPoint)) {
+                BOOL shouldMask = [GrowingTKNodeHelper checkShouldMask:(UIView *)child];
+                if (shouldMask) {
+                    return [self realHitView:(UIView *)child point:hitPoint];
+                }
+            }
+        }
+    }
+    
+    BOOL shouldMask = [GrowingTKNodeHelper checkShouldMask:view];
+    if (shouldMask) {
+        return view;
+    }else {
+        UIResponder *next = view.nextResponder;
+        if (!next || ![next isKindOfClass:[UIView class]]) {
+            return nil;
+        }
+        
+        if ([next isKindOfClass:NSClassFromString(@"WKContentView")]) {
+            while (![next isKindOfClass:NSClassFromString(@"WKWebView")]) {
+                next = next.nextResponder;
+            }
+        }
+        return [self realHitView:(UIView *)next point:hitPoint];
+    }
+}
+
 + (BOOL)checkShouldMask:(UIView *)view {
     id <GrowingTKNode>node = (id <GrowingTKNode>)view;
     return ![self checkDoNotTrack:node] && ([self checkUserInteraction:node]);

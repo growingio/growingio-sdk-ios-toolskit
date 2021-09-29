@@ -117,6 +117,8 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
     }
     if (self.hasListParent) {
         [array addObject:[NSString stringWithFormat:@"列表: %@", @"是"]];
+    }
+    if (self.index >= 0) {
         [array addObject:[NSString stringWithFormat:@"位置: %@", @(self.index)]];
     }
     [array addObject:[NSString stringWithFormat:@"xpath: %@%@", self.path, self.xPath]];

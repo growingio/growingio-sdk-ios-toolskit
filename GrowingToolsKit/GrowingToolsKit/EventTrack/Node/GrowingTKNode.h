@@ -42,6 +42,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否已注入ToolsKit Hybrid JS
 - (BOOL)growingtk_hybrid;
 
+// 过滤后的子节点,例如UITableView子节点只需要是cell和footter
+- (NSArray <id<GrowingTKNode>> * _Nullable)growingNodeChilds;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -201,25 +201,9 @@
             panView.center = CGPointMake(panView.center.x + translation.x, panView.center.y + translation.y);
             
             UIView *view = [GrowingTKUtil.keyWindow hitTest:panView.center withEvent:nil];
-            
-            BOOL shouldMask = [GrowingTKNodeHelper checkShouldMask:view];
-            while (!shouldMask) {
-                UIResponder *next = view.nextResponder;
-                if (!next || ![next isKindOfClass:[UIView class]]) {
-                    break;
-                }
-                
-                if ([next isKindOfClass:NSClassFromString(@"WKContentView")]) {
-                    while (![next isKindOfClass:[WKWebView class]]) {
-                        next = next.nextResponder;
-                    }
-                }
+            view = [GrowingTKNodeHelper realHitView:view point:panView.center];
 
-                view = (UIView *)next;
-                shouldMask = [GrowingTKNodeHelper checkShouldMask:view];
-            }
-
-            if (view && shouldMask) {
+            if (view) {
                 [self updateMask:view];
             }else {
                 [self updateMask:nil];

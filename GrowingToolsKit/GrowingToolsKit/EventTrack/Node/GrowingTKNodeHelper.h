@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingTKNodeHelper : NSObject
 
-+ (BOOL)checkShouldMask:(UIView *)view;
++ (nullable UIView *)realHitView:(UIView *)view point:(CGPoint)hitPoint;
 
 @end
 
