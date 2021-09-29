@@ -33,7 +33,7 @@ typedef NS_ENUM(NSUInteger, GrowingTKMagnifierPosition) {
 
 static CGFloat const kMagnifierViewWidth = 160.0f;
 static CGFloat const kMagnifierViewHeight = 90.0f;
-static CGFloat const kTriangleViewSideLength = 8.0f;
+static CGFloat const kTriangleViewSideLength = 12.0f;
 
 @interface GrowingTKMagnifierView ()
 
@@ -58,13 +58,17 @@ static CGFloat const kTriangleViewSideLength = 8.0f;
                                                           GrowingTKSizeFrom750(kMagnifierViewHeight))];
         self.contentImageView.image = [self takeSnapshotWithTouchPoint:point];
         self.contentImageView.backgroundColor = UIColor.whiteColor;
-        self.contentImageView.layer.cornerRadius = 5.0f;
-        self.contentImageView.layer.borderWidth = 2.0f;
+        self.contentImageView.layer.cornerRadius = GrowingTKSizeFrom750(10.0f);
+        self.contentImageView.layer.borderWidth = GrowingTKSizeFrom750(3.0f);
         self.contentImageView.layer.borderColor = UIColor.growingtk_primaryBackgroundColor.CGColor;
         self.contentImageView.layer.masksToBounds = YES;
         [self addSubview:self.contentImageView];
 
-        self.triangleView = [[GrowingTKTriangleView alloc] initWithFrame:CGRectMake(0, 0, kTriangleViewSideLength, kTriangleViewSideLength)];
+        self.triangleView =
+            [[GrowingTKTriangleView alloc] initWithFrame:CGRectMake(0,
+                                                                    0,
+                                                                    GrowingTKSizeFrom750(kTriangleViewSideLength),
+                                                                    GrowingTKSizeFrom750(kTriangleViewSideLength))];
         self.triangleView.backgroundColor = UIColor.clearColor;
         self.triangleView.triangleColor = UIColor.growingtk_primaryBackgroundColor;
         [self addSubview:self.triangleView];
@@ -86,49 +90,75 @@ static CGFloat const kTriangleViewSideLength = 8.0f;
     CGRect frame =
         CGRectMake(0, 0, GrowingTKSizeFrom750(kMagnifierViewWidth), GrowingTKSizeFrom750(kMagnifierViewHeight));
     CGRect viewFrame = [view convertRect:view.bounds toView:view.window];
-    CGFloat margin = 8.0f;
+    CGFloat padding = GrowingTKSizeFrom750(kTriangleViewSideLength);
     switch (position) {
         case GrowingTKMagnifierPositionLeft: {
-            frame.size.width += kTriangleViewSideLength;
-            frame.origin.x = viewFrame.origin.x - frame.size.width - margin;
+            frame.size.width += padding;
+            frame.origin.x = viewFrame.origin.x - frame.size.width - padding;
             frame.origin.y = viewFrame.origin.y + viewFrame.size.height / 2 - frame.size.height / 2;
         } break;
         case GrowingTKMagnifierPositionTop: {
-            frame.size.height += kTriangleViewSideLength;
+            frame.size.height += padding;
             frame.origin.x = viewFrame.origin.x + viewFrame.size.width / 2 - frame.size.width / 2;
-            frame.origin.y = viewFrame.origin.y - frame.size.height - margin;
+            frame.origin.y = viewFrame.origin.y - frame.size.height - padding;
         } break;
         case GrowingTKMagnifierPositionRight: {
-            frame.size.width += kTriangleViewSideLength;
-            frame.origin.x = viewFrame.origin.x + viewFrame.size.width + margin;
+            frame.size.width += padding;
+            frame.origin.x = viewFrame.origin.x + viewFrame.size.width + padding;
             frame.origin.y = viewFrame.origin.y + viewFrame.size.height / 2 - frame.size.height / 2;
         } break;
         case GrowingTKMagnifierPositionBottom: {
-            frame.size.height += kTriangleViewSideLength;
+            frame.size.height += padding;
             frame.origin.x = viewFrame.origin.x + viewFrame.size.width / 2 - frame.size.width / 2;
-            frame.origin.y = viewFrame.origin.y + viewFrame.size.height + margin;
+            frame.origin.y = viewFrame.origin.y + viewFrame.size.height + padding;
         } break;
         default:
             break;
     }
 
     self.frame = frame;
-    
+
+    // contentImageView
+    switch (position) {
+        case GrowingTKMagnifierPositionLeft: {
+            self.contentImageView.growingtk_x = 0;
+            self.contentImageView.growingtk_y = 0;
+        } break;
+        case GrowingTKMagnifierPositionTop: {
+            self.contentImageView.growingtk_x = 0;
+            self.contentImageView.growingtk_y = 0;
+        } break;
+        case GrowingTKMagnifierPositionRight: {
+            self.contentImageView.growingtk_x = padding;
+            self.contentImageView.growingtk_y = 0;
+        } break;
+        case GrowingTKMagnifierPositionBottom: {
+            self.contentImageView.growingtk_x = 0;
+            self.contentImageView.growingtk_y = padding;
+        } break;
+        default:
+            break;
+    }
+
     // triangleView
     self.triangleView.transform = CGAffineTransformMakeRotation(M_PI_2 + M_PI_2 * position);
     self.triangleView.center = self.contentImageView.center;
     switch (position) {
         case GrowingTKMagnifierPositionLeft: {
-            self.triangleView.growingtk_x += self.growingtk_width / 2;
+            self.triangleView.growingtk_x +=
+                (self.contentImageView.growingtk_width + self.triangleView.growingtk_width) / 2;
         } break;
         case GrowingTKMagnifierPositionTop: {
-            self.triangleView.growingtk_y += self.growingtk_height / 2;
+            self.triangleView.growingtk_y +=
+                (self.contentImageView.growingtk_height + self.triangleView.growingtk_height) / 2;
         } break;
         case GrowingTKMagnifierPositionRight: {
-            self.triangleView.growingtk_x -= self.growingtk_width / 2;
+            self.triangleView.growingtk_x -=
+                (self.contentImageView.growingtk_width + self.triangleView.growingtk_width) / 2;
         } break;
         case GrowingTKMagnifierPositionBottom: {
-            self.triangleView.growingtk_y -= self.growingtk_height / 2;
+            self.triangleView.growingtk_y -=
+                (self.contentImageView.growingtk_height + self.triangleView.growingtk_height) / 2;
         } break;
         default:
             break;
