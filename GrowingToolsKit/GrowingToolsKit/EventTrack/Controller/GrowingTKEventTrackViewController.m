@@ -30,6 +30,7 @@
 #import "WKWebView+GrowingTKNode.h"
 #import "GrowingTKMagnifierView.h"
 
+static CGFloat const kInfoViewMargin = 24.0f;
 #define CIRCLE_SIZE GrowingTKSizeFrom750(100)
 #define MASK_BORDER_COLOR [UIColor growingtk_colorWithHex:@"0xFF4824" alpha:0.9f]
 #define MASK_BACKGROUND_COLOR [UIColor growingtk_colorWithHex:@"0xFF4824" alpha:0.3f]
@@ -43,8 +44,9 @@
 @property (nonatomic, strong) UIButton *closeBtn;
 @property (nonatomic, strong) UILabel *infoLabel;
 
-@property (nonatomic, strong) NSLayoutConstraint *infoViewTopConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *infoViewBottomConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *infoViewLeadingConstraint;
+@property (nonatomic, assign) BOOL resetInfoViewConstraintsAfterKeyBoardHide;
 
 @property (nonatomic, strong) UIView *latestMaskedView;
 
@@ -62,6 +64,10 @@
                                              selector:@selector(webViewNodeInfoNotification:)
                                                  name:GrowingTKWebViewNodeInfoNotification
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+
 }
 
 #pragma mark - Private Method
@@ -75,14 +81,14 @@
     [self.view addSubview:self.maskView];
     [self.view addSubview:self.circleView];
 
-    CGFloat infoViewMargin = GrowingTKSizeFrom750(24);
-    self.infoViewTopConstraint = [self.infoView.bottomAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.bottomAnchor
+    CGFloat infoViewMargin = GrowingTKSizeFrom750(kInfoViewMargin);
+    self.infoViewBottomConstraint = [self.infoView.bottomAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.bottomAnchor
                                                                             constant:-infoViewMargin];
     self.infoViewLeadingConstraint = [self.infoView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor
                                                                                  constant:infoViewMargin];
 
     [NSLayoutConstraint activateConstraints:@[
-        self.infoViewTopConstraint,
+        self.infoViewBottomConstraint,
         self.infoViewLeadingConstraint,
         [self.infoView.widthAnchor constraintEqualToAnchor:self.view.widthAnchor constant:-infoViewMargin * 2],
     ]];
@@ -107,8 +113,8 @@
 
 - (void)reset {
     dispatch_async(dispatch_get_main_queue(), ^{
-        CGFloat infoViewMargin = GrowingTKSizeFrom750(24);
-        self.infoViewTopConstraint.constant = -infoViewMargin;
+        CGFloat infoViewMargin = GrowingTKSizeFrom750(kInfoViewMargin);
+        self.infoViewBottomConstraint.constant = -infoViewMargin;
         self.infoViewLeadingConstraint.constant = infoViewMargin;
         
         [self resetInfoLabelText:@"请拖动中间的圆点选择控件"];
@@ -239,7 +245,7 @@
         CGPoint offsetPoint = [sender translationInView:panView];
         [sender setTranslation:CGPointZero inView:panView];
         self.infoViewLeadingConstraint.constant += offsetPoint.x;
-        self.infoViewTopConstraint.constant += offsetPoint.y;
+        self.infoViewBottomConstraint.constant += offsetPoint.y;
         [self.infoView setNeedsUpdateConstraints];
     }
 }
@@ -253,6 +259,43 @@
 - (void)webViewNodeInfoNotification:(NSNotification *)not {
     NSString *info = not.userInfo[@"info"];
     [self resetInfoLabelText:info];
+}
+
+- (void)keyboardWillShow:(NSNotification *)not {
+    CGRect keyBoardFrame = [[not userInfo][UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGRect viewFrame = [self.infoView convertRect:self.infoView.bounds toView:self.infoView.window];
+    
+    if (CGRectIntersectsRect(keyBoardFrame, viewFrame)) {
+        CGFloat infoViewMargin = GrowingTKSizeFrom750(kInfoViewMargin);
+        CGFloat keyBoardHeight = [[not userInfo][UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
+        self.infoViewLeadingConstraint.constant = infoViewMargin;
+        self.infoViewBottomConstraint.constant = -(keyBoardHeight + infoViewMargin - self.growingtk_safeAreaInset.bottom);
+        [self.infoView setNeedsUpdateConstraints];
+        
+        CGFloat duration = [[not userInfo][UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+        [UIView animateWithDuration:duration animations:^{
+            [self.view layoutIfNeeded];
+        }];
+        
+        self.resetInfoViewConstraintsAfterKeyBoardHide = YES;
+    }
+}
+
+- (void)keyboardWillHide:(NSNotification *)not {
+    if (!self.resetInfoViewConstraintsAfterKeyBoardHide) {
+        return;
+    }
+    self.resetInfoViewConstraintsAfterKeyBoardHide = NO;
+    
+    CGFloat infoViewMargin = GrowingTKSizeFrom750(kInfoViewMargin);
+    self.infoViewLeadingConstraint.constant = infoViewMargin;
+    self.infoViewBottomConstraint.constant = -infoViewMargin;
+    [self.infoView setNeedsUpdateConstraints];
+    
+    CGFloat duration = [[not userInfo][UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    [UIView animateWithDuration:duration animations:^{
+        [self.view layoutIfNeeded];
+    }];
 }
 
 #pragma mark - Getter & Setter
