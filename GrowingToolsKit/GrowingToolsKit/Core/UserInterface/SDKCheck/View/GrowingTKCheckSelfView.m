@@ -23,6 +23,7 @@
 #import "UIView+GrowingTK.h"
 #import "UIImage+GrowingTK.h"
 #import "UIColor+GrowingTK.h"
+#import "GrowingTKUtil.h"
 #import "GrowingTKSDKUtil.h"
 
 static CGFloat const CheckButtonHeight = 130.0f;
@@ -140,7 +141,7 @@ static CGFloat const CheckButtonHeight = 130.0f;
 
 - (void)refresh {
     [self.tableView reloadData];
-    
+
     [self layoutIfNeeded];
     NSArray *constraints = self.tableView.constraints;
     for (NSLayoutConstraint *constraint in constraints) {
@@ -161,7 +162,7 @@ static CGFloat const CheckButtonHeight = 130.0f;
 
 - (void)checkAction {
     self.checkButton.userInteractionEnabled = NO;
-    
+
     GrowingTKSDKUtil *sdk = GrowingTKSDKUtil.sharedInstance;
     NSMutableArray *sdkInfo = [NSMutableArray arrayWithArray:@[
         [NSMutableDictionary dictionaryWithDictionary:@{
@@ -181,28 +182,28 @@ static CGFloat const CheckButtonHeight = 130.0f;
             @"checkMessage": @"正在获取SDK初始化状态",
             @"title": GrowingTKLocalizedString(@"SDK初始化"),
             @"value": sdk.initializationDescription,
-            @"bad" : @(!(sdk.isInitialized))
+            @"bad": @(!(sdk.isInitialized))
         }],
         [NSMutableDictionary dictionaryWithDictionary:@{
             @"check": @(0),
             @"checkMessage": @"正在获取URL Scheme配置",
             @"title": @"URL Scheme",
             @"value": sdk.urlScheme.length > 0 ? sdk.urlScheme : @"未配置",
-            @"bad" : @(sdk.urlScheme.length == 0)
+            @"bad": @(sdk.urlScheme.length == 0)
         }],
         [NSMutableDictionary dictionaryWithDictionary:@{
             @"check": @(0),
             @"checkMessage": @"是否适配URL Scheme",
             @"title": @"适配URL Scheme",
             @"value": sdk.isAdaptToURLScheme ? @"是" : @"否",
-            @"bad" : @(!sdk.isAdaptToURLScheme)
+            @"bad": @(!sdk.isAdaptToURLScheme)
         }],
         [NSMutableDictionary dictionaryWithDictionary:@{
             @"check": @(0),
             @"checkMessage": @"是否适配Deep Link",
             @"title": @"适配Deep Link",
             @"value": sdk.isAdaptToDeepLink ? @"是" : @"否",
-            @"bad" : @(!sdk.isAdaptToDeepLink)
+            @"bad": @(!sdk.isAdaptToDeepLink)
         }]
     ]];
 
@@ -224,11 +225,14 @@ static CGFloat const CheckButtonHeight = 130.0f;
         }
 
         NSString *dataCollectionServerHost = sdk.dataCollectionServerHost;
+        BOOL hostBad = (![GrowingTKUtil isIPAddress:dataCollectionServerHost]
+                        && ![GrowingTKUtil isDomain:dataCollectionServerHost]);
         [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
                      @"check": @(0),
                      @"checkMessage": @"正在获取ServerHost",
                      @"title": @"ServerHost",
-                     @"value": dataCollectionServerHost
+                     @"value": dataCollectionServerHost,
+                     @"bad": @(hostBad)
                  }]];
 
         NSString *debugEnabled = sdk.debugEnabled ? @"YES" : @"NO";
@@ -237,7 +241,7 @@ static CGFloat const CheckButtonHeight = 130.0f;
                      @"checkMessage": @"是否调试",
                      @"title": GrowingTKLocalizedString(@"调试模式"),
                      @"value": debugEnabled,
-                     @"bad" : @(sdk.debugEnabled)
+                     @"bad": @(sdk.debugEnabled)
                  }]];
 
         NSString *dataCollectionEnabled = sdk.dataCollectionEnabled ? @"YES" : @"NO";
@@ -246,7 +250,7 @@ static CGFloat const CheckButtonHeight = 130.0f;
                      @"checkMessage": @"是否允许采集数据",
                      @"title": GrowingTKLocalizedString(@"是否采集数据"),
                      @"value": dataCollectionEnabled,
-                     @"bad" : @(!(sdk.dataCollectionEnabled))
+                     @"bad": @(!(sdk.dataCollectionEnabled))
                  }]];
     }
 

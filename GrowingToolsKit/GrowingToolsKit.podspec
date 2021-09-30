@@ -28,7 +28,7 @@ TODO: Add long description of the pod here.
     ss.dependency 'GrowingToolsKit/Core'
     ss.dependency 'GrowingToolsKit/SDKCheck'
     ss.dependency 'GrowingToolsKit/SDKInfo'
-    ss.dependency 'GrowingToolsKit/TrackList'
+#    ss.dependency 'GrowingToolsKit/TrackList'
     ss.dependency 'GrowingToolsKit/EventsList'
     ss.dependency 'GrowingToolsKit/EventTrack'
   end

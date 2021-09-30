@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *urlScheme;
 @property (nonatomic, copy, readonly) NSString *deviceId;
 @property (nonatomic, copy, readonly) NSString *userId;
+@property (nonatomic, copy, readonly) NSString *userKey;
 @property (nonatomic, copy, readonly) NSString *sessionId;
 @property (nonatomic, copy, readonly) NSString *cellularNetworkUploadEventSize;
 @property (nonatomic, assign, readonly) BOOL isInitialized;
@@ -49,6 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *dataCollectionServerHost;
 @property (nonatomic, assign, readonly) NSUInteger excludeEvent;
 @property (nonatomic, assign, readonly) NSUInteger ignoreField;
+@property (nonatomic, assign, readonly) BOOL idMappingEnabled;
 
 // AutoTracker
 @property (nonatomic, assign, readonly) float impressionScale;

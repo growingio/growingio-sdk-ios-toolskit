@@ -53,4 +53,16 @@
     }
 }
 
++ (BOOL)isIPAddress:(NSString *)string {
+    NSString *pre = @"((?:(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d)\\.){3}(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d))";
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", pre];
+    return [predicate evaluateWithObject:string];
+}
+
++ (BOOL)isDomain:(NSString *)string {
+    NSString *pre = @"(http|https)://((\\w)*|([0-9]*)|([-|_])*)+([\\.|/]((\\w)*|([0-9]*)|([-|_])*))+";
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", pre];
+    return [predicate evaluateWithObject:string];
+}
+
 @end

@@ -27,6 +27,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)openAppSetting;
 
++ (BOOL)isIPAddress:(NSString *)string;
+
++ (BOOL)isDomain:(NSString *)string;
+
 @end
 
 NS_ASSUME_NONNULL_END

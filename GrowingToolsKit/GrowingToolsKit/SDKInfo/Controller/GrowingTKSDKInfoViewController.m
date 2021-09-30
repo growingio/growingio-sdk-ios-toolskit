@@ -114,6 +114,14 @@
         [sdkInfo addObject:@{@"title": @"User ID", @"value": userId.length > 0 ? userId : @"未配置"}];
 
         [sdkInfo addObject:@{@"title": @"Session ID", @"value": sdk.sessionId}];
+        
+        NSString *idMappingEnabled = sdk.idMappingEnabled ? @"YES" : @"NO";
+        [sdkInfo addObject:@{@"title": @"Id Mapping", @"value": idMappingEnabled}];
+        
+        if (sdk.idMappingEnabled) {
+            NSString *userKey = sdk.userKey;
+            [sdkInfo addObject:@{@"title": @"User Key", @"value": userKey.length > 0 ? userKey : @"未配置"}];
+        }
 
         NSString *debugEnabled = sdk.debugEnabled ? @"YES" : @"NO";
         [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"调试模式"), @"value": debugEnabled}];
@@ -151,32 +159,18 @@
         [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"曝光事件比例因子"), @"value": impressionScale}];
     }
 
-    //获取设备名称
     NSString *deviceName = [GrowingTKDevice deviceName];
-    //获取当前系统版本号
     NSString *deviceSystemVersion = [GrowingTKDevice deviceSystemVersion];
-    //获取手机型号
     NSString *deviceType = [GrowingTKDevice platformString];
-    //获取手机屏幕大小
     NSString *deviceSize = [NSString stringWithFormat:@"%.0f * %.0f", GrowingTKScreenWidth, GrowingTKScreenHeight];
-    //获取手机ipv4地址
     NSString *ipv4 = [GrowingTKDevice IPv4Address];
-    //获取手机ipv6地址
     NSString *ipv6 = [GrowingTKDevice IPv6Address];
-
-    //获取App名称
     NSString *appName = [GrowingTKAppInfoUtil appName];
-    //获取Bundle Id
     NSString *bundleIdentifier = [GrowingTKAppInfoUtil bundleIdentifier];
-    //获取App版本号
     NSString *bundleVersion = [GrowingTKAppInfoUtil bundleVersion];
-    //获取App版本Code
     NSString *bundleShortVersionString = [GrowingTKAppInfoUtil bundleShortVersionString];
-
-    //获取手机是否有地理位置权限
     GrowingTKAuthorizationStatus locationPermission = [GrowingTKPermission locationPermission];
 
-    //获取网络权限
     self.networkPermission = GrowingTKLocalizedString(@"用户没有选择");
     __weak typeof(self) weakSelf = self;
     [GrowingTKPermission startListenToNetworkPermissionDidUpdate:^(GrowingTKAuthorizationStatus status) {
@@ -205,28 +199,14 @@
         });
     }];
 
-    //获取push权限
     GrowingTKAuthorizationStatus pushPermission = [GrowingTKPermission pushPermission];
-
-    //获取拍照权限
     GrowingTKAuthorizationStatus cameraPermission = [GrowingTKPermission cameraPermission];
-
-    //获取麦克风权限
     GrowingTKAuthorizationStatus audioPermission = [GrowingTKPermission audioPermission];
-
-    //获取相册权限
     GrowingTKAuthorizationStatus photoPermission = [GrowingTKPermission photoPermission];
-
-    //获取通讯录权限
     GrowingTKAuthorizationStatus contactsPermission = [GrowingTKPermission contactsPermission];
-
-    //获取日历权限
     GrowingTKAuthorizationStatus calendarPermission = [GrowingTKPermission calendarPermission];
-
-    //获取提醒事项权限
     GrowingTKAuthorizationStatus notesPermission = [GrowingTKPermission notesPermission];
 
-    //可自定义的App信息
     NSArray *dataArray = @[
         @{@"title": GrowingTKLocalizedString(@"SDK信息"), @"array": sdkInfo},
         @{

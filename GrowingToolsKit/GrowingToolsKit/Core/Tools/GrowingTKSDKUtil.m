@@ -31,6 +31,7 @@
 @property (nonatomic, copy, readwrite) NSString *urlScheme;
 @property (nonatomic, copy, readwrite) NSString *deviceId;
 @property (nonatomic, copy, readwrite) NSString *userId;
+@property (nonatomic, copy, readwrite) NSString *userKey;
 @property (nonatomic, copy, readwrite) NSString *sessionId;
 @property (nonatomic, copy, readwrite) NSString *cellularNetworkUploadEventSize;
 @property (nonatomic, assign, readwrite) BOOL isInitialized;
@@ -50,6 +51,7 @@
 @property (nonatomic, copy, readwrite) NSString *dataCollectionServerHost;
 @property (nonatomic, assign, readwrite) NSUInteger excludeEvent;
 @property (nonatomic, assign, readwrite) NSUInteger ignoreField;
+@property (nonatomic, assign, readwrite) BOOL idMappingEnabled;
 
 // AutoTracker
 @property (nonatomic, assign, readwrite) float impressionScale;
@@ -395,6 +397,26 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
     return @"";
 }
 
+- (NSString *)userKey {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    if (self.isSDK3rdGeneration) {
+        Class class = NSClassFromString(@"GrowingSession");
+        SEL selector = NSSelectorFromString(@"currentSession");
+        if ([class respondsToSelector:selector]) {
+            id session = [class performSelector:selector];
+            SEL selector2 = NSSelectorFromString(@"loginUserKey");
+            if ([session respondsToSelector:selector2]) {
+                NSString *userKey = [session performSelector:selector2];
+                return userKey ?: @"";
+            }
+        }
+    } else {
+    }
+#pragma clang diagnostic pop
+    return @"";
+}
+
 - (NSString *)sessionId {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -547,6 +569,14 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
         return ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"ignoreField"]).integerValue;
     } else {
         return 0;
+    }
+}
+
+- (BOOL)idMappingEnabled {
+    if (self.isSDK3rdGeneration) {
+        return ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"idMappingEnabled"]).boolValue;
+    } else {
+        return YES;
     }
 }
 
