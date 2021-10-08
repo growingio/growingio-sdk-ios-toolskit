@@ -51,18 +51,14 @@ NSString *GrowingTKDefaultModuleName(void) {
     // *************** 平台工具 ***************
     // SDK信息
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_SDKInfoPlugin];
-    // 代码埋点
-    [self addPluginWithPluginType:GrowingTKDefaultPluginType_TrackListPlugin];
     // 埋点数据
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_EventsListPlugin];
     // 埋点跟踪
-    [self addPluginWithPluginType:GrowingTKDefaultPluginType_EventTrackPlugin];
+    [self addPluginWithPluginType:GrowingTKDefaultPluginType_XPathTrackPlugin];
     // 日志显示
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_LogPlugin];
     // Hybrid测试
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_HybridPlugin];
-    // xPath查看
-    [self addPluginWithPluginType:GrowingTKDefaultPluginType_XPathPlugin];
 }
 
 - (void)addPluginWithTitle:(NSString *)title
@@ -138,12 +134,10 @@ NSString *GrowingTKDefaultModuleName(void) {
 - (id<GrowingTKPluginProtocol>)getDefaultPluginWithPluginType:(GrowingTKDefaultPluginType)pluginType {
     NSString *classString = @{
         @(GrowingTKDefaultPluginType_SDKInfoPlugin): @"GrowingTKSDKInfoPlugin",
-        @(GrowingTKDefaultPluginType_TrackListPlugin): @"GrowingTKTrackListPlugin",
         @(GrowingTKDefaultPluginType_EventsListPlugin): @"GrowingTKEventsListPlugin",
-        @(GrowingTKDefaultPluginType_EventTrackPlugin): @"GrowingTKEventTrackPlugin",
+        @(GrowingTKDefaultPluginType_XPathTrackPlugin): @"GrowingTKXPathTrackPlugin",
         @(GrowingTKDefaultPluginType_LogPlugin): @"GrowingTKLogPlugin",
         @(GrowingTKDefaultPluginType_HybridPlugin): @"GrowingTKHybridPlugin",
-        @(GrowingTKDefaultPluginType_XPathPlugin): @"GrowingTKXPathPlugin",
     }[@(pluginType)];
 
     Class class = NSClassFromString(classString);

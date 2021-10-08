@@ -1,8 +1,8 @@
 //
-//  GrowingTKTrackListViewController.m
+//  GrowingTKXPathTrackWindow.h
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/9/1.
+//  Created by YoloMao on 2021/8/25.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,19 +17,17 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTKTrackListViewController.h"
 
-@interface GrowingTKTrackListViewController ()
+#import <UIKit/UIKit.h>
 
-@end
+NS_ASSUME_NONNULL_BEGIN
 
-@implementation GrowingTKTrackListViewController
+@interface GrowingTKXPathTrackWindow : UIWindow
 
-#pragma mark - Life Cycle
+- (void)show;
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    self.title = GrowingTKLocalizedString(@"代码埋点");
-}
+- (void)hide;
 
 @end
+
+NS_ASSUME_NONNULL_END

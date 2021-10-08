@@ -1,5 +1,5 @@
 //
-//  GrowingTKEventTrackViewController.m
+//  GrowingTKXPathTrackViewController.m
 //  GrowingToolsKit
 //
 //  Created by YoloMao on 2021/8/16.
@@ -17,8 +17,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTKEventTrackViewController.h"
-#import "GrowingTKEventTrackPlugin.h"
+#import "GrowingTKXPathTrackViewController.h"
+#import "GrowingTKXPathTrackPlugin.h"
 #import "UIImage+GrowingTK.h"
 #import "UIColor+GrowingTK.h"
 #import "UIView+GrowingTK.h"
@@ -35,7 +35,7 @@ static CGFloat const kInfoViewMargin = 24.0f;
 #define MASK_BORDER_COLOR [UIColor growingtk_colorWithHex:@"0xFF4824" alpha:0.9f]
 #define MASK_BACKGROUND_COLOR [UIColor growingtk_colorWithHex:@"0xFF4824" alpha:0.3f]
 
-@interface GrowingTKEventTrackViewController ()
+@interface GrowingTKXPathTrackViewController ()
 
 @property (nonatomic, strong) UIView *maskView;
 @property (nonatomic, strong) UIView *circleView;
@@ -52,7 +52,7 @@ static CGFloat const kInfoViewMargin = 24.0f;
 
 @end
 
-@implementation GrowingTKEventTrackViewController
+@implementation GrowingTKXPathTrackViewController
 
 #pragma mark - Life Cycle
 
@@ -251,7 +251,7 @@ static CGFloat const kInfoViewMargin = 24.0f;
 }
 
 - (void)closeButtonAction:(UIButton *)sender {
-    [GrowingTKEventTrackPlugin.plugin hideTrackView];
+    [GrowingTKXPathTrackPlugin.plugin hideTrackView];
 }
 
 #pragma mark - Notification

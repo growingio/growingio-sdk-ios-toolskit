@@ -1,5 +1,5 @@
 //
-//  GrowingTKEventTrackWindow.m
+//  GrowingTKXPathTrackWindow.m
 //  GrowingToolsKit
 //
 //  Created by YoloMao on 2021/8/25.
@@ -17,13 +17,13 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTKEventTrackWindow.h"
-#import "GrowingTKEventTrackViewController.h"
+#import "GrowingTKXPathTrackWindow.h"
+#import "GrowingTKXPathTrackViewController.h"
 #import "GrowingTKDefine.h"
 #import "UIView+GrowingTK.h"
 #import "UIColor+GrowingTK.h"
 
-@implementation GrowingTKEventTrackWindow
+@implementation GrowingTKXPathTrackWindow
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -38,14 +38,14 @@
         }
         self.backgroundColor = UIColor.clearColor;
         self.windowLevel = UIWindowLevelAlert;
-        self.rootViewController = [[GrowingTKEventTrackViewController alloc] init];
+        self.rootViewController = [[GrowingTKXPathTrackViewController alloc] init];
     }
     return self;
 }
 
 - (void)show {
     self.hidden = NO;
-    [((GrowingTKEventTrackViewController *)self.rootViewController) reset];
+    [((GrowingTKXPathTrackViewController *)self.rootViewController) reset];
 }
 
 - (void)hide {

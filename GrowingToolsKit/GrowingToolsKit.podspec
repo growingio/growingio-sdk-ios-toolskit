@@ -24,11 +24,9 @@ TODO: Add long description of the pod here.
   s.default_subspec  = 'Default'
   s.subspec 'Default' do |ss|
     ss.dependency 'GrowingToolsKit/Core'
-    ss.dependency 'GrowingToolsKit/SDKCheck'
     ss.dependency 'GrowingToolsKit/SDKInfo'
-#    ss.dependency 'GrowingToolsKit/TrackList'
     ss.dependency 'GrowingToolsKit/EventsList'
-    ss.dependency 'GrowingToolsKit/EventTrack'
+    ss.dependency 'GrowingToolsKit/XPathTrack'
   end
   
   s.subspec 'SDK30202' do |ss|
@@ -50,18 +48,8 @@ TODO: Add long description of the pod here.
     ss.resource_bundles = {'GrowingToolsKit' => ['GrowingToolsKit/Resource/**/*']}
   end
   
-  s.subspec 'SDKCheck' do |ss|
-    ss.source_files = 'GrowingToolsKit/SDKCheck/**/*{.h,.m,.c,.cpp,.mm}'
-    ss.dependency 'GrowingToolsKit/Core'
-  end
-  
   s.subspec 'SDKInfo' do |ss|
     ss.source_files = 'GrowingToolsKit/SDKInfo/**/*{.h,.m,.c,.cpp,.mm}'
-    ss.dependency 'GrowingToolsKit/Core'
-  end
-  
-  s.subspec 'TrackList' do |ss|
-    ss.source_files = 'GrowingToolsKit/TrackList/**/*{.h,.m,.c,.cpp,.mm}'
     ss.dependency 'GrowingToolsKit/Core'
   end
   
@@ -70,8 +58,8 @@ TODO: Add long description of the pod here.
     ss.dependency 'GrowingToolsKit/Core'
   end
   
-  s.subspec 'EventTrack' do |ss|
-    ss.source_files = 'GrowingToolsKit/EventTrack/**/*{.h,.m,.c,.cpp,.mm}'
+  s.subspec 'XPathTrack' do |ss|
+    ss.source_files = 'GrowingToolsKit/XPathTrack/**/*{.h,.m,.c,.cpp,.mm}'
     ss.dependency 'GrowingToolsKit/Core'
   end
 end

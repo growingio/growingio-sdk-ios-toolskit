@@ -9,11 +9,9 @@
 {
     "SDK工具" = "SDK";
     "当前版本" = "Current Version";
-    "SDK自检" = "SDKCheck";
     "SDK信息" = "SDKInfo";
-    "代码埋点" = "TrackList";
     "埋点数据" = "EventsList";
-    "埋点跟踪" = "EventTrack";
+    "埋点跟踪" = "XPathTrack";
 
     //SDK信息
     "复制" = "Copy";

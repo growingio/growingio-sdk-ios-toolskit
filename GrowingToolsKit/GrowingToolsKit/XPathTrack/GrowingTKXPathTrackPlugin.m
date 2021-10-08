@@ -1,5 +1,5 @@
 //
-//  GrowingTKEventTrackPlugin.m
+//  GrowingTKXPathTrackPlugin.m
 //  GrowingToolsKit
 //
 //  Created by YoloMao on 2021/8/16.
@@ -17,24 +17,24 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTKEventTrackPlugin.h"
-#import "GrowingTKEventTrackWindow.h"
+#import "GrowingTKXPathTrackPlugin.h"
+#import "GrowingTKXPathTrackWindow.h"
 
-@interface GrowingTKEventTrackPlugin ()
+@interface GrowingTKXPathTrackPlugin ()
 
-@property (nonatomic, strong) GrowingTKEventTrackWindow *trackView;
+@property (nonatomic, strong) GrowingTKXPathTrackWindow *trackView;
 
 @end
 
-@implementation GrowingTKEventTrackPlugin
+@implementation GrowingTKXPathTrackPlugin
 
 #pragma mark - GrowingTKPluginProtocol
 
 + (instancetype)plugin {
-    static GrowingTKEventTrackPlugin *instance;
+    static GrowingTKXPathTrackPlugin *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[GrowingTKEventTrackPlugin alloc] init];
+        instance = [[GrowingTKXPathTrackPlugin alloc] init];
     });
     return instance;
 }
@@ -44,11 +44,11 @@
 }
 
 - (NSString *)icon {
-    return @"growingtk_eventTrack";
+    return @"growingtk_xPathTrack";
 }
 
 - (NSString *)pluginName {
-    return @"GrowingTKEventTrackPlugin";
+    return @"GrowingTKXPathTrackPlugin";
 }
 
 - (NSString *)atModule {
@@ -74,9 +74,9 @@
     [self.trackView hide];
 }
 
-- (GrowingTKEventTrackWindow *)trackView {
+- (GrowingTKXPathTrackWindow *)trackView {
     if (!_trackView) {
-        _trackView = [[GrowingTKEventTrackWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
+        _trackView = [[GrowingTKXPathTrackWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(hideTrackView)

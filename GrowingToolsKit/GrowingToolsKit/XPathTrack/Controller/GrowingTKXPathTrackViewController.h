@@ -1,8 +1,8 @@
 //
-//  GrowingTKTrackListPlugin.h
+//  GrowingTKXPathTrackViewController.h
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/8/19.
+//  Created by YoloMao on 2021/8/16.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,19 +17,13 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTKPluginProtocol.h"
+#import "GrowingTKBaseViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingTKTrackListPlugin : NSObject <GrowingTKPluginProtocol>
+@interface GrowingTKXPathTrackViewController : GrowingTKBaseViewController
 
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSString *icon;
-@property (nonatomic, strong) NSString *pluginName;
-@property (nonatomic, strong) NSString *atModule;
-@property (nonatomic, strong) NSString *key;
-
-- (void)pluginDidLoad;
+- (void)reset;
 
 @end
 
