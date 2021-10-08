@@ -321,14 +321,32 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 }
 
 - (NSString *)version {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     if (self.isSDK3rdGeneration) {
-        // dangerous, may cause 'dyld: Symbol not found'
-        extern NSString *const GrowingTrackerVersionName;
-        extern const int GrowingTrackerVersionCode;
-        return [NSString stringWithFormat:@"%@(%d)", GrowingTrackerVersionName, GrowingTrackerVersionCode];
+        Class class = NSClassFromString(@"GrowingRealTracker");
+        SEL selector = NSSelectorFromString(@"versionName");
+        if ([class respondsToSelector:selector]) {
+            NSString *version = [class performSelector:selector];
+            SEL selector2 = NSSelectorFromString(@"versionCode");
+            if (version && [class respondsToSelector:selector2]) {
+                NSString *code = [class performSelector:selector2];
+                return [NSString stringWithFormat:@"%@(%@)", version, code];
+            }
+            return version ?: @"";
+#ifdef GROWING_SDK30202
+        }else {
+            // dangerous, may cause 'dyld: Symbol not found'
+            extern NSString *const GrowingTrackerVersionName;
+            extern const int GrowingTrackerVersionCode;
+            return [NSString stringWithFormat:@"%@(%d)", GrowingTrackerVersionName, GrowingTrackerVersionCode];
+#endif
+        }
     } else {
         return @"";
     }
+#pragma clang diagnostic pop
+    return @"";
 }
 
 - (NSString *)urlScheme {

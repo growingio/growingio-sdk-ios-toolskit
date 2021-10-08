@@ -22,8 +22,6 @@ TODO: Add long description of the pod here.
   s.ios.frameworks   = 'UIKit', 'WebKit'
   s.source_files     = 'GrowingToolsKit/GrowingToolsKit{.h,.m}'
   s.default_subspec  = 'Default'
-  s.xcconfig         = { 'OTHER_LDFLAGS' => '-Wl,-U,_GrowingTrackerVersionName -Wl,-U,_GrowingTrackerVersionCode', 'ENABLE_BITCODE' => 'NO'}
-  
   s.subspec 'Default' do |ss|
     ss.dependency 'GrowingToolsKit/Core'
     ss.dependency 'GrowingToolsKit/SDKCheck'
@@ -31,6 +29,16 @@ TODO: Add long description of the pod here.
 #    ss.dependency 'GrowingToolsKit/TrackList'
     ss.dependency 'GrowingToolsKit/EventsList'
     ss.dependency 'GrowingToolsKit/EventTrack'
+  end
+  
+  s.subspec 'SDK30202' do |ss|
+    ss.source_files = 'GrowingToolsKit/GrowingToolsKit{.h,.m}'
+    ss.dependency 'GrowingToolsKit/Default'
+    ss.pod_target_xcconfig = {
+      'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_SDK30202=1',
+      'OTHER_LDFLAGS' => '-Wl,-U,_GrowingTrackerVersionName -Wl,-U,_GrowingTrackerVersionCode'
+    }
+    ss.xcconfig = { 'ENABLE_BITCODE' => 'NO'}
   end
 
   s.subspec 'Core' do |ss|
