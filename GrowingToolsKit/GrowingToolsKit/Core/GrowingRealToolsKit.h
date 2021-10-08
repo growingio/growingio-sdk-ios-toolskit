@@ -1,8 +1,8 @@
 //
-//  GrowingToolsKit.m
+//  GrowingRealToolsKit.h
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/8/12.
+//  Created by YoloMao on 2021/10/8.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,17 +17,22 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingToolsKit.h"
-#import "GrowingRealToolsKit.h"
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@implementation GrowingToolsKit
+NS_ASSUME_NONNULL_BEGIN
 
-+ (void)start {
-    [GrowingRealToolsKit start];
-}
+@interface GrowingRealToolsKit : NSObject
 
-+ (void)startWithPosition:(CGPoint)position autoDock:(BOOL)autoDock {
-    [GrowingRealToolsKit startWithPosition:position autoDock:autoDock];
-}
+/// 启动GrowingToolsKit
++ (void)start;
+
+/// 启动GrowingToolsKit
+/// @param position 入口位置
+/// @param autoDock 是否自动停靠，默认为YES
++ (void)startWithPosition:(CGPoint)position autoDock:(BOOL)autoDock;
 
 @end
+
+NS_ASSUME_NONNULL_END
+
