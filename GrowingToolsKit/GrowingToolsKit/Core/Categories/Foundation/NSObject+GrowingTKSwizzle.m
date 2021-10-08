@@ -60,7 +60,11 @@
 
 @implementation NSObject (GrowingTKSwizzle)
 
-+ (BOOL)growingtk_swizzleMethod:(SEL)origSel_ withMethod:(SEL)altSel_ error:(NSError**)error_ {
++ (BOOL)growingtk_swizzleMethod:(SEL)origSel_ withMethod:(SEL)altSel_ error:(NSError **)error_ {
+#ifndef DEBUG
+    return NO;
+#endif
+    
     Method origMethod = class_getInstanceMethod(self, origSel_);
     if (!origMethod) {
 #if TARGET_OS_IPHONE
@@ -94,11 +98,19 @@
     return YES;
 }
 
-+ (BOOL)growingtk_swizzleClassMethod:(SEL)origSel_ withClassMethod:(SEL)altSel_ error:(NSError**)error_ {
++ (BOOL)growingtk_swizzleClassMethod:(SEL)origSel_ withClassMethod:(SEL)altSel_ error:(NSError **)error_ {
+#ifndef DEBUG
+    return NO;
+#endif
+    
     return [object_getClass((id)self) growingtk_swizzleMethod:origSel_ withMethod:altSel_ error:error_];
 }
 
-+ (NSInvocation*)growingtk_swizzleMethod:(SEL)origSel withBlock:(id)block error:(NSError**)error {
++ (nullable NSInvocation *)growingtk_swizzleMethod:(SEL)origSel withBlock:(id)block error:(NSError **)error {
+#ifndef DEBUG
+    return nil;
+#endif
+    
     IMP blockIMP = imp_implementationWithBlock(block);
     NSString *blockSelectorString = [NSString stringWithFormat:@"_growingtk_block_%@_%p", NSStringFromSelector(origSel), block];
     SEL blockSel = sel_registerName([blockSelectorString cStringUsingEncoding:NSUTF8StringEncoding]);
@@ -115,7 +127,11 @@
     return origInvocation;
 }
 
-+ (NSInvocation*)growingtk_swizzleClassMethod:(SEL)origSel withBlock:(id)block error:(NSError**)error {
++ (nullable NSInvocation *)growingtk_swizzleClassMethod:(SEL)origSel withBlock:(id)block error:(NSError **)error {
+#ifndef DEBUG
+    return nil;
+#endif
+    
     NSInvocation *invocation = [object_getClass((id)self) growingtk_swizzleMethod:origSel withBlock:block error:error];
     invocation.target = self;
 

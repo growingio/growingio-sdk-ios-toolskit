@@ -63,7 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
  } error:nil];
  ```
  */
-+ (NSInvocation *)growingtk_swizzleMethod:(SEL)origSel withBlock:(id)block error:(NSError **)error;
++ (nullable NSInvocation *)growingtk_swizzleMethod:(SEL)origSel withBlock:(id)block error:(NSError **)error;
 
 /**
  ```
@@ -75,7 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
  } error:nil];
  ```
  */
-+ (NSInvocation *)growingtk_swizzleClassMethod:(SEL)origSel withBlock:(id)block error:(NSError **)error;
++ (nullable NSInvocation *)growingtk_swizzleClassMethod:(SEL)origSel withBlock:(id)block error:(NSError **)error;
 
 @end
 

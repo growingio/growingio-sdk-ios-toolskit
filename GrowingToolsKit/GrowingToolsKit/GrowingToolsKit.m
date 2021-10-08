@@ -47,8 +47,6 @@ static GrowingToolsKit *instance = nil;
 }
 
 + (void)start {
-    [[GrowingTKPluginManager sharedInstance] setupDefaultPlugins];
-
     CGPoint defaultPosition = GrowingTKStartingPosition;
     NSDictionary *dict = [[NSUserDefaults standardUserDefaults] objectForKey:@"GrowingTKFloatViewCenterLocation"];
     if (dict && dict[@"centerX"] && dict[@"centerY"]) {
@@ -61,12 +59,15 @@ static GrowingToolsKit *instance = nil;
 }
 
 + (void)startWithPosition:(CGPoint)position autoDock:(BOOL)autoDock {
+#ifdef DEBUG
     if (instance) {
         // has install
         return;
     }
 
+    [[GrowingTKPluginManager sharedInstance] setupDefaultPlugins];
     [[self sharedInstance] initEntry:position autoDock:autoDock];
+#endif
 }
 
 - (void)initEntry:(CGPoint)position autoDock:(BOOL)autoDock {

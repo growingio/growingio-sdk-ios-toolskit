@@ -127,21 +127,6 @@
         };
         invocation = [class growingtk_swizzleClassMethod:selector withBlock:block error:nil];
     }
-    sdk3TrackEvent : {
-        Class class = NSClassFromString(@"GrowingRealTracker");
-        if (!class) {
-            goto end;
-        }
-
-        __block NSInvocation *invocation = nil;
-        SEL selector = NSSelectorFromString(@"trackCustomEvent:");
-        id block = ^(id obj, NSString *name) {
-            [invocation setArgument:&name atIndex:2];
-            [invocation invokeWithTarget:obj];
-            //            NSArray *array = [NSThread callStackSymbols];
-        };
-        invocation = [class growingtk_swizzleMethod:selector withBlock:block error:nil];
-    }
         // *************** SDK 3.0 ***************
     } else {
         // *************** SDK 2.0 ***************
@@ -155,6 +140,9 @@ static id growingtk_trackerInit(NSString *module,
                                 NSInvocation *invocation,
                                 id configuration,
                                 NSDictionary *launchOptions) {
+    if (!invocation) {
+        return nil;
+    }
     [invocation retainArguments];
 
     GrowingTKSDKUtil.sharedInstance.subName = module;

@@ -21,7 +21,9 @@
 #import <CoreServices/CoreServices.h>
 static NSString *const kGrowingProjectId = @"91eaf9b283361032";
 
-#import "GrowingToolsKit.h"
+#ifdef DEBUG
+#import <GrowingToolsKit/GrowingToolsKit.h>
+#endif
 
 @interface AppDelegate () <UNUserNotificationCenterDelegate>
 
@@ -30,9 +32,10 @@ static NSString *const kGrowingProjectId = @"91eaf9b283361032";
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
+#ifdef DEBUG
     [GrowingToolsKit start];
-
+#endif
+    
 //    [Bugly startWithAppId:@"93004a21ca"];
     // Config GrowingIO
     GrowingSDKConfiguration *configuration = [GrowingSDKConfiguration configurationWithProjectId:kGrowingProjectId];

@@ -118,6 +118,9 @@
 #pragma mark - Event Track
 
 static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSString *key) {
+    if (!invocation) {
+        return;
+    }
     [invocation setArgument:&event atIndex:2];
     [invocation setArgument:&key atIndex:3];
     [invocation invokeWithTarget:obj];
