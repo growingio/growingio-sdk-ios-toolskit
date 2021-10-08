@@ -18,7 +18,7 @@ target 'Example' do
   pod 'SDCycleScrollView', '~> 1.75'
   pod 'MJRefresh'
   pod 'MBProgressHUD'
-  pod 'GrowingToolsKit/SDK30202', :path => './GrowingToolsKit/', :configurations => ['Debug']
+  pod 'GrowingToolsKit/SDK30202', :path => './', :configurations => ['Debug']
 
 end
 
