@@ -66,7 +66,9 @@
             [platform isEqualToString:@"iPhone12,1"] || [platform isEqualToString:@"iPhone12,3"] ||
             [platform isEqualToString:@"iPhone12,5"] || [platform isEqualToString:@"iPhone13,1"] ||
             [platform isEqualToString:@"iPhone13,2"] || [platform isEqualToString:@"iPhone13,3"] ||
-            [platform isEqualToString:@"iPhone13,4"]);
+            [platform isEqualToString:@"iPhone13,4"] || [platform isEqualToString:@"iPhone14,5"] ||
+            [platform isEqualToString:@"iPhone14,4"] || [platform isEqualToString:@"iPhone14,2"] ||
+            [platform isEqualToString:@"iPhone14,3"]);
 }
 
 + (NSString *)platform {
@@ -142,6 +144,14 @@
         return @"iPhone 12 Pro";
     if ([platform isEqualToString:@"iPhone13,4"])
         return @"iPhone 12 Pro Max";
+    if ([platform isEqualToString:@"iPhone14,4"])
+        return @"iPhone 13 Mini";
+    if ([platform isEqualToString:@"iPhone14,5"])
+        return @"iPhone 13";
+    if ([platform isEqualToString:@"iPhone14,2"])
+        return @"iPhone 13 Pro";
+    if ([platform isEqualToString:@"iPhone14,3"])
+        return @"iPhone 13 Pro Max";
 
     // iPad
     if ([platform isEqualToString:@"iPad2,1"] || [platform isEqualToString:@"iPad2,2"] ||
@@ -207,6 +217,10 @@
     if ([platform isEqualToString:@"iPad13,8"] || [platform isEqualToString:@"iPad13,9"] ||
         [platform isEqualToString:@"iPad13,10"] || [platform isEqualToString:@"iPad13,11"])
         return @"iPad Pro (12.9-inch) (5th generation)";
+    if ([platform isEqualToString:@"iPad12,1"] || [platform isEqualToString:@"iPad12,2"])
+        return @"iPad (9th generation)";
+    if ([platform isEqualToString:@"iPad14,1"] || [platform isEqualToString:@"iPad14,2"])
+        return @"iPad Mini (6th generation)";
 
     return platform;
 }
