@@ -51,14 +51,16 @@
     }
     
     if (atts.count > 0) {
-
+#if SDK3rd
         [[GrowingSDK sharedInstance] trackCustomEvent:eventName
                    withAttributes:atts];
-        
+#endif
         NSLog(@"Track事件，eventName:%@, attributes:%@", eventName, atts);
 
     } else {
+#if SDK3rd
         [[GrowingSDK sharedInstance] trackCustomEvent:eventName];
+#endif
         NSLog(@"Track事件，eventName:%@", eventName);
     }
 }
@@ -66,7 +68,9 @@
 //发送track请求，测试event长度越界
 - (IBAction)eventNameOutRange:(id)sender {
     NSString *check = [GIOConstants getMyInput];
+#if SDK3rd
     [[GrowingSDK sharedInstance] trackCustomEvent:check];
+#endif
     NSLog(@"Track eventName超界，数据长度为：%ld",[check length]);
 }
 
@@ -75,7 +79,9 @@
     NSString *eid = self.eventNameTextField.text;
     NSDictionary *tvar=[GIOConstants getLargeDictionary];
     NSLog(@"Large Dict length is :%ld",tvar.count);
+#if SDK3rd
     [[GrowingSDK sharedInstance] trackCustomEvent:eid withAttributes:tvar];
+#endif
 }
 
 - (IBAction)tapGestureHandle:(UITapGestureRecognizer *)sender {

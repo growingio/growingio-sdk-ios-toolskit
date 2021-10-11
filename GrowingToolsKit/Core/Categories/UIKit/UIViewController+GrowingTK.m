@@ -21,8 +21,6 @@
 #import "NSObject+GrowingTKSwizzle.h"
 #import "GrowingTKSDKUtil.h"
 #import "UIView+GrowingTK.h"
-#import "GrowingTKUtil.h"
-#import "GrowingTKHomeWindow.h"
 
 @implementation UIViewController (GrowingTK)
 
@@ -44,13 +42,6 @@
     [self growingtk_viewWillAppear:animated];
 }
 
-- (UIEdgeInsets)growingtk_safeAreaInset:(UIView *)view {
-    if (@available(iOS 11.0, *)) {
-        return view.safeAreaInsets;
-    }
-    return UIEdgeInsetsZero;
-}
-
 - (UILayoutGuide *)growingtk_safeAreaLayoutGuide {
     if (@available(iOS 11.0, *)) {
         return self.view.safeAreaLayoutGuide;
@@ -59,7 +50,10 @@
 }
 
 - (UIEdgeInsets)growingtk_safeAreaInset {
-    return [self growingtk_safeAreaInset:self.view];
+    if (@available(iOS 11.0, *)) {
+        return self.view.safeAreaInsets;
+    }
+    return UIEdgeInsetsZero;
 }
 
 - (CGRect)growingtk_fullscreen {
@@ -84,33 +78,6 @@
     }
 
     return screen;
-}
-
-+ (UIViewController *)growingtk_rootViewControllerForKeyWindow {
-    return GrowingTKUtil.keyWindow.rootViewController;
-}
-
-+ (UIViewController *)growingtk_topViewControllerForKeyWindow {
-    UIViewController *controller = [self growingtk_topViewController:GrowingTKUtil.keyWindow.rootViewController];
-    while (controller.presentedViewController) {
-        [self growingtk_topViewController:controller.presentedViewController];
-    }
-    return controller;
-}
-
-+ (UIViewController *)growingtk_topViewController:(UIViewController *)controller {
-    if ([controller isKindOfClass:[UINavigationController class]]) {
-        return [self growingtk_topViewController:[(UINavigationController *)controller topViewController]];
-    } else if ([controller isKindOfClass:[UITabBarController class]]) {
-        return [self growingtk_topViewController:[(UITabBarController *)controller selectedViewController]];
-    } else {
-        return controller;
-    }
-    return nil;
-}
-
-+ (UIViewController *)growingtk_rootViewControllerForHomeWindow {
-    return GrowingTKHomeWindow.sharedInstance.rootViewController;
 }
 
 @end

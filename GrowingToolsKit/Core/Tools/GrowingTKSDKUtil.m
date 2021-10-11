@@ -34,6 +34,7 @@
 @property (nonatomic, copy, readwrite) NSString *userKey;
 @property (nonatomic, copy, readwrite) NSString *sessionId;
 @property (nonatomic, copy, readwrite) NSString *cellularNetworkUploadEventSize;
+@property (nonatomic, assign, readwrite) BOOL isIntegrated;
 @property (nonatomic, assign, readwrite) BOOL isInitialized;
 @property (nonatomic, assign, readwrite) double initializationTime;
 @property (nonatomic, assign, readwrite) BOOL delayInitialized;
@@ -128,7 +129,7 @@
         invocation = [class growingtk_swizzleClassMethod:selector withBlock:block error:nil];
     }
         // *************** SDK 3.0 ***************
-    } else {
+    } else if (GrowingTKSDKUtil.sharedInstance.isSDK2ndGeneration) {
         // *************** SDK 2.0 ***************
 
         // *************** SDK 2.0 ***************
@@ -170,7 +171,11 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 #pragma mark - Public Method
 
 - (BOOL)isSDK3rdGeneration {
-    return NSClassFromString(@"GrowingRealTracker");
+    return NSClassFromString(@"GrowingRealTracker") != nil;
+}
+
+- (BOOL)isSDK2ndGeneration {
+    return NSClassFromString(@"Growing") != nil;
 }
 
 - (NSString *)nameDescription {
@@ -298,6 +303,8 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
             } else {
                 _name = @"GrowingAnalytics";
             }
+        } else if (self.isSDK2ndGeneration) {
+            _name = @"";
         } else {
             _name = @"";
         }
@@ -313,6 +320,8 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
             } else if (NSClassFromString(@"GrowingRealTracker")) {
                 _subName = @"/Tracker";
             }
+        } else if (self.isSDK2ndGeneration) {
+            _subName = @"";
         } else {
             _subName = @"";
         }
@@ -342,8 +351,10 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
             return [NSString stringWithFormat:@"%@(%d)", GrowingTrackerVersionName, GrowingTrackerVersionCode];
 #endif
         }
-    } else {
+    } else if (self.isSDK2ndGeneration) {
         return @"";
+    } else {
+        return @"-";
     }
 #pragma clang diagnostic pop
     return @"";
@@ -452,6 +463,10 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
     } else {
         return @"";
     }
+}
+
+- (BOOL)isIntegrated {
+    return self.isSDK3rdGeneration || self.isSDK2ndGeneration;
 }
 
 - (BOOL)isAdaptToURLScheme {

@@ -29,12 +29,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (CGRect)growingtk_fullscreen;
 
-+ (UIViewController *)growingtk_rootViewControllerForKeyWindow;
-
-+ (UIViewController *)growingtk_topViewControllerForKeyWindow;
-
-+ (UIViewController *)growingtk_rootViewControllerForHomeWindow;
-
 @end
 
 NS_ASSUME_NONNULL_END

@@ -169,7 +169,8 @@ static CGFloat const CheckButtonHeight = 130.0f;
             @"check": @(0),
             @"checkMessage": @"正在获取SDK",
             @"title": @"SDK",
-            @"value": sdk.nameDescription
+            @"value": sdk.isIntegrated ? sdk.nameDescription : @"未集成",
+            @"bad": @(!sdk.isIntegrated)
         }],
         [NSMutableDictionary dictionaryWithDictionary:@{
             @"check": @(0),

@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *userKey;
 @property (nonatomic, copy, readonly) NSString *sessionId;
 @property (nonatomic, copy, readonly) NSString *cellularNetworkUploadEventSize;
+@property (nonatomic, assign, readonly) BOOL isIntegrated;
 @property (nonatomic, assign, readonly) BOOL isInitialized;
 @property (nonatomic, assign, readonly) double initializationTime;
 @property (nonatomic, assign, readonly) BOOL delayInitialized;
@@ -64,6 +65,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)sharedInstance;
 
 - (BOOL)isSDK3rdGeneration;
+- (BOOL)isSDK2ndGeneration;
 - (NSString *)nameDescription;
 - (NSString *)initializationDescription;
 - (NSString *)excludeEventDescription;

@@ -18,8 +18,36 @@
 //  limitations under the License.
 
 #import "GrowingTKUtil.h"
+#import "GrowingTKHomeWindow.h"
 
 @implementation GrowingTKUtil
+
++ (UIViewController *)topViewControllerForKeyWindow {
+    UIViewController *controller = [self topViewController:GrowingTKUtil.keyWindow.rootViewController];
+    while (controller.presentedViewController) {
+        [self topViewController:controller.presentedViewController];
+    }
+    return controller;
+}
+
++ (UIViewController *)topViewControllerForHomeWindow {
+    UIViewController *controller = [self topViewController:GrowingTKHomeWindow.sharedInstance.rootViewController];
+    while (controller.presentedViewController) {
+        [self topViewController:controller.presentedViewController];
+    }
+    return controller;
+}
+
++ (UIViewController *)topViewController:(UIViewController *)controller {
+    if ([controller isKindOfClass:[UINavigationController class]]) {
+        return [self topViewController:[(UINavigationController *)controller topViewController]];
+    } else if ([controller isKindOfClass:[UITabBarController class]]) {
+        return [self topViewController:[(UITabBarController *)controller selectedViewController]];
+    } else {
+        return controller;
+    }
+    return nil;
+}
 
 + (UIWindow *)keyWindow {
     UIWindow *keyWindow = nil;

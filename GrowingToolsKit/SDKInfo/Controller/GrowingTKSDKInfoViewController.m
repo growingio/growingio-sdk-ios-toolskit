@@ -93,10 +93,10 @@
 - (void)initData {
     GrowingTKSDKUtil *sdk = GrowingTKSDKUtil.sharedInstance;
     NSMutableArray *sdkInfo = [NSMutableArray arrayWithArray:@[
-        @{@"title": @"SDK", @"value": sdk.nameDescription},
+        @{@"title": @"SDK", @"value": sdk.isIntegrated ? sdk.nameDescription : @"未集成"},
         @{@"title": GrowingTKLocalizedString(@"SDK版本号"), @"value": sdk.version},
         @{@"title": GrowingTKLocalizedString(@"SDK初始化"), @"value": sdk.initializationDescription},
-        @{@"title": @"URL Scheme", @"value": sdk.urlScheme},
+        @{@"title": @"URL Scheme", @"value": sdk.urlScheme.length > 0 ? sdk.urlScheme : @"未配置"},
         @{@"title": @"适配URL Scheme", @"value": (sdk.isAdaptToURLScheme ? @"是" : @"否")},
         @{@"title": @"适配Deep Link", @"value": (sdk.isAdaptToDeepLink ? @"是" : @"否")}
     ]];

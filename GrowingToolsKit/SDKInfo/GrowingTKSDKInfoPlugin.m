@@ -19,6 +19,9 @@
 
 #import "GrowingTKSDKInfoPlugin.h"
 #import "GrowingTKSDKInfoViewController.h"
+#import "GrowingTKSDKUtil.h"
+#import "GrowingTKUtil.h"
+#import "GrowingTKBaseViewController.h"
 
 @implementation GrowingTKSDKInfoPlugin
 
@@ -43,8 +46,14 @@
 }
 
 - (void)pluginDidLoad {
-    GrowingTKSDKInfoViewController *controller = [[GrowingTKSDKInfoViewController alloc] init];
-    [GrowingTKHomeWindow openPlugin:controller];
+    GrowingTKSDKUtil *sdk = GrowingTKSDKUtil.sharedInstance;
+    if (sdk.isIntegrated) {
+        GrowingTKSDKInfoViewController *controller = [[GrowingTKSDKInfoViewController alloc] init];
+        [GrowingTKHomeWindow openPlugin:controller];
+    } else {
+        GrowingTKBaseViewController *controller = (GrowingTKBaseViewController *)GrowingTKUtil.topViewControllerForHomeWindow;
+        [controller showToast:GrowingTKLocalizedString(@"未集成SDK，请参考帮助文档进行集成")];
+    }
 }
 
 @end

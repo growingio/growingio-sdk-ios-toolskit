@@ -22,7 +22,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-#if Autotracker
+#if SDK3rd && Autotracker
      self.segmentControl.growingUniqueTag = @"language-selector";
 
      self.growingPageAttributes = @{@"greet": @"hello"};

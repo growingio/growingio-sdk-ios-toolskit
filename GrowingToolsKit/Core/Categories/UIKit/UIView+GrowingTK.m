@@ -748,8 +748,8 @@ static const NSString *GrowingTKToastQueueKey = @"GrowingTKToastQueueKey";
         self.sharedStyle = [[GrowingTKToastStyle alloc] initWithDefaultStyle];
         self.tapToDismissEnabled = YES;
         self.queueEnabled = NO;
-        self.defaultDuration = 3.0;
-        self.defaultPosition = GrowingTKToastPositionBottom;
+        self.defaultDuration = 1.0;
+        self.defaultPosition = GrowingTKToastPositionCenter;
     }
     return self;
 }

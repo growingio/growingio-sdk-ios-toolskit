@@ -25,6 +25,8 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import "NSObject+GrowingTKSwizzle.h"
+#import "GrowingTKUtil.h"
+#import "GrowingTKBaseViewController.h"
 
 @interface GrowingTKEventsListPlugin ()
 
@@ -111,8 +113,14 @@
 }
 
 - (void)pluginDidLoad {
-    GrowingTKEventsListViewController *controller = [[GrowingTKEventsListViewController alloc] init];
-    [GrowingTKHomeWindow openPlugin:controller];
+    GrowingTKSDKUtil *sdk = GrowingTKSDKUtil.sharedInstance;
+    if (sdk.isIntegrated) {
+        GrowingTKEventsListViewController *controller = [[GrowingTKEventsListViewController alloc] init];
+        [GrowingTKHomeWindow openPlugin:controller];
+    } else {
+        GrowingTKBaseViewController *controller = (GrowingTKBaseViewController *)GrowingTKUtil.topViewControllerForHomeWindow;
+        [controller showToast:GrowingTKLocalizedString(@"未集成SDK，请参考帮助文档进行集成")];
+    }
 }
 
 #pragma mark - Event Track

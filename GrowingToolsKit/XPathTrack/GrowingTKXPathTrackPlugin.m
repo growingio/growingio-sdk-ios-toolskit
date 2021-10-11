@@ -19,6 +19,9 @@
 
 #import "GrowingTKXPathTrackPlugin.h"
 #import "GrowingTKXPathTrackWindow.h"
+#import "GrowingTKSDKUtil.h"
+#import "GrowingTKUtil.h"
+#import "GrowingTKBaseViewController.h"
 
 @interface GrowingTKXPathTrackPlugin ()
 
@@ -60,7 +63,13 @@
 }
 
 - (void)pluginDidLoad {
-    [self showTrackView];
+    GrowingTKSDKUtil *sdk = GrowingTKSDKUtil.sharedInstance;
+    if (sdk.isIntegrated) {
+        [self showTrackView];
+    } else {
+        GrowingTKBaseViewController *controller = (GrowingTKBaseViewController *)GrowingTKUtil.topViewControllerForHomeWindow;
+        [controller showToast:GrowingTKLocalizedString(@"未集成SDK，请参考帮助文档进行集成")];
+    }
 }
 
 #pragma mark - Event Track

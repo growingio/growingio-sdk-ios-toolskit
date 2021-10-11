@@ -5,21 +5,26 @@
 //
 
 #import <Availability.h>
+#import <Foundation/Foundation.h>
 
 #ifndef __IPHONE_5_0
 #warning "This project uses features only available in iOS SDK 5.0 and later."
 #endif
 
+#define SDK3rd 0
+#define SDK2nd 0
 #define Autotracker 1
 
-#if Autotracker
+#if SDK3rd && Autotracker
 #import "GrowingAutotracker.h"
 #define GrowingSDK GrowingAutotracker
 #define GrowingSDKConfiguration GrowingAutotrackConfiguration
-#else
+#elif SDK3rd
 #import "GrowingTracker.h"
 #define GrowingSDK GrowingTracker
 #define GrowingSDKConfiguration GrowingTrackConfiguration
+#elif SDK2nd
+#import "Growing.h"
 #endif
 
 #ifdef __OBJC__

@@ -23,6 +23,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingTKUtil : NSObject
 
++ (UIViewController *)topViewControllerForKeyWindow;
+
++ (UIViewController *)topViewControllerForHomeWindow;
+
 + (UIWindow *)keyWindow;
 
 + (void)openAppSetting;

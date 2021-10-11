@@ -7,8 +7,9 @@
 //
 
 #import "GIOActionSheetViewController.h"
+#if SDK3rd
 #import <GrowingAlert.h>
-
+#endif
 
 // Corresponds to the row in the action sheet section.
 typedef NS_ENUM(NSInteger, GIOActionSheetsViewControllerTableRow) {
@@ -36,7 +37,7 @@ typedef NS_ENUM(NSInteger, GIOActionSheetsViewControllerTableRow) {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
+#if SDK3rd
 // Show a dialog with an "Okay" and "Cancel" button.
 - (void)showOkayCancelActionSheet {
     NSString *cancelButtonTitle = NSLocalizedString(@"Cancel", nil);
@@ -168,5 +169,6 @@ typedef NS_ENUM(NSInteger, GIOActionSheetsViewControllerTableRow) {
 
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
+#endif
 
 @end

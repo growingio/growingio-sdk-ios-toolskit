@@ -99,13 +99,18 @@
 
 - (void)trackEventWithAttributes:(NSDictionary *)atts {
     if ([self.eventType isEqualToString:@"LOGIN_USER_ATTRIBUTES"]) {
+#if SDK3rd
         [[GrowingSDK sharedInstance] setLoginUserAttributes:atts];
+#endif
 
     } else if ([self.eventType isEqualToString:@"CONVERSION_VARIABLES"]) {
+#if SDK3rd
         [[GrowingSDK sharedInstance] setConversionVariables:atts];
-
+#endif
     } else if ([self.eventType isEqualToString:@"VISITOR_ATTRIBUTES"]) {
+#if SDK3rd
         [[GrowingSDK sharedInstance] setVisitorAttributes:atts];
+#endif
     }
 
     NSLog(@"track %@ 事件，attributes:%@", self.eventType, atts);

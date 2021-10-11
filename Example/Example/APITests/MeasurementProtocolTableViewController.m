@@ -22,7 +22,7 @@ typedef NS_ENUM(NSInteger, GIOMeasurementProtocolCount) { GIOAutoTrack = 0, GIOM
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-#if Autotracker
+#if SDK3rd && Autotracker
     self.growingPageAttributes = @{@"xxx" : @"111mmm"};
 #endif
     self.tableView.accessibilityIdentifier = @"MeasurementProtocolTableView";

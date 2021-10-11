@@ -12,6 +12,7 @@
     "SDK信息" = "SDKInfo";
     "埋点数据" = "EventsList";
     "埋点跟踪" = "XPathTrack";
+    "未集成SDK，请参考帮助文档进行集成" = "SDK is not integrated. Please refer to the help document for integration";
 
     //SDK信息
     "复制" = "Copy";
