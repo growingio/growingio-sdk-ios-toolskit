@@ -60,12 +60,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *dataSourceId;
 
 // SDK 2.0
+@property (nonatomic, assign, readonly) float sampling;
 @property (nonatomic, copy, readonly) NSString *sdk2ndAspectMode;
 
 + (instancetype)sharedInstance;
 
 - (BOOL)isSDK3rdGeneration;
 - (BOOL)isSDK2ndGeneration;
+- (BOOL)isSDKAutoTrack;
 - (NSString *)nameDescription;
 - (NSString *)initializationDescription;
 - (NSString *)excludeEventDescription;

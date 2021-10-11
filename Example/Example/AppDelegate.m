@@ -31,6 +31,8 @@ static NSString *const kGrowingProjectId = @"91eaf9b283361032";
     configuration.dataCollectionServerHost = @"http://uat-api.growingio.com";
     //    configuration.dataCollectionServerHost = @"https://run.mocky.io/v3/08999138-a180-431d-a136-051f3c6bd306";
     [GrowingSDK startWithConfiguration:configuration launchOptions:launchOptions];
+#elif SDK2nd
+    [Growing startWithAccountId:@"0a1b4118dd954ec3bcc69da5138bdb96"];
 #endif
     // 自动化测试会有授权弹窗
     //   [self registerRemoteNotification];
@@ -139,13 +141,18 @@ static NSString *const kGrowingProjectId = @"91eaf9b283361032";
 - (BOOL)application:(UIApplication *)app
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+#if SDK2nd
+    [Growing handleUrl:url];
+#endif
     return NO;
 }
 
 - (BOOL)application:(UIApplication *)application
     continueUserActivity:(NSUserActivity *)userActivity
       restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> *_Nullable))restorationHandler {
-    //    [Growing handleURL:userActivity.webpageURL];
+#if SDK2nd
+    [Growing handleUrl:userActivity.webpageURL];
+#endif
     restorationHandler(nil);
     return YES;
 }

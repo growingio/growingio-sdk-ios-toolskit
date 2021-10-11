@@ -9,16 +9,22 @@ workspace 'GrowingToolsKit.xcworkspace'
 
 target 'Example' do
   project 'Example/Example'
-  pod 'GrowingAnalytics/Autotracker'
+# SDK 3.0
+#  pod 'GrowingAnalytics/Autotracker'
 #  pod 'GrowingAnalytics/Tracker'
 #  pod 'GrowingAnalytics/Hybrid'
 #  pod 'GrowingAnalytics/ENABLE_ENCRYPTION' #启用加密
 #  pod 'GrowingAnalytics/Advertising'
 #  pod 'GrowingAnalytics/DISABLE_IDFA' #禁用idfa
+
+# SDK 2.0
+  pod 'GrowingAutoTrackKit'
+#  pod 'GrowingCoreKit'
+
   pod 'SDCycleScrollView', '~> 1.75'
   pod 'MJRefresh'
   pod 'MBProgressHUD'
-  pod 'GrowingToolsKit/SDK30202', :path => './', :configurations => ['Debug']
+  pod 'GrowingToolsKit/SDK2nd', :path => './', :configurations => ['Debug']
 
 end
 

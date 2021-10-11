@@ -12,7 +12,7 @@
 #endif
 
 #define SDK3rd 0
-#define SDK2nd 0
+#define SDK2nd 1
 #define Autotracker 1
 
 #if SDK3rd && Autotracker

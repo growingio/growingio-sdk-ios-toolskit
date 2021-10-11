@@ -38,6 +38,16 @@ TODO: Add long description of the pod here.
     }
     ss.xcconfig = { 'ENABLE_BITCODE' => 'NO'}
   end
+  
+  s.subspec 'SDK2nd' do |ss|
+    ss.source_files = 'GrowingToolsKit/GrowingToolsKit{.h,.m}'
+    ss.dependency 'GrowingToolsKit/Default'
+    ss.pod_target_xcconfig = {
+      'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_SDK2nd=1',
+      'OTHER_LDFLAGS' => '-Wl,-U,_g_GDPRFlag'
+    }
+    ss.xcconfig = { 'ENABLE_BITCODE' => 'NO'}
+  end
 
   s.subspec 'Core' do |ss|
     ss.source_files = 'GrowingToolsKit/Core/**/*{.h,.m,.c,.cpp,.mm}'

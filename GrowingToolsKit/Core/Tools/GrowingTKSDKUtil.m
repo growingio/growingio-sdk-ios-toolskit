@@ -61,6 +61,7 @@
 @property (nonatomic, copy, readwrite) NSString *dataSourceId;
 
 // SDK 2.0
+@property (nonatomic, assign, readwrite) float sampling;
 @property (nonatomic, copy, readwrite) NSString *sdk2ndAspectMode;
 
 // Private
@@ -111,7 +112,7 @@
         __block NSInvocation *invocation = nil;
         SEL selector = NSSelectorFromString(@"trackerWithConfiguration:launchOptions:");
         id block = ^(id obj, id configuration, NSDictionary *launchOptions) {
-            return growingtk_trackerInit(@"/Autotracker", invocation, configuration, launchOptions);
+            return growingtk_sdk3rdInit(@"/Autotracker", invocation, configuration, launchOptions);
         };
         invocation = [class growingtk_swizzleClassMethod:selector withBlock:block error:nil];
     }
@@ -124,28 +125,54 @@
         __block NSInvocation *invocation = nil;
         SEL selector = NSSelectorFromString(@"trackerWithConfiguration:launchOptions:");
         id block = ^(id obj, id configuration, NSDictionary *launchOptions) {
-            return growingtk_trackerInit(@"/Tracker", invocation, configuration, launchOptions);
+            return growingtk_sdk3rdInit(@"/Tracker", invocation, configuration, launchOptions);
         };
         invocation = [class growingtk_swizzleClassMethod:selector withBlock:block error:nil];
     }
         // *************** SDK 3.0 ***************
     } else if (GrowingTKSDKUtil.sharedInstance.isSDK2ndGeneration) {
-        // *************** SDK 2.0 ***************
+    // *************** SDK 2.0 ***************
+    sdk2CoreKitInitialization : {
+        Class class = NSClassFromString(@"Growing");
+        if (!class) {
+            goto end;
+        }
 
+        __block NSInvocation *invocation = nil;
+        SEL selector = NSSelectorFromString(@"startWithAccountId:withSampling:");
+        id block = ^(id obj, NSString *accountId, CGFloat sampling) {
+            return growingtk_sdk2ndInit(invocation, accountId, sampling);
+        };
+        invocation = [class growingtk_swizzleClassMethod:selector withBlock:block error:nil];
+    }
+    sdk2CoreKitHandleURL : {
+        Class class = NSClassFromString(@"Growing");
+        if (!class) {
+            goto end;
+        }
+
+        __block NSInvocation *invocation = nil;
+        SEL selector = NSSelectorFromString(@"handleUrl:");
+        id block = ^(id obj, NSURL *url) {
+            return growingtk_sdk2ndHandleURL(invocation, url);
+        };
+        invocation = [class growingtk_swizzleClassMethod:selector withBlock:block error:nil];
+    }
         // *************** SDK 2.0 ***************
     }
 end:;
 }
 
-static id growingtk_trackerInit(NSString *module,
-                                NSInvocation *invocation,
-                                id configuration,
-                                NSDictionary *launchOptions) {
+static id growingtk_sdk3rdInit(NSString *module,
+                               NSInvocation *invocation,
+                               id configuration,
+                               NSDictionary *launchOptions) {
     if (!invocation) {
         return nil;
     }
     [invocation retainArguments];
 
+    // 防止集成了无埋点SDK，却初始化了埋点SDK的情况
     GrowingTKSDKUtil.sharedInstance.subName = module;
 
     NSTimeInterval startTime = [[NSDate date] timeIntervalSince1970];
@@ -154,7 +181,7 @@ static id growingtk_trackerInit(NSString *module,
     [invocation invoke];
     NSTimeInterval endTime = [[NSDate date] timeIntervalSince1970];
     if (GrowingTKSDKUtil.sharedInstance.initializationTime <= 0) {
-        //避免多次初始化影响，取第一次初始化耗时
+        // 避免多次初始化影响，取第一次初始化耗时
         GrowingTKSDKUtil.sharedInstance.initializationTime = (endTime - startTime) * 1000LL;
     }
     GrowingTKSDKUtil.sharedInstance.isInitialized = YES;
@@ -162,6 +189,37 @@ static id growingtk_trackerInit(NSString *module,
     id ret = nil;
     [invocation getReturnValue:&ret];
     return ret;
+}
+
+static void growingtk_sdk2ndInit(NSInvocation *invocation, NSString *accountId, CGFloat sampling) {
+    if (!invocation) {
+        return;
+    }
+    [invocation retainArguments];
+
+    NSTimeInterval startTime = [[NSDate date] timeIntervalSince1970];
+    [invocation setArgument:&accountId atIndex:2];
+    [invocation setArgument:&sampling atIndex:3];
+    [invocation invoke];
+    NSTimeInterval endTime = [[NSDate date] timeIntervalSince1970];
+    if (GrowingTKSDKUtil.sharedInstance.initializationTime <= 0) {
+        // 避免多次初始化影响，取第一次初始化耗时
+        GrowingTKSDKUtil.sharedInstance.initializationTime = (endTime - startTime) * 1000LL;
+        GrowingTKSDKUtil.sharedInstance.sampling = sampling;
+    }
+    GrowingTKSDKUtil.sharedInstance.isInitialized = YES;
+}
+
+static BOOL kGrowingTKHandleURL = NO;
+static void growingtk_sdk2ndHandleURL(NSInvocation *invocation, NSURL *url) {
+    if (!invocation) {
+        return;
+    }
+    [invocation retainArguments];
+    [invocation setArgument:&url atIndex:2];
+    [invocation invoke];
+
+    kGrowingTKHandleURL = YES;
 }
 
 static id growingtk_valueForUndefinedKey(NSString *key) {
@@ -176,6 +234,17 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 
 - (BOOL)isSDK2ndGeneration {
     return NSClassFromString(@"Growing") != nil;
+}
+
+- (BOOL)isSDKAutoTrack {
+    if (self.isSDK3rdGeneration) {
+        return [self.subName containsString:@"Auto"];
+    } else if (self.isSDK2ndGeneration) {
+        Class cls = NSClassFromString(@"Growing");
+        SEL selector = NSSelectorFromString(@"globalImpScale");
+        return [cls respondsToSelector:selector];
+    }
+    return NO;
 }
 
 - (NSString *)nameDescription {
@@ -245,7 +314,8 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
         if ([viewController respondsToSelector:selector]) {
             ((void (*)(id, SEL, NSUInteger))objc_msgSend)(viewController, selector, 3 /** GrowingIgnoreAll */);
         }
-    } else {
+    } else if (self.isSDK2ndGeneration) {
+        // SDK 2.0 windowLevel != UIWindowLevelNormal 不会采集
     }
 }
 
@@ -255,7 +325,11 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
         if ([view respondsToSelector:selector]) {
             ((void (*)(id, SEL, NSUInteger))objc_msgSend)(view, selector, 3 /** GrowingIgnoreAll */);
         }
-    } else {
+    } else if (self.isSDK2ndGeneration) {
+        SEL selector = NSSelectorFromString(@"setGrowingAttributesDonotTrack:");
+        if ([view respondsToSelector:selector]) {
+            ((void (*)(id, SEL, BOOL))objc_msgSend)(view, selector, YES);
+        }
     }
 }
 
@@ -282,12 +356,23 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 - (void)applicationDidFinishLaunching {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    Class session = NSClassFromString(@"GrowingSession");
-    if (session) {
-        SEL selector = NSSelectorFromString(@"currentSession");
-        if ([session respondsToSelector:selector]) {
-            id s = [session performSelector:selector];
-            self.delayInitialized = (s == nil);
+    if (self.isSDK3rdGeneration) {
+        Class session = NSClassFromString(@"GrowingSession");
+        if (session) {
+            SEL selector = NSSelectorFromString(@"currentSession");
+            if ([session respondsToSelector:selector]) {
+                id s = [session performSelector:selector];
+                self.delayInitialized = (s == nil);
+            }
+        }
+    } else if (self.isSDK2ndGeneration) {
+        Class cls = NSClassFromString(@"GrowingInstance");
+        if (cls) {
+            SEL selector = NSSelectorFromString(@"sharedInstance");
+            if ([cls respondsToSelector:selector]) {
+                id s = [cls performSelector:selector];
+                self.delayInitialized = (s == nil);
+            }
         }
     }
 #pragma clang diagnostic pop
@@ -304,7 +389,14 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
                 _name = @"GrowingAnalytics";
             }
         } else if (self.isSDK2ndGeneration) {
-            _name = @"";
+            Class cls = NSClassFromString(@"Growing");
+            if ([cls respondsToSelector:NSSelectorFromString(@"trackPage:")]) {
+                _name = @"GrowingCDPCoreKit";
+            } else if ([cls respondsToSelector:NSSelectorFromString(@"autoTrackKitVersion")]) {
+                _name = @"GrowingAutoTrackKit";
+            } else {
+                _name = @"GrowingCoreKit";
+            }
         } else {
             _name = @"";
         }
@@ -344,7 +436,7 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
             }
             return version ?: @"";
 #ifdef GROWING_SDK30202
-        }else {
+        } else {
             // dangerous, may cause 'dyld: Symbol not found'
             extern NSString *const GrowingTrackerVersionName;
             extern const int GrowingTrackerVersionCode;
@@ -352,7 +444,15 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 #endif
         }
     } else if (self.isSDK2ndGeneration) {
-        return @"";
+        Class cls = NSClassFromString(@"Growing");
+        SEL selector = NSSelectorFromString(@"sdkVersion");
+        if ([cls respondsToSelector:selector]) {
+            NSString *version = [cls performSelector:selector];
+            return version ?: @"";
+        } else if ([cls respondsToSelector:NSSelectorFromString(@"autoTrackKitVersion")]) {
+            NSString *version = [cls performSelector:selector];
+            return version ?: @"";
+        }
     } else {
         return @"-";
     }
@@ -377,18 +477,15 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 - (NSString *)deviceId {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    if (self.isSDK3rdGeneration) {
-        Class class = NSClassFromString(@"GrowingDeviceInfo");
-        SEL selector = NSSelectorFromString(@"currentDeviceInfo");
-        if ([class respondsToSelector:selector]) {
-            id deviceInfo = [class performSelector:selector];
-            SEL selector2 = NSSelectorFromString(@"deviceIDString");
-            if ([deviceInfo respondsToSelector:selector2]) {
-                NSString *deviceIDString = [deviceInfo performSelector:selector2];
-                return deviceIDString ?: @"";
-            }
+    Class class = NSClassFromString(@"GrowingDeviceInfo");
+    SEL selector = NSSelectorFromString(@"currentDeviceInfo");
+    if ([class respondsToSelector:selector]) {
+        id deviceInfo = [class performSelector:selector];
+        SEL selector2 = NSSelectorFromString(@"deviceIDString");
+        if ([deviceInfo respondsToSelector:selector2]) {
+            NSString *deviceIDString = [deviceInfo performSelector:selector2];
+            return deviceIDString ?: @"";
         }
-    } else {
     }
 #pragma clang diagnostic pop
     return @"";
@@ -408,7 +505,17 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
                 return userId ?: @"";
             }
         }
-    } else {
+    } else if (self.isSDK2ndGeneration) {
+        Class class = NSClassFromString(@"GrowingCustomField");
+        SEL selector = NSSelectorFromString(@"shareInstance");
+        if ([class respondsToSelector:selector]) {
+            id instance = [class performSelector:selector];
+            SEL selector2 = NSSelectorFromString(@"cs1");
+            if ([instance respondsToSelector:selector2]) {
+                NSString *userId = [instance performSelector:selector2];
+                return userId ?: @"";
+            }
+        }
     }
 #pragma clang diagnostic pop
     return @"";
@@ -428,7 +535,6 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
                 return userKey ?: @"";
             }
         }
-    } else {
     }
 #pragma clang diagnostic pop
     return @"";
@@ -448,7 +554,13 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
                 return sessionId ?: @"";
             }
         }
-    } else {
+    } else if (self.isSDK2ndGeneration) {
+        Class class = NSClassFromString(@"Growing");
+        SEL selector = NSSelectorFromString(@"getSessionId");
+        if ([class respondsToSelector:selector]) {
+            NSString *sessionId = [class performSelector:selector];
+            return sessionId ?: @"";
+        }
     }
 #pragma clang diagnostic pop
     return @"";
@@ -460,9 +572,13 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
         SEL selector = NSSelectorFromString(@"cellularNetworkUploadEventSize");
         unsigned long long size = ((unsigned long long (*)(id, SEL))objc_msgSend)(class, selector);
         return [NSString stringWithFormat:@"%.2fKB", (double)size / 1000];
-    } else {
-        return @"";
+    } else if (self.isSDK2ndGeneration) {
+        Class class = NSClassFromString(@"GrowingFileStore");
+        SEL selector = NSSelectorFromString(@"cellularNetworkUploadEventSize");
+        unsigned long long size = ((unsigned long long (*)(id, SEL))objc_msgSend)(class, selector);
+        return [NSString stringWithFormat:@"%.2fKB", (double)size / 1000];
     }
+    return @"";
 }
 
 - (BOOL)isIntegrated {
@@ -488,9 +604,36 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
                 return NO;
             }
         }
-    } else {
-        return YES;
+    } else if (self.isSDK2ndGeneration) {
+        kGrowingTKHandleURL = NO;
+        NSObject *delegate = [UIApplication sharedApplication].delegate;
+        if ([delegate respondsToSelector:@selector(application:openURL:options:)]) {
+            ((BOOL(*)(id, SEL, id, id, id))objc_msgSend)(delegate,
+                                                         @selector(application:openURL:options:),
+                                                         [UIApplication sharedApplication],
+                                                         [NSURL URLWithString:@"growingio://test"],
+                                                         nil);
+            return kGrowingTKHandleURL;
+        } else if ([delegate respondsToSelector:@selector(application:openURL:sourceApplication:annotation:)]) {
+            ((BOOL(*)(id, SEL, id, id, id, id))objc_msgSend)(delegate,
+                                                             @selector(application:
+                                                                           openURL:sourceApplication:annotation:),
+                                                             [UIApplication sharedApplication],
+                                                             [NSURL URLWithString:@"growingio://test"],
+                                                             @"",
+                                                             nil);
+            return kGrowingTKHandleURL;
+        } else if ([delegate respondsToSelector:@selector(application:handleOpenURL:)]) {
+            ((BOOL(*)(id, SEL, id, id))objc_msgSend)(delegate,
+                                                     @selector(application:handleOpenURL:),
+                                                     [UIApplication sharedApplication],
+                                                     [NSURL URLWithString:@"growingio://test"]);
+            return kGrowingTKHandleURL;
+        } else {
+            return NO;
+        }
     }
+    return NO;
 }
 
 - (BOOL)isAdaptToDeepLink {
@@ -508,73 +651,135 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
                 return NO;
             }
         }
-    } else {
-        return YES;
+    } else if (self.isSDK2ndGeneration) {
+        kGrowingTKHandleURL = NO;
+        NSObject *delegate = [UIApplication sharedApplication].delegate;
+        NSUserActivity *acitivity = [[NSUserActivity alloc] initWithActivityType:@"Test"];
+        void (^block)(NSArray<id<UIUserActivityRestoring>> *_Nullable) =
+            ^(NSArray<id<UIUserActivityRestoring>> *_Nullable array) {
+            };
+        if ([delegate respondsToSelector:@selector(application:continueUserActivity:restorationHandler:)]) {
+            ((BOOL(*)(id, SEL, id, id, id))objc_msgSend)(delegate,
+                                                         @selector(application:
+                                                             continueUserActivity:restorationHandler:),
+                                                         [UIApplication sharedApplication],
+                                                         acitivity,
+                                                         block);
+            return kGrowingTKHandleURL;
+        } else {
+            return NO;
+        }
     }
+    return NO;
 }
 
 - (NSString *)projectId {
     if (self.isSDK3rdGeneration) {
         return [self.sdk3rdConfiguration valueForKey:@"projectId"] ?: @"";
-    } else {
-        return @"";
+    } else if (self.isSDK2ndGeneration) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        Class cls = NSClassFromString(@"GrowingInstance");
+        SEL selector = NSSelectorFromString(@"sharedInstance");
+        if ([cls respondsToSelector:selector]) {
+            id instance = [cls performSelector:selector];
+            SEL selector2 = NSSelectorFromString(@"accountID");
+            if ([instance respondsToSelector:selector2]) {
+                NSString *accountId = [instance performSelector:selector2];
+                return accountId ?: @"";
+            }
+        }
+#pragma clang diagnostic pop
     }
+    return @"";
 }
 
 - (BOOL)debugEnabled {
     if (self.isSDK3rdGeneration) {
         return ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"debugEnabled"]).boolValue;
-    } else {
-        return YES;
+    } else if (self.isSDK2ndGeneration) {
+        Class class = NSClassFromString(@"Growing");
+        SEL selector = NSSelectorFromString(@"getEnableLog");
+        return ((BOOL(*)(id, SEL))objc_msgSend)(class, selector);
     }
+    return YES;
 }
 
 - (NSUInteger)cellularDataLimit {
     if (self.isSDK3rdGeneration) {
         return ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"cellularDataLimit"]).integerValue;
-    } else {
-        return 0;
+    } else if (self.isSDK2ndGeneration) {
+        Class class = NSClassFromString(@"Growing");
+        SEL selector = NSSelectorFromString(@"getDailyDataLimit");
+        NSUInteger limit = ((NSUInteger(*)(id, SEL))objc_msgSend)(class, selector);
+        return limit / 1024;
     }
+    return 0;
 }
 
 - (NSTimeInterval)dataUploadInterval {
     if (self.isSDK3rdGeneration) {
         return ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"dataUploadInterval"]).doubleValue;
-    } else {
-        return 0;
+    } else if (self.isSDK2ndGeneration) {
+        Class class = NSClassFromString(@"Growing");
+        SEL selector = NSSelectorFromString(@"getFlushInterval");
+        return ((NSTimeInterval(*)(id, SEL))objc_msgSend)(class, selector);
     }
+    return 0;
 }
 
 - (NSTimeInterval)sessionInterval {
     if (self.isSDK3rdGeneration) {
         return ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"sessionInterval"]).doubleValue;
-    } else {
-        return 0;
+    } else if (self.isSDK2ndGeneration) {
+        Class class = NSClassFromString(@"Growing");
+        SEL selector = NSSelectorFromString(@"getSessionInterval");
+        return ((NSTimeInterval(*)(id, SEL))objc_msgSend)(class, selector);
     }
+    return 0;
 }
 
 - (BOOL)dataCollectionEnabled {
     if (self.isSDK3rdGeneration) {
         return ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"dataCollectionEnabled"]).boolValue;
-    } else {
-        return YES;
+    } else if (self.isSDK2ndGeneration) {
+#ifdef GROWING_SDK2nd
+        // dangerous, may cause 'dyld: Symbol not found'
+        extern BOOL g_GDPRFlag;
+        return !g_GDPRFlag;
+#endif
     }
+    return NO;
 }
 
 - (BOOL)uploadExceptionEnable {
     if (self.isSDK3rdGeneration) {
         return ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"uploadExceptionEnable"]).boolValue;
-    } else {
-        return YES;
+    } else if (self.isSDK2ndGeneration) {
+        // TODO:SDK 2.0
     }
+    return NO;
 }
 
 - (NSString *)dataCollectionServerHost {
     if (self.isSDK3rdGeneration) {
         return [self.sdk3rdConfiguration valueForKey:@"dataCollectionServerHost"] ?: @"";
-    } else {
-        return @"";
+    } else if (self.isSDK2ndGeneration) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        Class cls = NSClassFromString(@"GrowingNetworkConfig");
+        SEL selector = NSSelectorFromString(@"sharedInstance");
+        if ([cls respondsToSelector:selector]) {
+            id instance = [cls performSelector:selector];
+            SEL selector2 = NSSelectorFromString(@"growingApiHost");
+            if ([instance respondsToSelector:selector2]) {
+                NSString *host = [instance performSelector:selector2];
+                return host ?: @"";
+            }
+        }
+#pragma clang diagnostic pop
     }
+    return @"";
 }
 
 - (NSUInteger)excludeEvent {
@@ -597,28 +802,49 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
     if (self.isSDK3rdGeneration) {
         return ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"idMappingEnabled"]).boolValue;
     } else {
-        return YES;
+        return NO;
     }
 }
 
 - (float)impressionScale {
-    if (self.isSDK3rdGeneration) {
-        return ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"impressionScale"]).floatValue;
-    } else {
-        return 0;
+    if (self.isSDKAutoTrack) {
+        if (self.isSDK3rdGeneration) {
+            return ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"impressionScale"]).floatValue;
+        } else if (self.isSDK2ndGeneration) {
+            Class class = NSClassFromString(@"Growing");
+            SEL selector = NSSelectorFromString(@"globalImpScale");
+            return ((double (*)(id, SEL))objc_msgSend)(class, selector);
+        }
     }
+    return 0;
 }
 
 - (NSString *)dataSourceId {
     if (self.isSDK3rdGeneration) {
         return [self.sdk3rdConfiguration valueForKey:@"dataSourceId"] ?: @"";
-    } else {
-        return @"";
+    } else if (self.isSDK2ndGeneration) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        Class cls = NSClassFromString(@"GrowingInstance");
+        SEL selector = NSSelectorFromString(@"sharedInstance");
+        if ([cls respondsToSelector:selector]) {
+            id instance = [cls performSelector:selector];
+            SEL selector2 = NSSelectorFromString(@"dataSourceID");
+            if ([instance respondsToSelector:selector2]) {
+                NSString *dataSourceId = [instance performSelector:selector2];
+                return dataSourceId ?: @"";
+            }
+        }
+#pragma clang diagnostic pop
     }
+    return @"";
 }
 
 - (NSString *)sdk2ndAspectMode {
-    return @"AspectModeDynamicSwizzling";  // AspectModeSubClass
+    Class class = NSClassFromString(@"Growing");
+    SEL selector = NSSelectorFromString(@"getAspectMode");
+    NSInteger mode = ((NSInteger(*)(id, SEL))objc_msgSend)(class, selector);
+    return mode == 1 ? @"AspectModeDynamicSwizzling" : @"AspectModeSubClass";
 }
 
 - (NSObject *)sdk3rdConfiguration {

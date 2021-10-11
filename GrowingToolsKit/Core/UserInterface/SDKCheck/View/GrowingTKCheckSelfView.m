@@ -209,12 +209,28 @@ static CGFloat const CheckButtonHeight = 130.0f;
     ]];
 
     if (sdk.isInitialized) {
-        [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
-                     @"check": @(0),
-                     @"checkMessage": @"正在获取Project ID",
-                     @"title": @"Project ID",
-                     @"value": sdk.projectId
-                 }]];
+        if (sdk.isSDK3rdGeneration) {
+            [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
+                         @"check": @(0),
+                         @"checkMessage": @"正在获取Project ID",
+                         @"title": @"Project ID",
+                         @"value": sdk.projectId
+                     }]];
+        } else if (sdk.isSDK2ndGeneration) {
+            [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
+                         @"check": @(0),
+                         @"checkMessage": @"正在获取Account ID",
+                         @"title": @"Account ID",
+                         @"value": sdk.projectId
+                     }]];
+            [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
+                         @"check": @(0),
+                         @"checkMessage": @"正在获取采样率",
+                         @"title": @"采样率",
+                         @"value": [NSString stringWithFormat:@"%.3f%%", sdk.sampling * 100],
+                         @"bad": @(sdk.sampling == 0)
+                     }]];
+        }
 
         if (sdk.dataSourceId.length > 0) {
             [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{

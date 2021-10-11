@@ -102,7 +102,13 @@
     ]];
 
     if (sdk.isInitialized) {
-        [sdkInfo addObject:@{@"title": @"Project ID", @"value": sdk.projectId}];
+        if (sdk.isSDK3rdGeneration) {
+            [sdkInfo addObject:@{@"title": @"Project ID", @"value": sdk.projectId}];
+        } else if (sdk.isSDK2ndGeneration) {
+            [sdkInfo addObject:@{@"title": @"Account ID", @"value": sdk.projectId}];
+            [sdkInfo addObject:@{@"title": @"采样率", @"value": [NSString stringWithFormat:@"%.3f%%", sdk.sampling * 100]}];
+            [sdkInfo addObject:@{@"title": @"采集模式", @"value": sdk.sdk2ndAspectMode}];
+        }
 
         if (sdk.dataSourceId.length > 0) {
             [sdkInfo addObject:@{@"title": @"DataSource ID", @"value": sdk.dataSourceId}];
@@ -115,12 +121,14 @@
 
         [sdkInfo addObject:@{@"title": @"Session ID", @"value": sdk.sessionId}];
         
-        NSString *idMappingEnabled = sdk.idMappingEnabled ? @"YES" : @"NO";
-        [sdkInfo addObject:@{@"title": @"Id Mapping", @"value": idMappingEnabled}];
-        
-        if (sdk.idMappingEnabled) {
-            NSString *userKey = sdk.userKey;
-            [sdkInfo addObject:@{@"title": @"User Key", @"value": userKey.length > 0 ? userKey : @"未配置"}];
+        if (sdk.isSDK3rdGeneration) {
+            NSString *idMappingEnabled = sdk.idMappingEnabled ? @"YES" : @"NO";
+            [sdkInfo addObject:@{@"title": @"Id Mapping", @"value": idMappingEnabled}];
+            
+            if (sdk.idMappingEnabled) {
+                NSString *userKey = sdk.userKey;
+                [sdkInfo addObject:@{@"title": @"User Key", @"value": userKey.length > 0 ? userKey : @"未配置"}];
+            }
         }
 
         NSString *debugEnabled = sdk.debugEnabled ? @"YES" : @"NO";
@@ -145,18 +153,22 @@
         NSString *dataCollectionServerHost = sdk.dataCollectionServerHost;
         [sdkInfo addObject:@{@"title": @"ServerHost", @"value": dataCollectionServerHost}];
 
-        NSString *excludeEvent = sdk.excludeEventDescription;
-        if (excludeEvent.length > 0) {
-            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"事件过滤"), @"value": excludeEvent}];
-        }
-        
-        NSString *ignoreField = sdk.ignoreFieldDescription;
-        if (ignoreField.length > 0) {
-            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"事件属性过滤"), @"value": ignoreField}];
+        if (sdk.isSDK3rdGeneration) {
+            NSString *excludeEvent = sdk.excludeEventDescription;
+            if (excludeEvent.length > 0) {
+                [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"事件过滤"), @"value": excludeEvent}];
+            }
+            
+            NSString *ignoreField = sdk.ignoreFieldDescription;
+            if (ignoreField.length > 0) {
+                [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"事件属性过滤"), @"value": ignoreField}];
+            }
         }
 
-        NSString *impressionScale = [NSString stringWithFormat:@"%.f", sdk.impressionScale];
-        [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"曝光事件比例因子"), @"value": impressionScale}];
+        if (sdk.isSDKAutoTrack) {
+            NSString *impressionScale = [NSString stringWithFormat:@"%.f", sdk.impressionScale];
+            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"曝光事件比例因子"), @"value": impressionScale}];
+        }
     }
 
     NSString *deviceName = [GrowingTKDevice deviceName];

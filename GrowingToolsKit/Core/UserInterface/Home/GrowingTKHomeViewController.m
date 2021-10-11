@@ -126,10 +126,12 @@
     }
     [self showChildController:self.pluginsList];
 
-    self.triangleViewCenterXConstraint.active = YES;
     self.triangleViewCenterXConstraint2.active = NO;
+    self.triangleViewCenterXConstraint.active = YES;
     [self.triangleView setNeedsUpdateConstraints];
-    [self.view layoutIfNeeded];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.view layoutIfNeeded];
+    });
 }
 
 - (void)showCheckSelf {
@@ -143,7 +145,9 @@
     self.triangleViewCenterXConstraint.active = NO;
     self.triangleViewCenterXConstraint2.active = YES;
     [self.triangleView setNeedsUpdateConstraints];
-    [self.view layoutIfNeeded];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.view layoutIfNeeded];
+    });
 }
 
 - (void)hideHome {
