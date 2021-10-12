@@ -67,7 +67,14 @@ static CGFloat const kInfoViewMargin = 24.0f;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+}
 
+- (void)viewWillTransitionToSize:(CGSize)size
+       withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.circleView.center = self.view.center;
+    });
 }
 
 #pragma mark - Private Method

@@ -55,13 +55,22 @@
 
     [NSLayoutConstraint activateConstraints:@[
         [self.checkView.centerXAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.centerXAnchor],
-        [self.checkView.centerYAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.centerYAnchor constant:-30.0f],
+        [self.checkView.centerYAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.centerYAnchor
+                                                     constant:-30.0f],
         [self.checkView.widthAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.widthAnchor],
         [label2.centerXAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.centerXAnchor],
-        [label2.bottomAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.bottomAnchor constant:-30.0f],
+        [label2.bottomAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.bottomAnchor constant:-20.0f],
         [label.centerXAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.centerXAnchor],
-        [label.bottomAnchor constraintEqualToAnchor:label2.topAnchor constant:-10.0f]
+        [label.bottomAnchor constraintEqualToAnchor:label2.topAnchor constant:-8.0f]
     ]];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size
+       withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    UIInterfaceOrientation orientation =
+        size.width < size.height ? UIInterfaceOrientationPortrait : UIInterfaceOrientationLandscapeLeft;
+    [self.checkView resetConstraintsWithOrientation:orientation];
 }
 
 #pragma mark - Getter & Setter

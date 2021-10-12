@@ -35,6 +35,11 @@ static CGFloat const CheckButtonHeight = 130.0f;
 @property (nonatomic, strong) NSMutableArray *datasource;
 @property (nonatomic, strong) NSArray *infoArray;
 
+@property (nonatomic, strong) NSArray<NSLayoutConstraint *> *constraintsForPortrait;
+@property (nonatomic, strong) NSArray<NSLayoutConstraint *> *constraintsForLandscape;
+@property (nonatomic, strong) NSLayoutConstraint *tableViewHeightConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *tableViewLimitedHeightConstraint;
+
 @end
 
 @implementation GrowingTKCheckSelfView
@@ -47,79 +52,63 @@ static CGFloat const CheckButtonHeight = 130.0f;
 
         [self addSubview:self.checkButton];
         [self addSubview:self.tableView];
-
+        
+        self.tableViewHeightConstraint = [self.tableView.heightAnchor constraintEqualToConstant:80.0f];
+        self.tableViewLimitedHeightConstraint = [self.tableView.heightAnchor constraintEqualToConstant:200.0f];
+        
+        self.constraintsForPortrait = @[
+            [self.checkButton.topAnchor constraintEqualToAnchor:self.topAnchor],
+            [self.checkButton.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
+            [self.tableView.topAnchor constraintEqualToAnchor:self.checkButton.bottomAnchor constant:10.0f],
+            [self.tableView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+            self.tableViewHeightConstraint
+        ];
+        
+        self.constraintsForLandscape = @[
+            [self.checkButton.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
+            [NSLayoutConstraint constraintWithItem:self.checkButton
+                                         attribute:NSLayoutAttributeCenterX
+                                         relatedBy:NSLayoutRelationEqual
+                                            toItem:self attribute:NSLayoutAttributeCenterX
+                                        multiplier:0.3f
+                                          constant:0.0f],
+            [self.tableView.topAnchor constraintEqualToAnchor:self.topAnchor],
+            [self.tableView.leadingAnchor constraintEqualToAnchor:self.checkButton.trailingAnchor constant:10.0f],
+            self.tableViewLimitedHeightConstraint
+        ];
+        
         [NSLayoutConstraint activateConstraints:@[
-            [NSLayoutConstraint constraintWithItem:self.checkButton
-                                         attribute:NSLayoutAttributeTop
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self
-                                         attribute:NSLayoutAttributeTop
-                                        multiplier:1.0
-                                          constant:0.0],
-            [NSLayoutConstraint constraintWithItem:self.checkButton
-                                         attribute:NSLayoutAttributeWidth
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:nil
-                                         attribute:NSLayoutAttributeNotAnAttribute
-                                        multiplier:1.0
-                                          constant:CheckButtonHeight],
-            [NSLayoutConstraint constraintWithItem:self.checkButton
-                                         attribute:NSLayoutAttributeHeight
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:nil
-                                         attribute:NSLayoutAttributeNotAnAttribute
-                                        multiplier:1.0
-                                          constant:CheckButtonHeight],
-            [NSLayoutConstraint constraintWithItem:self.checkButton
-                                         attribute:NSLayoutAttributeCenterX
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self
-                                         attribute:NSLayoutAttributeCenterX
-                                        multiplier:1.0
-                                          constant:0.0],
-            [NSLayoutConstraint constraintWithItem:self.tableView
-                                         attribute:NSLayoutAttributeTop
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self.checkButton
-                                         attribute:NSLayoutAttributeBottom
-                                        multiplier:1.0
-                                          constant:10.0],
-            [NSLayoutConstraint constraintWithItem:self.tableView
-                                         attribute:NSLayoutAttributeLeading
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self
-                                         attribute:NSLayoutAttributeLeading
-                                        multiplier:1.0
-                                          constant:0.0],
-            [NSLayoutConstraint constraintWithItem:self.tableView
-                                         attribute:NSLayoutAttributeTrailing
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self
-                                         attribute:NSLayoutAttributeTrailing
-                                        multiplier:1.0
-                                          constant:0.0],
-            [NSLayoutConstraint constraintWithItem:self.tableView
-                                         attribute:NSLayoutAttributeBottom
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self
-                                         attribute:NSLayoutAttributeBottom
-                                        multiplier:1.0
-                                          constant:0.0],
-            [NSLayoutConstraint constraintWithItem:self.tableView
-                                         attribute:NSLayoutAttributeHeight
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:nil
-                                         attribute:NSLayoutAttributeNotAnAttribute
-                                        multiplier:1.0
-                                          constant:80.0],
+            [self.checkButton.widthAnchor constraintEqualToConstant:CheckButtonHeight],
+            [self.checkButton.heightAnchor constraintEqualToConstant:CheckButtonHeight],
+            [self.tableView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+            [self.tableView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor]
         ]];
+        
+        [self resetConstraintsWithOrientation:[UIApplication sharedApplication].statusBarOrientation];
     }
     return self;
 }
 
+#pragma mark - Public Method
+
+- (void)resetConstraintsWithOrientation:(UIInterfaceOrientation)orientation {
+    if (UIInterfaceOrientationIsLandscape(orientation)) {
+        self.tableView.scrollEnabled = YES;
+        self.tableView.showsVerticalScrollIndicator = YES;
+        [NSLayoutConstraint deactivateConstraints:self.constraintsForPortrait];
+        [NSLayoutConstraint activateConstraints:self.constraintsForLandscape];
+
+    } else {
+        self.tableView.scrollEnabled = NO;
+        self.tableView.showsVerticalScrollIndicator = NO;
+        [NSLayoutConstraint deactivateConstraints:self.constraintsForLandscape];
+        [NSLayoutConstraint activateConstraints:self.constraintsForPortrait];
+    }
+}
+
 #pragma mark - Private Method
 
-- (void)insertNext:(NSMutableArray *)fromArray {
+- (void)insertNext:(NSMutableArray *)fromArray delay:(BOOL)delay {
     if (fromArray.count <= self.datasource.count
         && ((NSNumber *)((NSMutableDictionary *)self.datasource.lastObject)[@"check"]).boolValue) {
         self.checkButton.userInteractionEnabled = YES;
@@ -133,34 +122,41 @@ static CGFloat const CheckButtonHeight = 130.0f;
         [((NSMutableDictionary *)self.datasource.lastObject) setObject:@(1) forKey:@"check"];
     }
 
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    if (delay) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self refresh];
+            [self insertNext:fromArray delay:YES];
+        });
+    }else {
         [self refresh];
-        [self insertNext:fromArray];
-    });
+        [self insertNext:fromArray delay:YES];
+    }
 }
 
 - (void)refresh {
     [self.tableView reloadData];
-
     [self layoutIfNeeded];
-    NSArray *constraints = self.tableView.constraints;
-    for (NSLayoutConstraint *constraint in constraints) {
-        if (constraint.firstAttribute == NSLayoutAttributeHeight) {
-            constraint.constant = self.tableView.contentSize.height;
-
-            [self.tableView setNeedsUpdateConstraints];
-            [UIView animateWithDuration:0.3f
-                             animations:^{
-                                 [self layoutIfNeeded];
-                             }];
-            break;
+    self.tableViewHeightConstraint.constant = self.tableView.contentSize.height;
+    
+    if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+        if (self.datasource.count > 0) {
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.datasource.count - 1 inSection:0]
+                                  atScrollPosition:UITableViewScrollPositionBottom
+                                          animated:YES];
         }
+    } else {
+        [self.tableView setNeedsUpdateConstraints];
+        [UIView animateWithDuration:0.3f
+                         animations:^{
+                             [self layoutIfNeeded];
+                         }];
     }
 }
 
 #pragma mark - Action
 
 - (void)checkAction {
+    self.checkButton.tag = 1;
     self.checkButton.userInteractionEnabled = NO;
 
     GrowingTKSDKUtil *sdk = GrowingTKSDKUtil.sharedInstance;
@@ -272,8 +268,7 @@ static CGFloat const CheckButtonHeight = 130.0f;
     }
 
     self.datasource = nil;
-    [self refresh];
-    [self insertNext:sdkInfo];
+    [self insertNext:sdkInfo delay:NO];
 }
 
 #pragma mark - UITableView DataSource & Delegate
@@ -299,36 +294,51 @@ static CGFloat const CheckButtonHeight = 130.0f;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if (self.datasource.count > 0) {
+    if (self.datasource.count > 0 || self.checkButton.tag > 0) {
         return nil;
     }
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 100)];
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 15, self.frame.size.width, 20)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 80)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
     label.text = @"CHECK-SELF";
     label.font = [UIFont systemFontOfSize:18 weight:UIFontWeightBold];
     label.textColor = UIColor.growingtk_secondaryBackgroundColor;
     label.textAlignment = NSTextAlignmentCenter;
+    label.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:label];
 
-    UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectMake(0, 40, self.frame.size.width, 15)];
+    UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectZero];
     label2.text = @"点击检查埋点 SDK 是否集成成功";
     label2.font = [UIFont systemFontOfSize:13 weight:UIFontWeightSemibold];
     label2.textColor = UIColor.growingtk_black_1;
     label2.textAlignment = NSTextAlignmentCenter;
+    label2.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:label2];
 
-    UILabel *label3 = [[UILabel alloc] initWithFrame:CGRectMake(0, 60, self.frame.size.width, 15)];
+    UILabel *label3 = [[UILabel alloc] initWithFrame:CGRectZero];
     label3.text = @"BY GROWINGIO";
     label3.font = [UIFont systemFontOfSize:12 weight:UIFontWeightLight];
     label3.textColor = UIColor.growingtk_black_1;
     label3.textAlignment = NSTextAlignmentCenter;
+    label3.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:label3];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [label.topAnchor constraintEqualToAnchor:view.topAnchor constant:15.0f],
+        [label.heightAnchor constraintEqualToConstant:20.0f],
+        [label.centerXAnchor constraintEqualToAnchor:view.centerXAnchor],
+        [label2.topAnchor constraintEqualToAnchor:label.bottomAnchor constant:5.0f],
+        [label2.heightAnchor constraintEqualToConstant:15.0f],
+        [label2.centerXAnchor constraintEqualToAnchor:view.centerXAnchor],
+        [label3.topAnchor constraintEqualToAnchor:label2.bottomAnchor constant:5.0f],
+        [label3.heightAnchor constraintEqualToConstant:15.0f],
+        [label3.centerXAnchor constraintEqualToAnchor:view.centerXAnchor]
+    ]];
 
     return view;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForHeaderInSection:(NSInteger)section {
-    return self.datasource.count > 0 ? 0.01f : 100.0f;
+    return (self.datasource.count > 0 || self.checkButton.tag > 0) ? 0.01f : 80.0f;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -345,6 +355,7 @@ static CGFloat const CheckButtonHeight = 130.0f;
         CGFloat imageMargin = 16.0f;
 
         _checkButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _checkButton.tag = 0;
         _checkButton.frame = CGRectMake(0, 0, sideLength, sideLength);
         _checkButton.backgroundColor = UIColor.growingtk_primaryBackgroundColor;
         _checkButton.layer.cornerRadius = sideLength / 2;
@@ -385,6 +396,7 @@ static CGFloat const CheckButtonHeight = 130.0f;
         } else {
             _tableView.backgroundColor = [UIColor whiteColor];
         }
+        _tableView.backgroundColor = UIColor.clearColor;
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.scrollEnabled = NO;

@@ -88,6 +88,11 @@ static GrowingTKEntryWindow *instance = nil;
     window->_autoDock = autoDock;
     window->_moduleType = GrowingTKModuleCheckSelf;
     instance = window;
+
+    [[NSNotificationCenter defaultCenter] addObserver:window
+                                             selector:@selector(orientationDidChange:)
+                                                 name:UIApplicationDidChangeStatusBarOrientationNotification
+                                               object:nil];
 }
 
 #pragma mark - Action
@@ -133,7 +138,7 @@ static GrowingTKEntryWindow *instance = nil;
 
 - (void)entryClick {
     [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKHomeWillShowNotification object:nil];
-    
+
     [self toggle:self.moduleType
         completion:^(BOOL finished) {
             if (finished) {
@@ -193,8 +198,9 @@ static GrowingTKEntryWindow *instance = nil;
             if (@available(iOS 11.0, *)) {
                 safeBottom = self.safeAreaInsets.bottom;
             }
-            CGFloat centerY = MAX(MIN(location.y, CGRectGetMaxY([UIScreen mainScreen].bounds) - safeBottom),
-                                  [UIApplication sharedApplication].statusBarFrame.size.height);
+            CGFloat centerY =
+                MAX(MIN(location.y, CGRectGetMaxY([UIScreen mainScreen].bounds) - safeBottom - ENTRY_SIDELENGTH / 2),
+                    [UIApplication sharedApplication].statusBarFrame.size.height + ENTRY_SIDELENGTH / 2);
             if (location.x > CGRectGetWidth([UIScreen mainScreen].bounds) / 2.f) {
                 centerX = CGRectGetWidth([UIScreen mainScreen].bounds) - ENTRY_SIDELENGTH / 2 - padding;
             } else {
@@ -214,6 +220,20 @@ static GrowingTKEntryWindow *instance = nil;
         default:
             break;
     }
+}
+
+#pragma mark - Notification
+
+- (void)orientationDidChange:(NSNotification *)not {
+    // TODO: 优化横竖屏适配
+    // 这里的横竖屏适配方式不够优雅，位置不是原先位置，但总归还在屏幕内
+    if (CGPointEqualToPoint(self.latestPosition, CGPointZero)) {
+        return;
+    }
+    CGPoint point = CGPointZero;
+    point.x = self.latestPosition.y;
+    point.y = self.latestPosition.x;
+    self.latestPosition = point;
 }
 
 #pragma mark - Getter & Setter

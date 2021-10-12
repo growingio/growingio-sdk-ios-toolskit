@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingTKCheckSelfView : UIView
 
+- (void)resetConstraintsWithOrientation:(UIInterfaceOrientation)orientation;
+
 @end
 
 NS_ASSUME_NONNULL_END
