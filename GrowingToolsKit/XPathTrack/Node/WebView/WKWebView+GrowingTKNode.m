@@ -129,7 +129,9 @@ static void growingtk_webView_addUserScripts(WKUserContentController *contentCon
 }
 
 static BOOL growingtk_webView_addBridge(WKWebView *webView) {
-    BOOL dontTrack = ((BOOL(*)(id, SEL))objc_msgSend)(webView, NSSelectorFromString(@"growingViewDontTrack"));
+    SEL sel = GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration ? NSSelectorFromString(@"growingViewDontTrack")
+                                                                 : NSSelectorFromString(@"growingAttributesDonotTrack");
+    BOOL dontTrack = ((BOOL(*)(id, SEL))objc_msgSend)(webView, sel);
     if (dontTrack) {
         return NO;
     }
@@ -170,24 +172,16 @@ static BOOL growingtk_webView_addBridge(WKWebView *webView) {
     class_addMethod(cls, @selector(growingtk_nodeUpdateMask:point:), (IMP)_growingtk_nodeUpdateMask, "v@:B{");
     class_addMethod(cls, @selector(growingtk_nodeUpdateInfo), (IMP)_growingtk_nodeUpdateInfo, "v@:");
 
-    if (GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration) {
-        // *************** SDK 3.0 ***************
-        [cls growingtk_swizzleMethod:@selector(loadRequest:) withMethod:@selector(growingtk_loadRequest:) error:nil];
-        [cls growingtk_swizzleMethod:@selector(loadHTMLString:baseURL:)
-                          withMethod:@selector(growingtk_loadHTMLString:baseURL:)
-                               error:nil];
-        [cls growingtk_swizzleMethod:@selector(loadFileURL:allowingReadAccessToURL:)
-                          withMethod:@selector(growingtk_loadFileURL:allowingReadAccessToURL:)
-                               error:nil];
-        [cls growingtk_swizzleMethod:@selector(loadData:MIMEType:characterEncodingName:baseURL:)
-                          withMethod:@selector(growingtk_loadData:MIMEType:characterEncodingName:baseURL:)
-                               error:nil];
-        // *************** SDK 3.0 ***************
-    } else {
-        // *************** SDK 2.0 ***************
-
-        // *************** SDK 2.0 ***************
-    }
+    [cls growingtk_swizzleMethod:@selector(loadRequest:) withMethod:@selector(growingtk_loadRequest:) error:nil];
+    [cls growingtk_swizzleMethod:@selector(loadHTMLString:baseURL:)
+                      withMethod:@selector(growingtk_loadHTMLString:baseURL:)
+                           error:nil];
+    [cls growingtk_swizzleMethod:@selector(loadFileURL:allowingReadAccessToURL:)
+                      withMethod:@selector(growingtk_loadFileURL:allowingReadAccessToURL:)
+                           error:nil];
+    [cls growingtk_swizzleMethod:@selector(loadData:MIMEType:characterEncodingName:baseURL:)
+                      withMethod:@selector(growingtk_loadData:MIMEType:characterEncodingName:baseURL:)
+                           error:nil];
 }
 
 - (void)setGrowingtk_hybrid:(BOOL)growingtk_hybrid {

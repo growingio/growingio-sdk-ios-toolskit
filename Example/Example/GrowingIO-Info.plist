@@ -26,7 +26,17 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>GrowingIO</string>
+			<string>GrowingIO 3.0</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>growing.af745dd060b3dc92</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>GrowingIO 2.0</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>growing.530c8231345c492d</string>

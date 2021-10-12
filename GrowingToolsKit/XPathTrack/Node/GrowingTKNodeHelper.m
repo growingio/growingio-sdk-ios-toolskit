@@ -23,24 +23,41 @@
 @implementation GrowingTKNodeHelper
 
 + (nullable UIView *)realHitView:(UIView *)view point:(CGPoint)hitPoint {
-    id <GrowingTKNode>node = (id <GrowingTKNode>)view;
-    NSArray *childs = node.growingNodeChilds;
-    if (childs.count > 0) {
-        for (int i = 0; i < childs.count; i++) {
-            id <GrowingTKNode>child = childs[i];
+    // Childrens
+    if ([view conformsToProtocol:@protocol(GrowingTKNode)]
+        && [view respondsToSelector:@selector(growingNodeChilds)]) {
+        id <GrowingTKNode>node = (id <GrowingTKNode>)view;
+        NSArray *childs = node.growingNodeChilds;
+        if (childs.count > 0) {
+            for (int i = 0; i < childs.count; i++) {
+                id <GrowingTKNode>child = childs[i];
+                if (CGRectContainsPoint(child.growingNodeFrame, hitPoint)) {
+                    BOOL shouldMask = [GrowingTKNodeHelper checkShouldMask:(UIView *)child];
+                    if (shouldMask) {
+                        return [self realHitView:(UIView *)child point:hitPoint];
+                    }
+                }
+            }
+        }
+    }else {
+        // SDK 2.0
+        for (UIView *subview in view.subviews) {
+            id <GrowingTKNode>child = (id <GrowingTKNode>)subview;
             if (CGRectContainsPoint(child.growingNodeFrame, hitPoint)) {
-                BOOL shouldMask = [GrowingTKNodeHelper checkShouldMask:(UIView *)child];
+                BOOL shouldMask = [GrowingTKNodeHelper checkShouldMask:subview];
                 if (shouldMask) {
-                    return [self realHitView:(UIView *)child point:hitPoint];
+                    return [self realHitView:subview point:hitPoint];
                 }
             }
         }
     }
     
+    // Self
     BOOL shouldMask = [GrowingTKNodeHelper checkShouldMask:view];
     if (shouldMask) {
         return view;
     }else {
+        // NextResponder
         UIResponder *next = view.nextResponder;
         if (!next || ![next isKindOfClass:[UIView class]]) {
             return nil;

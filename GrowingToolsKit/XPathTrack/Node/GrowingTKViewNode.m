@@ -47,7 +47,17 @@
         // *************** SDK 3.0 ***************
     } else {
         // *************** SDK 2.0 ***************
-
+    sdk2AvoidKVCCrash : {
+        Class class = NSClassFromString(@"GrowingElement");
+        if (!class) {
+            return;
+        }
+        Method originMethod = class_getInstanceMethod(class, NSSelectorFromString(@"valueForUndefinedKey:"));
+        IMP swizzledImplementation = (IMP)growingtk_valueForUndefinedKey;
+        if (!class_addMethod(class, method_getName(originMethod), swizzledImplementation, "@@:@")) {
+            method_setImplementation(originMethod, swizzledImplementation);
+        }
+    }
         // *************** SDK 2.0 ***************
     }
 }
@@ -61,7 +71,6 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 - (instancetype)initWithView:(UIView *)view {
     self = [super init];
     if (GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration) {
-        _path = [self pathForView:view];
         Class cls = NSClassFromString(@"GrowingNodeHelper");
         if (cls) {
             SEL selector = NSSelectorFromString(@"getViewNode:");
@@ -70,15 +79,41 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
                 _view = [node valueForKey:@"view"];
                 _viewName = NSStringFromClass(_view.class);
                 _viewContent = [node valueForKey:@"viewContent"] ?: @"";
+                _path = [self pathForView:view];
                 _xPath = [node valueForKey:@"xPath"];
+                _index = ((NSNumber *)[node valueForKey:@"index"]).intValue;
+                _hasListParent = ((NSNumber *)[node valueForKey:@"hasListParent"]).boolValue;
+                
+                // unused
                 _originXPath = [node valueForKey:@"originXPath"];
                 _nodeType = [node valueForKey:@"nodeType"];
-                _index = ((NSNumber *)[node valueForKey:@"index"]).intValue;
                 _position = ((NSNumber *)[node valueForKey:@"position"]).intValue;
-                _hasListParent = ((NSNumber *)[node valueForKey:@"hasListParent"]).boolValue;
             }
         }
-    } else {
+    } else if (GrowingTKSDKUtil.sharedInstance.isSDK2ndGeneration) {
+        Class cls = NSClassFromString(@"GrowingLocalCircleWindow");
+        if (cls) {
+            id circle = [[cls alloc] init];
+            SEL selector = NSSelectorFromString(@"getElementFromNode:");
+            if ([circle respondsToSelector:selector]) {
+                id element = ((id(*)(id, SEL, id))objc_msgSend)(circle, selector, view);
+                _view = view;
+                _viewName = NSStringFromClass(_view.class);
+                _viewContent = [element valueForKey:@"content"] ?: @"";
+                _path = [element valueForKey:@"page"];
+                _xPath = [element valueForKey:@"xpath"];
+                if (_xPath.length == 0) {
+                    _xPath = @"当前SDK不支持此控件圈选";
+                }
+                _index = ((NSNumber *)[element valueForKey:@"index"]).intValue;
+                _hasListParent = _index >= 0;
+                
+                // unused
+                _originXPath = _xPath.copy;
+                _nodeType = _viewName.copy;
+                _position = 0;
+            }
+        }
     }
 
     return self;
@@ -91,11 +126,9 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
     if (self = [super init]) {
         _view = webView;
         _viewName = domain;
-        _path = h5Path;
         _viewContent = nodeDic[@"v"] ?: @"";
+        _path = h5Path;
         _xPath = nodeDic[@"x"] ?: @"";
-        _nodeType = nodeDic[@"nodeType"] ?: @"";
-        _position = 0;
         if (nodeDic[@"idx"]) {
             _index = ((NSNumber *)nodeDic[@"idx"]).intValue;
             _hasListParent = YES;
@@ -103,6 +136,11 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
             _index = -1;
             _hasListParent = NO;
         }
+        
+        // unused
+        _originXPath = _xPath.copy;
+        _nodeType = nodeDic[@"nodeType"] ?: @"";
+        _position = 0;
     }
     return self;
 }
@@ -121,7 +159,8 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
     if (self.index >= 0) {
         [array addObject:[NSString stringWithFormat:@"位置: %@", @(self.index)]];
     }
-    [array addObject:[NSString stringWithFormat:@"xpath: %@%@", self.path, self.xPath]];
+    [array addObject:[NSString stringWithFormat:@"path: %@", self.path]];
+    [array addObject:[NSString stringWithFormat:@"xpath: %@", self.xPath]];
     return [array componentsJoinedByString:@"\n"];
 }
 
