@@ -53,7 +53,7 @@ NSString *GrowingTKDefaultModuleName(void) {
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_SDKInfoPlugin];
     // 埋点数据
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_EventsListPlugin];
-    // 埋点跟踪
+    // XPath跟踪
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_XPathTrackPlugin];
     // 日志显示
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_LogPlugin];

@@ -18,8 +18,8 @@ target 'Example' do
 #  pod 'GrowingAnalytics/DISABLE_IDFA' #禁用idfa
 
 # SDK 2.0
-  pod 'GrowingAutoTrackKit'
-#  pod 'GrowingCoreKit'
+#  pod 'GrowingAutoTrackKit'
+  pod 'GrowingCoreKit'
 
   pod 'SDCycleScrollView', '~> 1.75'
   pod 'MJRefresh'
