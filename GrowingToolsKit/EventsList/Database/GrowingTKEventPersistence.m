@@ -79,7 +79,7 @@
         if (GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration) {
             _globalSequenceId = self.dictionary[@"globalSequenceId"];
         } else if (GrowingTKSDKUtil.sharedInstance.isSDK2ndGeneration) {
-            _globalSequenceId = self.dictionary[@"gesid"];
+            _globalSequenceId = self.dictionary[@"gesid"] ?: @"-"; // 如tchd事件是没有gesid的
         }
     }
     return _globalSequenceId;
