@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *time;
 
 - (instancetype)initWithUUID:(NSString *)uuid
-                   eventType:(NSString *)eventType
+                   eventType:(nullable NSString *)eventType
                   jsonString:(NSString *)jsonString
                       isSend:(BOOL)isSend;
 

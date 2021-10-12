@@ -107,7 +107,7 @@
             [self.sendStatusLabel.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
             [self.timeLabel.leadingAnchor constraintEqualToAnchor:self.sendStatusLabel.trailingAnchor constant:margin],
             [self.timeLabel.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-margin],
-            [self.timeLabel.widthAnchor constraintEqualToConstant:GrowingTKSizeFrom750(120)],
+            [self.timeLabel.widthAnchor constraintEqualToConstant:GrowingTKSizeFrom750(125)],
             [self.timeLabel.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
             self.typeLabelBottomConstraint,
             self.pathLabelTopConstraint

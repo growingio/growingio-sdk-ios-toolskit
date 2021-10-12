@@ -19,8 +19,12 @@
 
 #import "GrowingTKEventPersistence.h"
 #import "GrowingTKDateUtil.h"
+#import "GrowingTKSDKUtil.h"
 
 @interface GrowingTKEventPersistence ()
+
+// Init
+@property (nonatomic, copy, readwrite) NSString *eventType;
 
 // Common
 @property (nonatomic, copy, readwrite) NSNumber *globalSequenceId;
@@ -41,7 +45,7 @@
 #pragma mark - Init
 
 - (instancetype)initWithUUID:(NSString *)uuid
-                   eventType:(NSString *)eventType
+                   eventType:(nullable NSString *)eventType
                   jsonString:(NSString *)jsonString
                       isSend:(BOOL)isSend {
     if (self = [super init]) {
@@ -63,16 +67,31 @@
     return _dictionary;
 }
 
+- (NSString *)eventType {
+    if (!_eventType && GrowingTKSDKUtil.sharedInstance.isSDK2ndGeneration) {
+        _eventType = self.dictionary[@"t"];
+    }
+    return _eventType;
+}
+
 - (NSNumber *)globalSequenceId {
     if (!_globalSequenceId) {
-        _globalSequenceId = self.dictionary[@"globalSequenceId"];
+        if (GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration) {
+            _globalSequenceId = self.dictionary[@"globalSequenceId"];
+        } else if (GrowingTKSDKUtil.sharedInstance.isSDK2ndGeneration) {
+            _globalSequenceId = self.dictionary[@"gesid"];
+        }
     }
     return _globalSequenceId;
 }
 
 - (NSString *)deviceId {
     if (!_deviceId) {
-        _deviceId = self.dictionary[@"deviceId"];
+        if (GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration) {
+            _deviceId = self.dictionary[@"deviceId"];
+        } else if (GrowingTKSDKUtil.sharedInstance.isSDK2ndGeneration) {
+            _deviceId = self.dictionary[@"u"];
+        }
     }
     return _deviceId;
 }
@@ -80,21 +99,33 @@
 
 - (NSString *)sessionId {
     if (!_sessionId) {
-        _sessionId = self.dictionary[@"sessionId"];
+        if (GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration) {
+            _sessionId = self.dictionary[@"sessionId"];
+        } else if (GrowingTKSDKUtil.sharedInstance.isSDK2ndGeneration) {
+            _sessionId = self.dictionary[@"s"];
+        }
     }
     return _sessionId;
 }
 
 - (NSString *)path {
     if (!_path) {
-        _path = self.dictionary[@"path"];
+        if (GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration) {
+            _path = self.dictionary[@"path"];
+        } else if (GrowingTKSDKUtil.sharedInstance.isSDK2ndGeneration) {
+            _path = self.dictionary[@"p"];
+        }
     }
     return _path;
 }
 
 - (double)timestamp {
     if (!_timestamp) {
-        _timestamp = ((NSNumber *)self.dictionary[@"timestamp"]).doubleValue;
+        if (GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration) {
+            _timestamp = ((NSNumber *)self.dictionary[@"timestamp"]).doubleValue;
+        } else if (GrowingTKSDKUtil.sharedInstance.isSDK2ndGeneration) {
+            _timestamp = ((NSNumber *)self.dictionary[@"tm"]).doubleValue;
+        }
     }
     return _timestamp;
 }

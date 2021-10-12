@@ -76,7 +76,19 @@
         // *************** SDK 3.0 ***************
     } else {
         // *************** SDK 2.0 ***************
+    sdk2EventTrack : {
+        Class class = NSClassFromString(@"GrowingEventDataBase");
+        if (!class) {
+            return;
+        }
 
+        __block NSInvocation *invocation = nil;
+        SEL selector = NSSelectorFromString(@"setValue:forKey:error:");
+        id block = ^(id obj, NSString *event, NSString *key, NSError **error) {
+            return growingtk_sdk2ndEventTrack(invocation, obj, event, key, error);
+        };
+        invocation = [class growingtk_swizzleMethod:selector withBlock:block error:nil];
+    }
         // *************** SDK 2.0 ***************
     }
 }
@@ -139,6 +151,31 @@ static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSS
                                                   eventType:[event valueForKey:@"eventType"]
                                                  jsonString:[event valueForKey:@"rawJsonString"]
                                                      isSend:NO];
+        [GrowingTKEventsListPlugin.plugin.db insertEvent:e];
+    } else {
+        [GrowingTKEventsListPlugin.plugin.db updateEventDidSend:key];
+    }
+}
+
+static void growingtk_sdk2ndEventTrack(NSInvocation *invocation, id obj, NSString *event, NSString *key, NSError **error) {
+    if (!invocation) {
+        return;
+    }
+    [invocation setArgument:&event atIndex:2];
+    [invocation setArgument:&key atIndex:3];
+    [invocation setArgument:&error atIndex:4];
+    [invocation invokeWithTarget:obj];
+
+    if (event) {
+        GrowingTKEventPersistence *e =
+            [[GrowingTKEventPersistence alloc] initWithUUID:key
+                                                  eventType:nil
+                                                 jsonString:event
+                                                     isSend:NO];
+        if (e.eventType.length == 0) {
+            // 无法解析，不是事件
+            return;
+        }
         [GrowingTKEventsListPlugin.plugin.db insertEvent:e];
     } else {
         [GrowingTKEventsListPlugin.plugin.db updateEventDidSend:key];
