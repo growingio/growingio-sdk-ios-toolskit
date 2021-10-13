@@ -56,11 +56,11 @@
 
 
 + (instancetype)databasePoolWithPath:(NSString*)aPath {
-    return FMG3DBReturnAutoreleased([[self alloc] initWithPath:aPath]);
+    return GrowingTKFMDBReturnAutoreleased([[self alloc] initWithPath:aPath]);
 }
 
 + (instancetype)databasePoolWithPath:(NSString*)aPath flags:(int)openFlags {
-    return FMG3DBReturnAutoreleased([[self alloc] initWithPath:aPath flags:openFlags]);
+    return GrowingTKFMDBReturnAutoreleased([[self alloc] initWithPath:aPath flags:openFlags]);
 }
 
 - (instancetype)initWithPath:(NSString*)aPath flags:(int)openFlags {
@@ -69,9 +69,9 @@
     
     if (self != nil) {
         _path               = [aPath copy];
-        _lockQueue          = dispatch_queue_create([[NSString stringWithFormat:@"FMG3DB.%@", self] UTF8String], NULL);
-        _databaseInPool     = FMG3DBReturnRetained([NSMutableArray array]);
-        _databaseOutPool    = FMG3DBReturnRetained([NSMutableArray array]);
+        _lockQueue          = dispatch_queue_create([[NSString stringWithFormat:@"GrowingTKFMDB.%@", self] UTF8String], NULL);
+        _databaseInPool     = GrowingTKFMDBReturnRetained([NSMutableArray array]);
+        _databaseOutPool    = GrowingTKFMDBReturnRetained([NSMutableArray array]);
         _openFlags          = openFlags;
     }
     
@@ -92,12 +92,12 @@
 - (void)dealloc {
     
     _delegate = 0x00;
-    FMG3DBRelease(_path);
-    FMG3DBRelease(_databaseInPool);
-    FMG3DBRelease(_databaseOutPool);
+    GrowingTKFMDBRelease(_path);
+    GrowingTKFMDBRelease(_databaseInPool);
+    GrowingTKFMDBRelease(_databaseOutPool);
     
     if (_lockQueue) {
-        FMG3DBDispatchQueueRelease(_lockQueue);
+        GrowingTKFMDBDispatchQueueRelease(_lockQueue);
         _lockQueue = 0x00;
     }
 #if ! __has_feature(objc_arc)

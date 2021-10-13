@@ -59,7 +59,7 @@
     NSParameterAssert(![statement inUse]);
     [statement setInUse:YES]; // weak reference
     
-    return FMG3DBReturnAutoreleased(rs);
+    return GrowingTKFMDBReturnAutoreleased(rs);
 }
 
 #if ! __has_feature(objc_arc)
@@ -72,10 +72,10 @@
 - (void)dealloc {
     [self close];
     
-    FMG3DBRelease(_query);
+    GrowingTKFMDBRelease(_query);
     _query = nil;
     
-    FMG3DBRelease(_columnNameToIndexMap);
+    GrowingTKFMDBRelease(_columnNameToIndexMap);
     _columnNameToIndexMap = nil;
     
 #if ! __has_feature(objc_arc)
@@ -85,7 +85,7 @@
 
 - (void)close {
     [_statement reset];
-    FMG3DBRelease(_statement);
+    GrowingTKFMDBRelease(_statement);
     _statement = nil;
     
     // we don't need this anymore... (i think)
@@ -146,7 +146,7 @@
             [dict setObject:objectValue forKey:columnName];
         }
         
-        return FMG3DBReturnAutoreleased([dict copy]);
+        return GrowingTKFMDBReturnAutoreleased([dict copy]);
     }
     else {
         NSLog(@"Warning: There seem to be no columns in this set.");

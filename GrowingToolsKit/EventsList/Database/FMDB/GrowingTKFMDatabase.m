@@ -57,7 +57,7 @@
 #pragma mark FMG3Database instantiation and deallocation
 
 + (instancetype)databaseWithPath:(NSString*)aPath {
-    return FMG3DBReturnAutoreleased([[self alloc] initWithPath:aPath]);
+    return GrowingTKFMDBReturnAutoreleased([[self alloc] initWithPath:aPath]);
 }
 
 - (instancetype)init {
@@ -91,11 +91,11 @@
 
 - (void)dealloc {
     [self close];
-    FMG3DBRelease(_openResultSets);
-    FMG3DBRelease(_cachedStatements);
-    FMG3DBRelease(_dateFormat);
-    FMG3DBRelease(_databasePath);
-    FMG3DBRelease(_openFunctions);
+    GrowingTKFMDBRelease(_openResultSets);
+    GrowingTKFMDBRelease(_cachedStatements);
+    GrowingTKFMDBRelease(_dateFormat);
+    GrowingTKFMDBRelease(_databasePath);
+    GrowingTKFMDBRelease(_openFunctions);
     
 #if ! __has_feature(objc_arc)
     [super dealloc];
@@ -106,22 +106,22 @@
     return _databasePath;
 }
 
-+ (NSString*)FMG3DBUserVersion {
++ (NSString*)GrowingTKFMDBUserVersion {
     return @"2.5";
 }
 
 // returns 0x0240 for version 2.4.  This makes it super easy to do things like:
-// /* need to make sure to do X with FMG3DB version 2.4 or later */
-// if ([FMG3Database FMG3DBVersion] >= 0x0240) { … }
+// /* need to make sure to do X with GrowingTKFMDB version 2.4 or later */
+// if ([FMG3Database GrowingTKFMDBVersion] >= 0x0240) { … }
 
-+ (SInt32)FMG3DBVersion {
++ (SInt32)GrowingTKFMDBVersion {
     
     // we go through these hoops so that we only have to change the version number in a single spot.
     static dispatch_once_t once;
-    static SInt32 FMG3DBVersionVal = 0;
+    static SInt32 GrowingTKFMDBVersionVal = 0;
     
     dispatch_once(&once, ^{
-        NSString *prodVersion = [self FMG3DBUserVersion];
+        NSString *prodVersion = [self GrowingTKFMDBUserVersion];
         
         if ([[prodVersion componentsSeparatedByString:@"."] count] < 3) {
             prodVersion = [prodVersion stringByAppendingString:@".0"];
@@ -130,12 +130,12 @@
         NSString *junk = [prodVersion stringByReplacingOccurrencesOfString:@"." withString:@""];
         
         char *e = nil;
-        FMG3DBVersionVal = (int) strtoul([junk UTF8String], &e, 16);
+        GrowingTKFMDBVersionVal = (int) strtoul([junk UTF8String], &e, 16);
         
     });
     
 
-    return FMG3DBVersionVal;
+    return GrowingTKFMDBVersionVal;
 }
 
 #pragma mark SQLite information
@@ -263,7 +263,7 @@
 //       C function causes problems; the rest don't. Anyway, ignoring the .m
 //       files with appledoc will prevent this problem from occurring.
 
-static int FMG3DBDatabaseBusyHandler(void *f, int count) {
+static int GrowingTKFMDBDatabaseBusyHandler(void *f, int count) {
     GrowingTKFMDatabase *self = (__bridge GrowingTKFMDatabase*)f;
     
     if (count == 0) {
@@ -294,7 +294,7 @@ static int FMG3DBDatabaseBusyHandler(void *f, int count) {
     }
     
     if (timeout > 0) {
-        sqlite3_busy_handler(_db, &FMG3DBDatabaseBusyHandler, (__bridge void *)(self));
+        sqlite3_busy_handler(_db, &GrowingTKFMDBDatabaseBusyHandler, (__bridge void *)(self));
     }
     else {
         // turn it off otherwise
@@ -312,14 +312,14 @@ static int FMG3DBDatabaseBusyHandler(void *f, int count) {
 // we'll still implement the method so they don't get suprise crashes
 - (int)busyRetryTimeout {
     NSLog(@"%s:%d", __FUNCTION__, __LINE__);
-    NSLog(@"FMG3DB: busyRetryTimeout no longer works, please use maxBusyRetryTimeInterval");
+    NSLog(@"GrowingTKFMDB: busyRetryTimeout no longer works, please use maxBusyRetryTimeInterval");
     return -1;
 }
 
 - (void)setBusyRetryTimeout:(int)i {
 #pragma unused(i)
     NSLog(@"%s:%d", __FUNCTION__, __LINE__);
-    NSLog(@"FMG3DB: setBusyRetryTimeout does nothing, please use setMaxBusyRetryTimeInterval:");
+    NSLog(@"GrowingTKFMDB: setBusyRetryTimeout does nothing, please use setMaxBusyRetryTimeInterval:");
 }
 
 #pragma mark Result set functions
@@ -331,7 +331,7 @@ static int FMG3DBDatabaseBusyHandler(void *f, int count) {
 - (void)closeOpenResultSets {
     
     //Copy the set so we don't get mutation errors
-    NSSet *openSetCopy = FMG3DBReturnAutoreleased([_openResultSets copy]);
+    NSSet *openSetCopy = GrowingTKFMDBReturnAutoreleased([_openResultSets copy]);
     for (NSValue *rsInWrappedInATastyValueMeal in openSetCopy) {
         GrowingTKFMResultSet *rs = (GrowingTKFMResultSet *)[rsInWrappedInATastyValueMeal pointerValue];
         
@@ -386,7 +386,7 @@ static int FMG3DBDatabaseBusyHandler(void *f, int count) {
     
     [_cachedStatements setObject:statements forKey:query];
     
-    FMG3DBRelease(query);
+    GrowingTKFMDBRelease(query);
 }
 
 #pragma mark Key routines
@@ -442,10 +442,10 @@ static int FMG3DBDatabaseBusyHandler(void *f, int count) {
 
 + (NSDateFormatter *)storeableDateFormat:(NSString *)format {
     
-    NSDateFormatter *result = FMG3DBReturnAutoreleased([[NSDateFormatter alloc] init]);
+    NSDateFormatter *result = GrowingTKFMDBReturnAutoreleased([[NSDateFormatter alloc] init]);
     result.dateFormat = format;
     result.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
-    result.locale = FMG3DBReturnAutoreleased([[NSLocale alloc] initWithLocaleIdentifier:@"en_US"]);
+    result.locale = GrowingTKFMDBReturnAutoreleased([[NSLocale alloc] initWithLocaleIdentifier:@"en_US"]);
     return result;
 }
 
@@ -455,8 +455,8 @@ static int FMG3DBDatabaseBusyHandler(void *f, int count) {
 }
 
 - (void)setDateFormat:(NSDateFormatter *)format {
-    FMG3DBAutorelease(_dateFormat);
-    _dateFormat = FMG3DBReturnRetained(format);
+    GrowingTKFMDBAutorelease(_dateFormat);
+    _dateFormat = GrowingTKFMDBReturnRetained(format);
 }
 
 - (NSDate *)dateFromString:(NSString *)s {
@@ -843,7 +843,7 @@ static int FMG3DBDatabaseBusyHandler(void *f, int count) {
             // Get the index for the parameter name.
             int namedIdx = sqlite3_bind_parameter_index(pStmt, [parameterName UTF8String]);
             
-            FMG3DBRelease(parameterName);
+            GrowingTKFMDBRelease(parameterName);
             
             if (namedIdx > 0) {
                 // Standard binding from here.
@@ -893,7 +893,7 @@ static int FMG3DBDatabaseBusyHandler(void *f, int count) {
         return nil;
     }
     
-    FMG3DBRetain(statement); // to balance the release below
+    GrowingTKFMDBRetain(statement); // to balance the release below
     
     if (!statement) {
         statement = [[GrowingTKFMStatement alloc] init];
@@ -913,7 +913,7 @@ static int FMG3DBDatabaseBusyHandler(void *f, int count) {
     
     [statement setUseCount:[statement useCount] + 1];
     
-    FMG3DBRelease(statement); 
+    GrowingTKFMDBRelease(statement); 
     
     _isExecutingStatement = NO;
     
@@ -1032,7 +1032,7 @@ static int FMG3DBDatabaseBusyHandler(void *f, int count) {
             // Get the index for the parameter name.
             int namedIdx = sqlite3_bind_parameter_index(pStmt, [parameterName UTF8String]);
             
-            FMG3DBRelease(parameterName);
+            GrowingTKFMDBRelease(parameterName);
             
             if (namedIdx > 0) {
                 // Standard binding from here.
@@ -1125,7 +1125,7 @@ static int FMG3DBDatabaseBusyHandler(void *f, int count) {
         
         [self setCachedStatement:cachedStmt forQuery:sql];
         
-        FMG3DBRelease(cachedStmt);
+        GrowingTKFMDBRelease(cachedStmt);
     }
     
     int closeErrorCode;
@@ -1194,8 +1194,8 @@ static int FMG3DBDatabaseBusyHandler(void *f, int count) {
 }
 
 
-int FMG3DBExecuteBulkSQLCallback(void *theBlockAsVoid, int columns, char **values, char **names); // shhh clang.
-int FMG3DBExecuteBulkSQLCallback(void *theBlockAsVoid, int columns, char **values, char **names) {
+int GrowingTKFMDBExecuteBulkSQLCallback(void *theBlockAsVoid, int columns, char **values, char **names); // shhh clang.
+int GrowingTKFMDBExecuteBulkSQLCallback(void *theBlockAsVoid, int columns, char **values, char **names) {
     
     if (!theBlockAsVoid) {
         return SQLITE_OK;
@@ -1218,12 +1218,12 @@ int FMG3DBExecuteBulkSQLCallback(void *theBlockAsVoid, int columns, char **value
     return [self executeStatements:sql withResultBlock:nil];
 }
 
-- (BOOL)executeStatements:(NSString *)sql withResultBlock:(FMG3DBExecuteStatementsCallbackBlock)block {
+- (BOOL)executeStatements:(NSString *)sql withResultBlock:(GrowingTKFMDBExecuteStatementsCallbackBlock)block {
     
     int rc;
     char *errmsg = nil;
     
-    rc = sqlite3_exec([self sqliteHandle], [sql UTF8String], block ? FMG3DBExecuteBulkSQLCallback : nil, (__bridge void *)(block), &errmsg);
+    rc = sqlite3_exec([self sqliteHandle], [sql UTF8String], block ? GrowingTKFMDBExecuteBulkSQLCallback : nil, (__bridge void *)(block), &errmsg);
     
     if (errmsg && [self logsErrors]) {
         NSLog(@"Error inserting batch: %s", errmsg);
@@ -1307,7 +1307,7 @@ int FMG3DBExecuteBulkSQLCallback(void *theBlockAsVoid, int columns, char **value
 
 #if SQLITE_VERSION_NUMBER >= 3007000
 
-static NSString *FMG3DBEscapeSavePointName(NSString *savepointName) {
+static NSString *GrowingTKFMDBEscapeSavePointName(NSString *savepointName) {
     return [savepointName stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
 }
 
@@ -1315,7 +1315,7 @@ static NSString *FMG3DBEscapeSavePointName(NSString *savepointName) {
     
     NSParameterAssert(name);
     
-    NSString *sql = [NSString stringWithFormat:@"savepoint '%@';", FMG3DBEscapeSavePointName(name)];
+    NSString *sql = [NSString stringWithFormat:@"savepoint '%@';", GrowingTKFMDBEscapeSavePointName(name)];
     
     if (![self executeUpdate:sql]) {
 
@@ -1333,7 +1333,7 @@ static NSString *FMG3DBEscapeSavePointName(NSString *savepointName) {
     
     NSParameterAssert(name);
     
-    NSString *sql = [NSString stringWithFormat:@"release savepoint '%@';", FMG3DBEscapeSavePointName(name)];
+    NSString *sql = [NSString stringWithFormat:@"release savepoint '%@';", GrowingTKFMDBEscapeSavePointName(name)];
     BOOL worked = [self executeUpdate:sql];
     
     if (!worked && outErr) {
@@ -1347,7 +1347,7 @@ static NSString *FMG3DBEscapeSavePointName(NSString *savepointName) {
     
     NSParameterAssert(name);
     
-    NSString *sql = [NSString stringWithFormat:@"rollback transaction to savepoint '%@';", FMG3DBEscapeSavePointName(name)];
+    NSString *sql = [NSString stringWithFormat:@"rollback transaction to savepoint '%@';", GrowingTKFMDBEscapeSavePointName(name)];
     BOOL worked = [self executeUpdate:sql];
     
     if (!worked && outErr) {
@@ -1406,8 +1406,8 @@ static NSString *FMG3DBEscapeSavePointName(NSString *savepointName) {
 
 #pragma mark Callback function
 
-void FMG3DBBlockSQLiteCallBackFunction(sqlite3_context *context, int argc, sqlite3_value **argv); // -Wmissing-prototypes
-void FMG3DBBlockSQLiteCallBackFunction(sqlite3_context *context, int argc, sqlite3_value **argv) {
+void GrowingTKFMDBBlockSQLiteCallBackFunction(sqlite3_context *context, int argc, sqlite3_value **argv); // -Wmissing-prototypes
+void GrowingTKFMDBBlockSQLiteCallBackFunction(sqlite3_context *context, int argc, sqlite3_value **argv) {
 #if ! __has_feature(objc_arc)
     void (^block)(sqlite3_context *context, int argc, sqlite3_value **argv) = (id)sqlite3_user_data(context);
 #else
@@ -1425,15 +1425,15 @@ void FMG3DBBlockSQLiteCallBackFunction(sqlite3_context *context, int argc, sqlit
         _openFunctions = [NSMutableSet new];
     }
     
-    id b = FMG3DBReturnAutoreleased([block copy]);
+    id b = GrowingTKFMDBReturnAutoreleased([block copy]);
     
     [_openFunctions addObject:b];
     
     /* I tried adding custom functions to release the block when the connection is destroyed- but they seemed to never be called, so we use _openFunctions to store the values instead. */
 #if ! __has_feature(objc_arc)
-    sqlite3_create_function([self sqliteHandle], [name UTF8String], count, SQLITE_UTF8, (void*)b, &FMG3DBBlockSQLiteCallBackFunction, 0x00, 0x00);
+    sqlite3_create_function([self sqliteHandle], [name UTF8String], count, SQLITE_UTF8, (void*)b, &GrowingTKFMDBBlockSQLiteCallBackFunction, 0x00, 0x00);
 #else
-    sqlite3_create_function([self sqliteHandle], [name UTF8String], count, SQLITE_UTF8, (__bridge void*)b, &FMG3DBBlockSQLiteCallBackFunction, 0x00, 0x00);
+    sqlite3_create_function([self sqliteHandle], [name UTF8String], count, SQLITE_UTF8, (__bridge void*)b, &GrowingTKFMDBBlockSQLiteCallBackFunction, 0x00, 0x00);
 #endif
 }
 
@@ -1456,7 +1456,7 @@ void FMG3DBBlockSQLiteCallBackFunction(sqlite3_context *context, int argc, sqlit
 
 - (void)dealloc {
     [self close];
-    FMG3DBRelease(_query);
+    GrowingTKFMDBRelease(_query);
 #if ! __has_feature(objc_arc)
     [super dealloc];
 #endif
