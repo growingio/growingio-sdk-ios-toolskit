@@ -25,6 +25,7 @@
 #import "UIColor+GrowingTK.h"
 #import "GrowingTKEntryViewController.h"
 #import "GrowingTKHomeWindow.h"
+#import "GrowingTKUtil.h"
 
 @interface GrowingTKEntryWindow ()
 
@@ -123,8 +124,8 @@ static GrowingTKEntryWindow *instance = nil;
             initialSpringVelocity:0.0f
             options:UIViewAnimationOptionCurveEaseInOut
             animations:^{
-                CGPoint endPoint = moduleType == GrowingTKModulePlugins ? MODULE_BUTTON_POSITION_PLUGIN
-                                                                        : MODULE_BUTTON_POSITION_CHECKSELF;
+                CGPoint endPoint = moduleType == GrowingTKModulePlugins ? self.moduleButtonPositionPlugin
+                                                                        : self.moduleButtonPositionCheckSelf;
                 self.growingtk_origin = endPoint;
             }
             completion:^(BOOL finished) {
@@ -175,9 +176,8 @@ static GrowingTKEntryWindow *instance = nil;
         newY = GrowingTKScreenHeight - ENTRY_SIDELENGTH / 2;
     }
     panView.center = CGPointMake(newX, newY);
-    [[NSUserDefaults standardUserDefaults]
-        setObject:@{@"centerX": [NSNumber numberWithFloat:newX], @"centerY": [NSNumber numberWithFloat:newY]}
-           forKey:@"GrowingTKFloatViewCenterLocation"];
+    [[NSUserDefaults standardUserDefaults] setObject:@{@"centerX": @(newX), @"centerY": @(newY)}
+                                              forKey:@"GrowingTKFloatViewCenterLocation"];
 }
 
 - (void)autoDocking:(UIPanGestureRecognizer *)panGestureRecognizer {
@@ -191,29 +191,31 @@ static GrowingTKEntryWindow *instance = nil;
         } break;
         case UIGestureRecognizerStateEnded:
         case UIGestureRecognizerStateCancelled: {
-            CGPoint location = panView.center;
-            CGFloat centerX;
-            CGFloat safeBottom = 0.0f;
+            CGPoint center = panView.center;
+            UIEdgeInsets insets = GrowingTKUtil.keyWindow.growingtk_safeAreaInsets;
             CGFloat padding = 3.0f;
-            if (@available(iOS 11.0, *)) {
-                safeBottom = self.safeAreaInsets.bottom;
+
+            CGFloat minY = ENTRY_SIDELENGTH / 2 + insets.top + padding;
+            CGFloat maxY = CGRectGetMaxY([UIScreen mainScreen].bounds) - insets.bottom - ENTRY_SIDELENGTH / 2 - padding;
+            if (center.y > maxY) {
+                center.y = maxY;
+            }else if (center.y < minY) {
+                center.y = minY;
             }
-            CGFloat centerY =
-                MAX(MIN(location.y, CGRectGetMaxY([UIScreen mainScreen].bounds) - safeBottom - ENTRY_SIDELENGTH / 2),
-                    [UIApplication sharedApplication].statusBarFrame.size.height + ENTRY_SIDELENGTH / 2);
-            if (location.x > CGRectGetWidth([UIScreen mainScreen].bounds) / 2.f) {
-                centerX = CGRectGetWidth([UIScreen mainScreen].bounds) - ENTRY_SIDELENGTH / 2 - padding;
+            
+            CGFloat minX = ENTRY_SIDELENGTH / 2 + insets.left + padding;
+            CGFloat maxX = CGRectGetMaxX([UIScreen mainScreen].bounds) - ENTRY_SIDELENGTH / 2 - insets.right - padding;
+            if (center.x > CGRectGetMaxX([UIScreen mainScreen].bounds) / 2.f) {
+                center.x = maxX;
             } else {
-                centerX = ENTRY_SIDELENGTH / 2 + padding;
+                center.x = minX;
             }
-            [[NSUserDefaults standardUserDefaults] setObject:@{
-                @"centerX": [NSNumber numberWithFloat:centerX],
-                @"centerY": [NSNumber numberWithFloat:centerY]
-            }
+            
+            [[NSUserDefaults standardUserDefaults] setObject:@{@"centerX": @(center.x), @"centerY": @(center.y)}
                                                       forKey:@"GrowingTKFloatViewCenterLocation"];
-            [UIView animateWithDuration:0.3
+            [UIView animateWithDuration:0.3f
                              animations:^{
-                                 panView.center = CGPointMake(centerX, centerY);
+                                 panView.center = center;
                              }];
         }
 
@@ -250,8 +252,20 @@ static GrowingTKEntryWindow *instance = nil;
 - (void)setModuleType:(GrowingTKModule)moduleType {
     _moduleType = moduleType;
     self.growingtk_origin =
-        moduleType == GrowingTKModulePlugins ? MODULE_BUTTON_POSITION_PLUGIN : MODULE_BUTTON_POSITION_CHECKSELF;
+        moduleType == GrowingTKModulePlugins ? self.moduleButtonPositionPlugin : self.moduleButtonPositionCheckSelf;
     [self.entryButton toggle:moduleType];
 }
+
+- (CGPoint)moduleButtonPositionPlugin {
+    // 为什么不用 self.growingtk_safeAreaInsets 呢，因为 self.hidden 可能是 YES，此时得到的 safeAreaInsets = UIEdgeInsetsZero
+    UIEdgeInsets insets = GrowingTKUtil.keyWindow.growingtk_safeAreaInsets;
+    return CGPointMake(GrowingTKScreenWidth - ENTRY_SIDELENGTH * 2 - 25 - insets.right, insets.top + 5);
+}
+
+- (CGPoint)moduleButtonPositionCheckSelf {
+    UIEdgeInsets insets = GrowingTKUtil.keyWindow.growingtk_safeAreaInsets;
+    return CGPointMake(GrowingTKScreenWidth - ENTRY_SIDELENGTH - 10 - insets.right, insets.top + 5);
+}
+
 
 @end

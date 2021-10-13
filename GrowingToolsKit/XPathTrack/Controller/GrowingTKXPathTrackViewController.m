@@ -22,7 +22,6 @@
 #import "UIImage+GrowingTK.h"
 #import "UIColor+GrowingTK.h"
 #import "UIView+GrowingTK.h"
-#import "UIViewController+GrowingTK.h"
 #import "GrowingTKNodeHelper.h"
 #import "GrowingTKViewNode.h"
 #import "GrowingTKUtil.h"
@@ -89,7 +88,7 @@ static CGFloat const kInfoViewMargin = 24.0f;
     [self.view addSubview:self.circleView];
 
     CGFloat infoViewMargin = GrowingTKSizeFrom750(kInfoViewMargin);
-    self.infoViewBottomConstraint = [self.infoView.bottomAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.bottomAnchor
+    self.infoViewBottomConstraint = [self.infoView.bottomAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.bottomAnchor
                                                                             constant:-infoViewMargin];
     self.infoViewLeadingConstraint = [self.infoView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor
                                                                                  constant:infoViewMargin];
@@ -276,7 +275,7 @@ static CGFloat const kInfoViewMargin = 24.0f;
         CGFloat infoViewMargin = GrowingTKSizeFrom750(kInfoViewMargin);
         CGFloat keyBoardHeight = [[not userInfo][UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
         self.infoViewLeadingConstraint.constant = infoViewMargin;
-        self.infoViewBottomConstraint.constant = -(keyBoardHeight + infoViewMargin - self.growingtk_safeAreaInset.bottom);
+        self.infoViewBottomConstraint.constant = -(keyBoardHeight + infoViewMargin - self.view.growingtk_safeAreaInsets.bottom);
         [self.infoView setNeedsUpdateConstraints];
         
         CGFloat duration = [[not userInfo][UIKeyboardAnimationDurationUserInfoKey] doubleValue];

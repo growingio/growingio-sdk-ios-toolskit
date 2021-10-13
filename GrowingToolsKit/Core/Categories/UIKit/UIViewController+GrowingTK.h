@@ -23,10 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIViewController (GrowingTK)
 
-- (UIEdgeInsets)growingtk_safeAreaInset;
-
-- (UILayoutGuide *)growingtk_safeAreaLayoutGuide;
-
 - (CGRect)growingtk_fullscreen;
 
 @end

@@ -19,8 +19,8 @@
 
 #import "GrowingTKEventDetailViewController.h"
 #import "GrowingTKEventPersistence.h"
-#import "UIViewController+GrowingTK.h"
 #import "UIImage+GrowingTK.h"
+#import "UIView+GrowingTK.h"
 #import "UIColor+GrowingTK.h"
 
 @interface GrowingTKEventDetailViewController ()
@@ -46,19 +46,19 @@
     CGFloat closeButtonSideLength = 30.0f;
     [NSLayoutConstraint activateConstraints:@[
         [self.typeLabel.centerYAnchor constraintEqualToAnchor:self.closeButton.centerYAnchor],
-        [self.typeLabel.leadingAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.leadingAnchor
+        [self.typeLabel.leadingAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.leadingAnchor
                                                      constant:margin * 1.5],
-        [self.closeButton.topAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.topAnchor
+        [self.closeButton.topAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.topAnchor
                                                    constant:margin],
-        [self.closeButton.trailingAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.trailingAnchor
+        [self.closeButton.trailingAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.trailingAnchor
                                                         constant:-margin],
         [self.closeButton.widthAnchor constraintEqualToConstant:closeButtonSideLength],
         [self.closeButton.heightAnchor constraintEqualToConstant:closeButtonSideLength],
         [self.textView.topAnchor constraintEqualToAnchor:self.closeButton.bottomAnchor constant:margin],
-        [self.textView.bottomAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.bottomAnchor],
-        [self.textView.leadingAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.leadingAnchor
+        [self.textView.bottomAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.bottomAnchor],
+        [self.textView.leadingAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.leadingAnchor
                                                     constant:margin],
-        [self.textView.trailingAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.trailingAnchor]
+        [self.textView.trailingAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.trailingAnchor]
     ]];
 
     self.typeLabel.text = [self.event.eventType uppercaseString];

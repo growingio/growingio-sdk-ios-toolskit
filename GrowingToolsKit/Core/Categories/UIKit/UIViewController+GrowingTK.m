@@ -42,20 +42,6 @@
     [self growingtk_viewWillAppear:animated];
 }
 
-- (UILayoutGuide *)growingtk_safeAreaLayoutGuide {
-    if (@available(iOS 11.0, *)) {
-        return self.view.safeAreaLayoutGuide;
-    }
-    return self.view.layoutMarginsGuide;
-}
-
-- (UIEdgeInsets)growingtk_safeAreaInset {
-    if (@available(iOS 11.0, *)) {
-        return self.view.safeAreaInsets;
-    }
-    return UIEdgeInsetsZero;
-}
-
 - (CGRect)growingtk_fullscreen {
     CGRect screen = self.view.bounds;
     UIInterfaceOrientation orientation = UIApplication.sharedApplication.statusBarOrientation;
@@ -64,7 +50,7 @@
         case UIInterfaceOrientationLandscapeRight: {
             CGSize size = self.view.growingtk_size;
             if (size.width > size.height) {
-                UIEdgeInsets safeAreaInsets = [self growingtk_safeAreaInset];
+                UIEdgeInsets safeAreaInsets = self.view.growingtk_safeAreaInsets;
                 CGRect frame = screen;
                 CGFloat width = self.view.growingtk_width - safeAreaInsets.left - safeAreaInsets.right;
                 frame.origin.x = safeAreaInsets.left;

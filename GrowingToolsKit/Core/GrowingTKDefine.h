@@ -51,7 +51,7 @@ typedef NS_ENUM(NSUInteger, GrowingTKModule) {
 #define GrowingTKScreenHeight [UIScreen mainScreen].bounds.size.height
 
 // GrowingToolsKit默认位置
-#define GrowingTKStartingPosition CGPointMake(0, GrowingTKScreenHeight * 2.0 / 3.0)
+#define GrowingTKStartingPosition CGPointMake(3.0, GrowingTKScreenHeight * 2.0 / 3.0)
 
 // 根据750*1334分辨率计算size
 #define GrowingTKSizeFrom750(x)                                                              \
@@ -59,15 +59,6 @@ typedef NS_ENUM(NSUInteger, GrowingTKModule) {
          ? ((x)*GrowingTKScreenHeight / 750)                                                 \
          : ((x)*GrowingTKScreenWidth / 750))
 
-// 是否全面屏
-#define IS_BANGS_SCREEN [GrowingTKDevice isBangsScreen]
-#define IPHONE_NAVIGATIONBAR_HEIGHT (IS_BANGS_SCREEN ? 88 : 64)
-#define IPHONE_STATUSBAR_HEIGHT (IS_BANGS_SCREEN ? 44 : 20)
-#define IPHONE_SAFEBOTTOMAREA_HEIGHT (IS_BANGS_SCREEN ? 34 : 0)
-#define IPHONE_TOPSENSOR_HEIGHT (IS_BANGS_SCREEN ? 32 : 0)
-
 #define ENTRY_SIDELENGTH 50.0f
-#define MODULE_BUTTON_POSITION_PLUGIN CGPointMake(GrowingTKScreenWidth - ENTRY_SIDELENGTH * 2 - 25, IPHONE_STATUSBAR_HEIGHT + 5)
-#define MODULE_BUTTON_POSITION_CHECKSELF CGPointMake(GrowingTKScreenWidth - ENTRY_SIDELENGTH - 10, IPHONE_STATUSBAR_HEIGHT + 5)
 
 #endif /* GrowingTKDefine_h */

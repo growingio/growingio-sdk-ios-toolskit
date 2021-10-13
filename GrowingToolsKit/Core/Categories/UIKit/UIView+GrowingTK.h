@@ -63,6 +63,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (UIViewController *)growingtk_viewController;
 
+- (UILayoutGuide *)growingtk_safeAreaLayoutGuide;
+
+- (UIEdgeInsets)growingtk_safeAreaInsets;
+
 @end
 
 #pragma mark - Toast

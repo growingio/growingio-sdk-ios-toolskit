@@ -26,7 +26,6 @@
 #import "UIColor+GrowingTK.h"
 #import "UIImage+GrowingTK.h"
 #import "UIView+GrowingTK.h"
-#import "UIViewController+GrowingTK.h"
 
 @interface GrowingTKHomeViewController ()
 
@@ -62,17 +61,19 @@
     [self.view addSubview:self.checkButton];
     [self.view addSubview:self.mainView];
 
-    CGFloat mainViewTopMargin = GrowingTKSizeFrom750(160) + IPHONE_STATUSBAR_HEIGHT;
+    CGFloat mainViewTopMargin = GrowingTKSizeFrom750(160);
     CGFloat triangleHeight = 30.f;
 
     [NSLayoutConstraint activateConstraints:@[
-        [self.mainView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:mainViewTopMargin],
+        [self.mainView.topAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.topAnchor
+                                                constant:mainViewTopMargin],
         [self.mainView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
         [self.mainView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
         [self.mainView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
-        [self.checkButton.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-10.0f],
-        [self.checkButton.topAnchor constraintEqualToAnchor:self.view.topAnchor
-                                                   constant:IPHONE_STATUSBAR_HEIGHT + 5.0f],
+        [self.checkButton.trailingAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.trailingAnchor
+                                                        constant:-10.0f],
+        [self.checkButton.topAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.topAnchor
+                                                   constant:5.0f],
         [self.checkButton.heightAnchor constraintEqualToConstant:self.checkButton.growingtk_height],
         [self.checkButton.widthAnchor constraintEqualToConstant:self.checkButton.growingtk_width],
         [self.pluginsButton.trailingAnchor constraintEqualToAnchor:self.checkButton.leadingAnchor constant:-15.0f],

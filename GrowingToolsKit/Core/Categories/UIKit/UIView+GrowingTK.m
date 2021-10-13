@@ -159,6 +159,20 @@
     return nil;
 }
 
+- (UILayoutGuide *)growingtk_safeAreaLayoutGuide {
+    if (@available(iOS 11.0, *)) {
+        return self.safeAreaLayoutGuide;
+    }
+    return self.layoutMarginsGuide;
+}
+
+- (UIEdgeInsets)growingtk_safeAreaInsets {
+    if (@available(iOS 11.0, *)) {
+        return self.safeAreaInsets;
+    }
+    return UIEdgeInsetsZero;
+}
+
 @end
 
 #pragma mark - Toast

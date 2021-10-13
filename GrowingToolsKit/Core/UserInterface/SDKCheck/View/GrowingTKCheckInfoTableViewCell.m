@@ -45,6 +45,7 @@
         self.titleLabel.textAlignment = NSTextAlignmentRight;
         self.titleLabel.textColor = UIColor.growingtk_secondaryLabelColor;
         self.titleLabel.font = [UIFont systemFontOfSize:GrowingTKSizeFrom750(28)];
+        self.titleLabel.adjustsFontSizeToFitWidth = YES;
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.titleLabel];
 

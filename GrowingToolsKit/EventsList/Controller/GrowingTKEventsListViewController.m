@@ -21,7 +21,7 @@
 #import "GrowingTKEventsListTableViewCell.h"
 #import "GrowingTKEventDetailViewController.h"
 #import "GrowingTKDefine.h"
-#import "UIViewController+GrowingTK.h"
+#import "UIView+GrowingTK.h"
 #import "UIColor+GrowingTK.h"
 #import "GrowingTKEventsListPlugin.h"
 #import "GrowingTKDatabase.h"
@@ -45,10 +45,10 @@
 
     [self.view addSubview:self.tableView];
     [NSLayoutConstraint activateConstraints:@[
-        [self.tableView.topAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.topAnchor],
-        [self.tableView.bottomAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.bottomAnchor],
-        [self.tableView.leadingAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.leadingAnchor],
-        [self.tableView.trailingAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.trailingAnchor]
+        [self.tableView.topAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.topAnchor],
+        [self.tableView.bottomAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.bottomAnchor],
+        [self.tableView.leadingAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.leadingAnchor],
+        [self.tableView.trailingAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.trailingAnchor]
     ]];
 
     [self refreshData];

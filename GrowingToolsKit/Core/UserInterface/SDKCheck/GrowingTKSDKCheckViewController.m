@@ -21,7 +21,7 @@
 #import "GrowingTKCheckSelfView.h"
 #import "GrowingTKDefine.h"
 #import "UIColor+GrowingTK.h"
-#import "UIViewController+GrowingTK.h"
+#import "UIView+GrowingTK.h"
 
 @interface GrowingTKSDKCheckViewController ()
 
@@ -54,13 +54,13 @@
     [self.view addSubview:label2];
 
     [NSLayoutConstraint activateConstraints:@[
-        [self.checkView.centerXAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.centerXAnchor],
-        [self.checkView.centerYAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.centerYAnchor
+        [self.checkView.centerXAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.centerXAnchor],
+        [self.checkView.centerYAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.centerYAnchor
                                                      constant:-30.0f],
-        [self.checkView.widthAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.widthAnchor],
-        [label2.centerXAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.centerXAnchor],
-        [label2.bottomAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.bottomAnchor constant:-20.0f],
-        [label.centerXAnchor constraintEqualToAnchor:self.growingtk_safeAreaLayoutGuide.centerXAnchor],
+        [self.checkView.widthAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.widthAnchor],
+        [label2.centerXAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.centerXAnchor],
+        [label2.bottomAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.bottomAnchor constant:-20.0f],
+        [label.centerXAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.centerXAnchor],
         [label.bottomAnchor constraintEqualToAnchor:label2.topAnchor constant:-8.0f]
     ]];
 }
