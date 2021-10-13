@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'GrowingToolsKit'
-  s.version          = '0.2.2'
+  s.version          = '0.2.3'
   s.summary          = 'GrowingToolsKit for iOS GrowingIO SDK'
   s.description      = <<-DESC
 TODO: Add long description of the pod here.
@@ -51,11 +51,11 @@ TODO: Add long description of the pod here.
 
   s.subspec 'Core' do |ss|
     ss.source_files = 'GrowingToolsKit/Core/**/*{.h,.m,.c,.cpp,.mm}'
-    ss.dependency 'GrowingToolsKit/Resources'
+    ss.dependency 'GrowingToolsKit/Res'
   end
   
-  s.subspec 'Resources' do |ss|
-    ss.resource_bundles = {'GrowingToolsKit' => ['GrowingToolsKit/Resource/**/*']}
+  s.subspec 'Res' do |ss|
+    ss.resource_bundles = {'GrowingToolsKit' => ['GrowingToolsKit/Res/**/*']}
   end
   
   s.subspec 'SDKInfo' do |ss|

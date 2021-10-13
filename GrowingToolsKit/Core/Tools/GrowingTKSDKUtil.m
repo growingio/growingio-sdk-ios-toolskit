@@ -820,11 +820,25 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 }
 
 - (NSString *)dataSourceId {
-    if (self.isSDK3rdGeneration) {
-        return [self.sdk3rdConfiguration valueForKey:@"dataSourceId"] ?: @"";
-    } else if (self.isSDK2ndGeneration) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    if (self.isSDK3rdGeneration) {
+        Class cls = self.isSDKAutoTrack ? NSClassFromString(@"GrowingAutotracker") : NSClassFromString(@"GrowingTracker");
+        SEL selector = NSSelectorFromString(@"sharedInstance");
+        if ([cls respondsToSelector:selector]) {
+            id instance = [cls performSelector:selector];
+            SEL selector2 = NSSelectorFromString(@"interceptor");
+            // [GrowingAutotracker/GrowingTracker class] 被hook了，所以这里用 instancesRespondToSelector 而不是 respondsToSelector
+            if ([cls instancesRespondToSelector:selector2]) {
+                id interceptor = [instance performSelector:selector2];
+                SEL selector3 = NSSelectorFromString(@"dataSourceId");
+                if ([interceptor respondsToSelector:selector3]) {
+                    NSString *dataSourceId = [interceptor performSelector:selector3];
+                    return dataSourceId ?: @"";
+                }
+            }
+        }
+    } else if (self.isSDK2ndGeneration) {
         Class cls = NSClassFromString(@"GrowingInstance");
         SEL selector = NSSelectorFromString(@"sharedInstance");
         if ([cls respondsToSelector:selector]) {
@@ -835,8 +849,8 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
                 return dataSourceId ?: @"";
             }
         }
-#pragma clang diagnostic pop
     }
+#pragma clang diagnostic pop
     return @"";
 }
 
