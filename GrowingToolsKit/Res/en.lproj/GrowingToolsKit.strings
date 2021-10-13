@@ -13,7 +13,8 @@
     "埋点数据" = "EventsList";
     "XPath跟踪" = "XPathTrack";
     "未集成SDK，请参考帮助文档进行集成" = "SDK is not integrated. Please refer to the help document for integration";
-
+    "未集成无埋点SDK，请参考帮助文档进行集成" = "AutoTrack SDK is not integrated. Please refer to the help document for integration";
+    
     //SDK信息
     "复制" = "Copy";
     "App信息" = "App Info";

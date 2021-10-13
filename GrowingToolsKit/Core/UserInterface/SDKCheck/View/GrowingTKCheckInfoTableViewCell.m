@@ -70,7 +70,7 @@
         self.checkLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.checkLabel];
         
-        CGFloat margin = 12.0f;
+        CGFloat margin = 4.0f;
         CGFloat padding = 2.0f;
         [NSLayoutConstraint activateConstraints:@[
             [self.titleLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:padding],
