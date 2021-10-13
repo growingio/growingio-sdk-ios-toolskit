@@ -25,7 +25,8 @@
 
 + (nullable UIImage *)growingtk_imageNamed:(NSString *)name {
     if (name && name.length > 0) {
-        NSBundle *imageBundle = [NSBundle growingtk_resourcesBundle:NSClassFromString(GrowingToolsKitName)];
+        NSBundle *imageBundle = [NSBundle growingtk_resourcesBundle:NSClassFromString(GrowingToolsKitName)
+                                                         bundleName:GrowingToolsKitName];
         return [UIImage imageNamed:name inBundle:imageBundle compatibleWithTraitCollection:nil];
     }
 

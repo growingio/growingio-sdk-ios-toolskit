@@ -36,7 +36,8 @@
 }
 
 + (NSString *)hybridJSScript {
-    NSBundle *bundle = [NSBundle growingtk_resourcesBundle:NSClassFromString(GrowingToolsKitName)];
+    NSBundle *bundle = [NSBundle growingtk_resourcesBundle:NSClassFromString(GrowingToolsKitName)
+                                                bundleName:GrowingToolsKitName];
     NSString *jsPath = [bundle pathForResource:@"app_hybrid" ofType:@"js"];
     NSData *jsData = [NSData dataWithContentsOfFile:jsPath];
     NSString *jsString = [[NSString alloc] initWithData:jsData encoding:NSUTF8StringEncoding];
@@ -44,7 +45,8 @@
 }
 
 + (NSString *)hybridJSCircleScript {
-    NSBundle *bundle = [NSBundle growingtk_resourcesBundle:NSClassFromString(GrowingToolsKitName)];
+    NSBundle *bundle = [NSBundle growingtk_resourcesBundle:NSClassFromString(GrowingToolsKitName)
+                                                bundleName:GrowingToolsKitName];
     NSString *jsPath = [bundle pathForResource:@"app_circle_plugin" ofType:@"js"];
     NSData *jsData = [NSData dataWithContentsOfFile:jsPath];
     NSString *jsString = [[NSString alloc] initWithData:jsData encoding:NSUTF8StringEncoding];

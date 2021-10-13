@@ -30,7 +30,9 @@
     }
 
     NSString *fileName = [language hasPrefix:@"en"] ? @"en" : @"zh-Hans";
-    NSBundle *bundle = [NSBundle growingtk_localizedBundle:NSClassFromString(GrowingToolsKitName) fileName:fileName];
+    NSBundle *resourcesBundle = [NSBundle growingtk_resourcesBundle:NSClassFromString(GrowingToolsKitName)
+                                                         bundleName:GrowingToolsKitName];
+    NSBundle *bundle = [NSBundle growingtk_localizedBundleWithFileName:fileName resourcesBundle:resourcesBundle];
     NSString *localizedString = [bundle localizedStringForKey:string value:nil table:GrowingToolsKitName];
     if (!localizedString) {
         localizedString = string;

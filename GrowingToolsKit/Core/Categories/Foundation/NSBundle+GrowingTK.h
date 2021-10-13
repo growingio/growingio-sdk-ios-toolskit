@@ -25,11 +25,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSBundle *)growingtk_currentBundle:(Class)aClass;
 
-+ (NSBundle *)growingtk_resourcesBundle:(Class)aClass;
-
-+ (NSBundle *)growingtk_localizedBundle:(Class)aClass fileName:(NSString *)fileName;
-
 + (NSBundle *)growingtk_resourcesBundle:(Class)aClass bundleName:(nullable NSString *)bundleName;
+
++ (NSBundle *)growingtk_localizedBundleWithFileName:(NSString *)fileName resourcesBundle:(NSBundle *)bundle;
 
 @end
 

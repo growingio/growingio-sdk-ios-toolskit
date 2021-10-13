@@ -25,16 +25,6 @@
     return [NSBundle bundleForClass:aClass];
 }
 
-+ (NSBundle *)growingtk_resourcesBundle:(Class)aClass {
-    return [NSBundle growingtk_resourcesBundle:aClass bundleName:nil];
-}
-
-+ (NSBundle *)growingtk_localizedBundle:(Class)aClass fileName:(NSString *)fileName {
-    NSBundle *bundle = [NSBundle growingtk_resourcesBundle:aClass];
-    NSString *path = [bundle pathForResource:fileName ofType:@"lproj"];
-    return [NSBundle bundleWithPath:path];
-}
-
 + (NSBundle *)growingtk_resourcesBundle:(Class)aClass bundleName:(nullable NSString *)bundleName {
     NSBundle *bundle = [NSBundle growingtk_currentBundle:aClass];
     if (!bundleName) {
@@ -42,6 +32,11 @@
     }
     NSString *path =
         [bundle.resourcePath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.bundle", bundleName]];
+    return [NSBundle bundleWithPath:path];
+}
+
++ (NSBundle *)growingtk_localizedBundleWithFileName:(NSString *)fileName resourcesBundle:(NSBundle *)bundle {
+    NSString *path = [bundle pathForResource:fileName ofType:@"lproj"];
     return [NSBundle bundleWithPath:path];
 }
 
