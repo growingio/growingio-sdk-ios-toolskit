@@ -338,7 +338,8 @@ static CGFloat const CheckButtonHeight = 130.0f;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForHeaderInSection:(NSInteger)section {
-    return (self.datasource.count > 0 || self.checkButton.tag > 0) ? 0.01f : 80.0f;
+    // https://stackoverflow.com/questions/42246153/returning-cgfloat-leastnormalmagnitude-for-uitableview-section-header-causes-cra
+    return (self.datasource.count > 0 || self.checkButton.tag > 0) ? 1.01f : 80.0f;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
