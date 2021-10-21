@@ -32,6 +32,8 @@ static NSString *const kGrowingProjectId = @"91eaf9b283361032";
     //    configuration.dataCollectionServerHost = @"https://run.mocky.io/v3/08999138-a180-431d-a136-051f3c6bd306";
     [GrowingSDK startWithConfiguration:configuration launchOptions:launchOptions];
 #elif SDK2nd
+    [Growing setEnableLog:YES];
+    [Growing setFlushInterval:3.0f];
     [Growing startWithAccountId:@"0a1b4118dd954ec3bcc69da5138bdb96"];
 #endif
     // 自动化测试会有授权弹窗
