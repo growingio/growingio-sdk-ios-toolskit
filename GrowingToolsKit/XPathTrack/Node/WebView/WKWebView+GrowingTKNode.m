@@ -56,18 +56,18 @@ static void _growingtk_nodeUpdateMask(WKWebView *self, SEL _cmd, BOOL shouldMask
             point.y -= self.scrollView.safeAreaInsets.top;
         }
 
-        NSString *js = [NSString stringWithFormat:@"_vds_hybrid.hoverOn(%lf, %lf);", point.x, point.y];
+        NSString *js = [NSString stringWithFormat:@"_gio_hybrid.hoverOn(%lf, %lf);", point.x, point.y];
         js = [NSString stringWithFormat:@"try { %@ } catch (e) { }", js];
         [self evaluateJavaScript:js completionHandler:nil];
     } else {
-        NSString *js = @"_vds_hybrid.cancelHover();";
+        NSString *js = @"_gio_hybrid.cancelHover();";
         js = [NSString stringWithFormat:@"try { %@ } catch (e) { }", js];
         [self evaluateJavaScript:js completionHandler:nil];
     }
 }
 
 static void _growingtk_nodeUpdateInfo(WKWebView *self, SEL _cmd) {
-    NSString *js = [NSString stringWithFormat:@"_vds_hybrid.findElementAtPoint('');"];
+    NSString *js = [NSString stringWithFormat:@"_gio_hybrid.findElementAtPoint('');"];
     js = [NSString stringWithFormat:@"try { %@ } catch (e) { }", js];
     [self evaluateJavaScript:js completionHandler:nil];
 }
@@ -82,36 +82,6 @@ static void growingtk_webView_addUserScripts(WKUserContentController *contentCon
     @try {
         NSArray<WKUserScript *> *userScripts = contentController.userScripts;
 
-        // Hybrid JS
-        if (GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration) {
-            __block BOOL isContainHybridScript = NO;
-            [userScripts enumerateObjectsUsingBlock:^(WKUserScript *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-                if ([obj.source containsString:@"_vds_ios"] || [obj.source containsString:@"_vds_hybrid_config"]
-                    /*|| [obj.source containsString:@"gio_hybrid.min.js"]*/) {
-                    isContainHybridScript = YES;
-                    *stop = YES;
-                }
-            }];
-
-            if (!isContainHybridScript) {
-                [contentController
-                    addUserScript:[[WKUserScript alloc] initWithSource:@"window._vds_ios = true;"
-                                                         injectionTime:WKUserScriptInjectionTimeAtDocumentStart
-                                                      forMainFrameOnly:NO]];
-
-                [contentController
-                    addUserScript:[[WKUserScript alloc] initWithSource:[GrowingTKHybridJS configHybridScript]
-                                                         injectionTime:WKUserScriptInjectionTimeAtDocumentStart
-                                                      forMainFrameOnly:NO]];
-
-                [contentController
-                    addUserScript:[[WKUserScript alloc] initWithSource:[GrowingTKHybridJS hybridJSScript]
-                                                         injectionTime:WKUserScriptInjectionTimeAtDocumentEnd
-                                                      forMainFrameOnly:NO]];
-            }
-        }
-
-        // Circle JS
         __block BOOL isContainCircleScript = NO;
         [userScripts enumerateObjectsUsingBlock:^(WKUserScript *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
             if ([obj.source containsString:@"start circle"]) {

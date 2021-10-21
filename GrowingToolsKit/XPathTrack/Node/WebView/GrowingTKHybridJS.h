@@ -23,8 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingTKHybridJS : NSObject
 
-+ (NSString *)configHybridScript;
-+ (NSString *)hybridJSScript;
 + (NSString *)hybridJSCircleScript;
 
 @end

@@ -23,31 +23,10 @@
 
 @implementation GrowingTKHybridJS
 
-+ (NSString *)configHybridScript {
-    NSString *configString = [NSString
-        stringWithFormat:
-            @"{\"enableHT\":%@,\"disableImp\":%@,\"phoneWidth\":%f,\"phoneHeight\":%f,\"protocolVersion\":%d}",
-            @"false",
-            @"true",
-            [UIScreen mainScreen].bounds.size.width,
-            [UIScreen mainScreen].bounds.size.height,
-            1];
-    return [NSString stringWithFormat:@"window._vds_hybrid_config = %@", configString];
-}
-
-+ (NSString *)hybridJSScript {
-    NSBundle *bundle = [NSBundle growingtk_resourcesBundle:NSClassFromString(GrowingToolsKitName)
-                                                bundleName:GrowingToolsKitName];
-    NSString *jsPath = [bundle pathForResource:@"app_hybrid" ofType:@"js"];
-    NSData *jsData = [NSData dataWithContentsOfFile:jsPath];
-    NSString *jsString = [[NSString alloc] initWithData:jsData encoding:NSUTF8StringEncoding];
-    return jsString;
-}
-
 + (NSString *)hybridJSCircleScript {
     NSBundle *bundle = [NSBundle growingtk_resourcesBundle:NSClassFromString(GrowingToolsKitName)
                                                 bundleName:GrowingToolsKitName];
-    NSString *jsPath = [bundle pathForResource:@"app_circle_plugin" ofType:@"js"];
+    NSString *jsPath = [bundle pathForResource:@"gio_hybrid.min" ofType:@"js"];
     NSData *jsData = [NSData dataWithContentsOfFile:jsPath];
     NSString *jsString = [[NSString alloc] initWithData:jsData encoding:NSUTF8StringEncoding];
     return jsString;

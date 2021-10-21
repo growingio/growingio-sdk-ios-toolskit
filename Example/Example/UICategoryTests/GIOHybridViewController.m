@@ -61,7 +61,8 @@
     //    NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
     //    [self.webView loadRequest:request];
 
-    NSURL *url = [NSURL URLWithString:@"http://release-messages.growingio.cn/push/cdp/webcircel.html"];
+//    NSURL *url = [NSURL URLWithString:@"http://release-messages.growingio.cn/push/cdp/webcircel.html"];
+    NSURL *url = [NSURL URLWithString:@"http://cn.bing.com"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [self.webView loadRequest:request];
 }
