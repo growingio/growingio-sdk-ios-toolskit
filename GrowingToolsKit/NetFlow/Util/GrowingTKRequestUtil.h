@@ -1,8 +1,8 @@
 //
-//  GrowingTKDateUtil.h
+//  GrowingTKRequestUtil.h
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/9/14.
+//  Created by YoloMao on 2021/11/4.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,19 +21,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingTKDateUtil : NSObject
+@interface GrowingTKRequestUtil : NSObject
 
-@property (nonatomic, strong) NSDateFormatter *defaultFormatter;
++ (NSUInteger)headersLengthForRequest:(NSURLRequest *)request;
 
-+ (instancetype)sharedInstance;
++ (int64_t)responseLengthForResponse:(NSHTTPURLResponse *)response responseData:(NSData *)responseData;
 
-- (NSString *)timeStringFromTimestamp:(double)timestamp;
++ (NSData *)decryptData:(NSData *)data factor:(unsigned char)hint;
 
-- (NSString *)timeStringFromTimestamp:(double)timestamp format:(NSString *_Nullable)format;
-
-- (BOOL)isToday:(double)timestamp;
-
-- (BOOL)isYesterday:(double)timestamp;
++ (NSData *)uncompressData:(NSData *)data;
 
 @end
 

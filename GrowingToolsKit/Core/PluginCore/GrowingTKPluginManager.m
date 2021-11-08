@@ -55,6 +55,8 @@ NSString *GrowingTKDefaultModuleName(void) {
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_EventsListPlugin];
     // XPath跟踪
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_XPathTrackPlugin];
+    // 网络请求
+    [self addPluginWithPluginType:GrowingTKDefaultPluginType_NetFlowPlugin];
     // 日志显示
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_LogPlugin];
     // Hybrid测试
@@ -136,6 +138,7 @@ NSString *GrowingTKDefaultModuleName(void) {
         @(GrowingTKDefaultPluginType_SDKInfoPlugin): @"GrowingTKSDKInfoPlugin",
         @(GrowingTKDefaultPluginType_EventsListPlugin): @"GrowingTKEventsListPlugin",
         @(GrowingTKDefaultPluginType_XPathTrackPlugin): @"GrowingTKXPathTrackPlugin",
+        @(GrowingTKDefaultPluginType_NetFlowPlugin): @"GrowingTKNetFlowPlugin",
         @(GrowingTKDefaultPluginType_LogPlugin): @"GrowingTKLogPlugin",
         @(GrowingTKDefaultPluginType_HybridPlugin): @"GrowingTKHybridPlugin",
     }[@(pluginType)];

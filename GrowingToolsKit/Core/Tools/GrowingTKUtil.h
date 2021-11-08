@@ -35,6 +35,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BOOL)isDomain:(NSString *)string;
 
++ (NSString *)convertJsonFromData:(NSData *)data;
+
++ (NSDictionary *)convertDicFromData:(NSData *)data;
+
 @end
 
 NS_ASSUME_NONNULL_END

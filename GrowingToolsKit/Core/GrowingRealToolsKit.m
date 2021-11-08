@@ -23,7 +23,7 @@
 #import "GrowingTKEntryWindow.h"
 
 NSString *const GrowingToolsKitName = @"GrowingToolsKit";
-NSString *const GrowingToolsKitVersion = @"0.3.0";
+NSString *const GrowingToolsKitVersion = @"0.3.1";
 
 NSString *const GrowingTKHomeWillShowNotification = @"GrowingTKHomeWillShowNotification";
 NSString *const GrowingTKHomeShouldHideNotification = @"GrowingTKHomeShouldHideNotification";

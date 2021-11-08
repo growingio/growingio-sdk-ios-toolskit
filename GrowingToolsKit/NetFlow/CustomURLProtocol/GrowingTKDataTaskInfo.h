@@ -1,8 +1,8 @@
 //
-//  GrowingTKDateUtil.h
+//  GrowingTKDataTaskInfo.h
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/9/14.
+//  Created by YoloMao on 2021/11/4.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,19 +21,20 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingTKDateUtil : NSObject
+@interface GrowingTKDataTaskInfo : NSObject
 
-@property (nonatomic, strong) NSDateFormatter *defaultFormatter;
+@property (atomic, strong, readonly) NSURLSessionDataTask *task;
+@property (atomic, strong, readonly) id<NSURLSessionDataDelegate> delegate;
+@property (atomic, strong, readonly) NSThread *thread;
+@property (atomic, copy, readonly) NSArray *modes;
 
-+ (instancetype)sharedInstance;
+- (instancetype)initWithTask:(NSURLSessionDataTask *)task
+                    delegate:(id<NSURLSessionDataDelegate>)delegate
+                       modes:(NSArray *)modes;
 
-- (NSString *)timeStringFromTimestamp:(double)timestamp;
+- (void)performBlock:(dispatch_block_t)block;
 
-- (NSString *)timeStringFromTimestamp:(double)timestamp format:(NSString *_Nullable)format;
-
-- (BOOL)isToday:(double)timestamp;
-
-- (BOOL)isYesterday:(double)timestamp;
+- (void)invalidate;
 
 @end
 

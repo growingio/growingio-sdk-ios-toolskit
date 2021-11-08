@@ -1,8 +1,8 @@
 //
-//  GrowingTKDateUtil.h
+//  GrowingTKDatabase+Request.h
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/9/14.
+//  Created by YoloMao on 2021/11/4.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,23 +17,31 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Foundation/Foundation.h>
+#import "GrowingTKDatabase.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingTKDateUtil : NSObject
+@class GrowingTKRequestPersistence;
 
-@property (nonatomic, strong) NSDateFormatter *defaultFormatter;
+@interface GrowingTKDatabase (Request)
 
-+ (instancetype)sharedInstance;
+- (void)createRequestsTable;
 
-- (NSString *)timeStringFromTimestamp:(double)timestamp;
+- (NSInteger)countOfRequests;
 
-- (NSString *)timeStringFromTimestamp:(double)timestamp format:(NSString *_Nullable)format;
+- (NSArray<GrowingTKRequestPersistence *> *)getAllRequests;
 
-- (BOOL)isToday:(double)timestamp;
+- (BOOL)insertRequest:(GrowingTKRequestPersistence *)request;
 
-- (BOOL)isYesterday:(double)timestamp;
+- (BOOL)insertRequests:(NSArray<GrowingTKRequestPersistence *> *)requests;
+
+- (BOOL)deleteRequest:(NSString *)key;
+
+- (BOOL)deleteRequests:(NSArray<NSString *> *)keys;
+
+- (BOOL)clearAllRequests;
+
+- (BOOL)cleanExpiredRequestIfNeeded;
 
 @end
 

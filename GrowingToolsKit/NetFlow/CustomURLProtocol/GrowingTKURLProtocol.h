@@ -1,8 +1,8 @@
 //
-//  GrowingTKDateUtil.h
+//  GrowingTKURLProtocol.h
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/9/14.
+//  Created by YoloMao on 2021/11/4.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,19 +21,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingTKDateUtil : NSObject
-
-@property (nonatomic, strong) NSDateFormatter *defaultFormatter;
-
-+ (instancetype)sharedInstance;
-
-- (NSString *)timeStringFromTimestamp:(double)timestamp;
-
-- (NSString *)timeStringFromTimestamp:(double)timestamp format:(NSString *_Nullable)format;
-
-- (BOOL)isToday:(double)timestamp;
-
-- (BOOL)isYesterday:(double)timestamp;
+@interface GrowingTKURLProtocol : NSURLProtocol
 
 @end
 

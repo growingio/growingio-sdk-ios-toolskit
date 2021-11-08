@@ -34,13 +34,15 @@
 
 #pragma mark - Public Method
 
-- (NSString *)dayForTimestamp:(double)timestamp {
-    self.defaultFormatter.dateFormat = @"yyyyMMdd";
-    return [self.defaultFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:timestamp / 1000LL]];
+- (NSString *)timeStringFromTimestamp:(double)timestamp {
+    return [self timeStringFromTimestamp:timestamp format:nil];
 }
 
-- (NSString *)timeForTimestamp:(double)timestamp {
-    self.defaultFormatter.dateFormat = @"HH:mm:ss";
+- (NSString *)timeStringFromTimestamp:(double)timestamp format:(NSString *_Nullable)format {
+    if (format.length == 0) {
+        format = @"yyyy-MM-dd HH:mm:ss";
+    }
+    self.defaultFormatter.dateFormat = format;
     return [self.defaultFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:timestamp / 1000LL]];
 }
 

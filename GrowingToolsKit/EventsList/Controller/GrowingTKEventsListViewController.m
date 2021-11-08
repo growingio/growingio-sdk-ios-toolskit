@@ -24,7 +24,7 @@
 #import "UIView+GrowingTK.h"
 #import "UIColor+GrowingTK.h"
 #import "GrowingTKEventsListPlugin.h"
-#import "GrowingTKDatabase.h"
+#import "GrowingTKDatabase+Event.h"
 #import "GrowingTKEventPersistence.h"
 #import "GrowingTKDateUtil.h"
 

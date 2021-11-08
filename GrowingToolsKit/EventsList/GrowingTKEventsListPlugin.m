@@ -19,7 +19,7 @@
 
 #import "GrowingTKEventsListPlugin.h"
 #import "GrowingTKEventsListViewController.h"
-#import "GrowingTKDatabase.h"
+#import "GrowingTKDatabase+Event.h"
 #import "GrowingTKEventPersistence.h"
 #import "GrowingTKSDKUtil.h"
 #import <objc/runtime.h>
@@ -38,7 +38,8 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        _db = [GrowingTKDatabase databaseWithPath:GrowingTKDatabase.defaultPath error:nil];
+        _db = [GrowingTKDatabase database];
+        [_db createEventsTable];
         [_db cleanExpiredEventIfNeeded];
 
         [self hookEvents];

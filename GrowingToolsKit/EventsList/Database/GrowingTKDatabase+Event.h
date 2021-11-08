@@ -1,9 +1,9 @@
 //
-// GrowingEventFMDatabase.h
-// GrowingToolsKit
+//  GrowingTKDatabase+Event.h
+//  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/9/13.
-//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2021/11/4.
+//  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,17 +17,15 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Foundation/Foundation.h>
+#import "GrowingTKDatabase.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class GrowingTKEventPersistence;
 
-@interface GrowingTKDatabase : NSObject
+@interface GrowingTKDatabase (Event)
 
-+ (instancetype)databaseWithPath:(NSString *)path error:(NSError **)error;
-
-+ (NSString *)defaultPath;
+- (void)createEventsTable;
 
 - (NSInteger)countOfEvents;
 
@@ -46,8 +44,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)clearAllEvents;
 
 - (BOOL)cleanExpiredEventIfNeeded;
-
-- (NSError *)lastError;
 
 @end
 

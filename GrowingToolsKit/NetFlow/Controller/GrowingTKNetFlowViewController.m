@@ -1,8 +1,8 @@
 //
-//  GrowingTKDateUtil.h
+//  GrowingTKNetFlowViewController.m
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/9/14.
+//  Created by YoloMao on 2021/11/8.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,24 +17,27 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Foundation/Foundation.h>
+#import "GrowingTKNetFlowViewController.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface GrowingTKDateUtil : NSObject
-
-@property (nonatomic, strong) NSDateFormatter *defaultFormatter;
-
-+ (instancetype)sharedInstance;
-
-- (NSString *)timeStringFromTimestamp:(double)timestamp;
-
-- (NSString *)timeStringFromTimestamp:(double)timestamp format:(NSString *_Nullable)format;
-
-- (BOOL)isToday:(double)timestamp;
-
-- (BOOL)isYesterday:(double)timestamp;
+@interface GrowingTKNetFlowViewController ()
 
 @end
 
-NS_ASSUME_NONNULL_END
+@implementation GrowingTKNetFlowViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

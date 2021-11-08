@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'GrowingToolsKit'
-  s.version          = '0.3.0'
+  s.version          = '0.3.1'
   s.summary          = 'GrowingToolsKit for iOS GrowingIO SDK'
   s.description      = <<-DESC
 TODO: Add long description of the pod here.
@@ -27,6 +27,7 @@ TODO: Add long description of the pod here.
     ss.dependency 'GrowingToolsKit/SDKInfo'
     ss.dependency 'GrowingToolsKit/EventsList'
     ss.dependency 'GrowingToolsKit/XPathTrack'
+    ss.dependency 'GrowingToolsKit/NetFlow'
   end
   
   s.subspec 'SDK30202' do |ss|
@@ -70,6 +71,11 @@ TODO: Add long description of the pod here.
   
   s.subspec 'XPathTrack' do |ss|
     ss.source_files = 'GrowingToolsKit/XPathTrack/**/*{.h,.m,.c,.cpp,.mm}'
+    ss.dependency 'GrowingToolsKit/Core'
+  end
+  
+  s.subspec 'NetFlow' do |ss|
+    ss.source_files = 'GrowingToolsKit/NetFlow/**/*{.h,.m,.c,.cpp,.mm}'
     ss.dependency 'GrowingToolsKit/Core'
   end
 end

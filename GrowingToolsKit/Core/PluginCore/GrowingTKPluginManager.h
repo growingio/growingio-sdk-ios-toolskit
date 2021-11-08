@@ -30,6 +30,8 @@ typedef NS_ENUM(NSUInteger, GrowingTKDefaultPluginType) {
     GrowingTKDefaultPluginType_EventsListPlugin,
     // XPath跟踪
     GrowingTKDefaultPluginType_XPathTrackPlugin,
+    // 网络请求
+    GrowingTKDefaultPluginType_NetFlowPlugin,
     // 日志显示
     GrowingTKDefaultPluginType_LogPlugin,
     // Hybrid测试

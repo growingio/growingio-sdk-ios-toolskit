@@ -132,14 +132,14 @@
 
 - (NSString *)day {
     if (!_day) {
-        _day = [GrowingTKDateUtil.sharedInstance dayForTimestamp:self.timestamp];
+        _day = [GrowingTKDateUtil.sharedInstance timeStringFromTimestamp:self.timestamp format:@"yyyyMMdd"];
     }
     return _day;
 }
 
 - (NSString *)time {
     if (!_time) {
-        _time = [GrowingTKDateUtil.sharedInstance timeForTimestamp:self.timestamp];
+        _time = [GrowingTKDateUtil.sharedInstance timeStringFromTimestamp:self.timestamp format:@"HH:mm:ss"];
     }
     return _time;
 }
