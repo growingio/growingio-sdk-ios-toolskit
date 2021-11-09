@@ -184,10 +184,12 @@
     }
 
     self.requestCountLabel.text = [NSString stringWithFormat:@"%ld", (long)requestCount];
-    if (uploadFlow > 1024 * 1024) {
-        self.uploadFlowLabel.text = [NSString stringWithFormat:@"%.2fMB", uploadFlow / (1024 * 1024)];
-    } else if (uploadFlow > 1024) {
-        self.uploadFlowLabel.text = [NSString stringWithFormat:@"%.2fKB", uploadFlow / 1024];
+    double mb = 1024.0 * 1024.0;
+    double kb = 1024.0;
+    if (uploadFlow > mb) {
+        self.uploadFlowLabel.text = [NSString stringWithFormat:@"%.2fMB", floor(uploadFlow / mb)];
+    } else if (uploadFlow > kb) {
+        self.uploadFlowLabel.text = [NSString stringWithFormat:@"%.2fKB", floor(uploadFlow / kb)];
     } else {
         self.uploadFlowLabel.text = [NSString stringWithFormat:@"%.2fB", uploadFlow];
     }

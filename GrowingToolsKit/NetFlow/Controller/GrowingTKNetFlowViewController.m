@@ -20,6 +20,7 @@
 #import "GrowingTKNetFlowViewController.h"
 #import "GrowingTKNetFlowHeaderView.h"
 #import "GrowingTKNetFlowTableViewCell.h"
+#import "GrowingTKNetFlowDetailViewController.h"
 #import "GrowingTKNetFlowPlugin.h"
 #import "GrowingTKDatabase+Request.h"
 #import "GrowingTKRequestPersistence.h"
@@ -182,11 +183,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    //    GrowingTKEventDetailViewController *controller = [[GrowingTKEventDetailViewController alloc] init];
-    //    NSDictionary *dic = (NSDictionary *)self.datasource[indexPath.section];
-    //    GrowingTKRequestPersistence *request = ((NSArray *)dic[dic.allKeys.firstObject])[indexPath.row];
-    //    controller.request = request;
-    //    [self presentViewController:controller animated:YES completion:nil];
+    GrowingTKNetFlowDetailViewController *controller = [[GrowingTKNetFlowDetailViewController alloc] init];
+    NSDictionary *dic = (NSDictionary *)self.datasource[indexPath.section];
+    GrowingTKRequestPersistence *request = ((NSArray *)dic[dic.allKeys.firstObject])[indexPath.row];
+    controller.request = request;
+    [self presentViewController:controller animated:YES completion:nil];
 }
 
 #pragma mark - Getter & Setter

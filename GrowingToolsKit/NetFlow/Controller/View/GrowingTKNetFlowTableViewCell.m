@@ -43,6 +43,8 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        
         if (@available(iOS 13.0, *)) {
             self.backgroundColor = [UIColor secondarySystemBackgroundColor];
         } else {
@@ -158,10 +160,15 @@
     self.timeLabel.text = request.startTime;
     self.durationLabel.text = [NSString stringWithFormat:@"耗时：%.f毫秒", request.totalDuration.doubleValue * 1000];
     self.methodLabel.text = request.method;
-    if (request.uploadFlow.doubleValue > 1024) {
-        self.uploadFlowLabel.text = [NSString stringWithFormat:@"↑%.2fKB", request.uploadFlow.doubleValue / 1024.0];
+    
+    double mb = 1024.0 * 1024.0;
+    double kb = 1024.0;
+    if (request.uploadFlow.doubleValue > mb) {
+        self.uploadFlowLabel.text = [NSString stringWithFormat:@"↑%.2fMB", floor(request.uploadFlow.doubleValue / mb)];
+    } else if (request.uploadFlow.doubleValue > kb) {
+        self.uploadFlowLabel.text = [NSString stringWithFormat:@"↑%.2fKB", floor(request.uploadFlow.doubleValue / kb)];
     } else {
-        self.uploadFlowLabel.text = [NSString stringWithFormat:@"↑%@B", request.uploadFlow];
+        self.uploadFlowLabel.text = [NSString stringWithFormat:@"↑%.2fB", request.uploadFlow.doubleValue];
     }
 }
 
