@@ -41,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *viewController;
 
 @property (nonatomic, copy, readonly) NSString *rawJsonString;
+@property (nonatomic, copy, readonly) NSString *day;
 
 + (void)dealWithRequest:(NSURLRequest *)request
                response:(NSURLResponse *)response

@@ -29,6 +29,7 @@
 @property (nonatomic, copy) NSURLResponse *response;
 @property (nonatomic, copy) NSData *responseData;
 @property (nonatomic, copy, readwrite) NSString *rawJsonString;
+@property (nonatomic, copy, readwrite) NSString *day;
 
 @end
 
@@ -56,8 +57,8 @@
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         persistence->_statusCode = [NSString stringWithFormat:@"%d",(int)httpResponse.statusCode];
         persistence->_mineType = httpResponse.MIMEType;
-        persistence->_endTimestamp = [[NSDate date] timeIntervalSince1970];
-        persistence->_totalDuration = [NSString stringWithFormat:@"%f", persistence->_endTimestamp - persistence->_startTimestamp];
+        persistence->_endTimestamp = [[NSDate date] timeIntervalSince1970] * 1000LL;
+        persistence->_totalDuration = [NSString stringWithFormat:@"%f", (persistence->_endTimestamp - persistence->_startTimestamp) / 1000LL];
         persistence->_responseBody = [GrowingTKUtil convertJsonFromData:responseData] ?: @"";
         persistence->_responseHeader = httpResponse.allHeaderFields;
         persistence->_downFlow = [NSString stringWithFormat:@"%lli", [GrowingTKRequestUtil responseLengthForResponse:httpResponse
@@ -206,6 +207,13 @@
         default:
             return nil;
     }
+}
+
+- (NSString *)day {
+    if (!_day) {
+        _day = [GrowingTKDateUtil.sharedInstance timeStringFromTimestamp:self.startTimestamp format:@"yyyyMMdd"];
+    }
+    return _day;
 }
 
 @end

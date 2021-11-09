@@ -73,7 +73,7 @@ static NSString *const kGrowingTKProtocolKey = @"com.growingio.toolskit.CustomHT
     }
 
     self.responseData = NSMutableData.data;
-    self.startTime = NSDate.date.timeIntervalSince1970;
+    self.startTime = NSDate.date.timeIntervalSince1970 * 1000LL;
     self.task = [GrowingTKNetFlowPlugin.plugin dataTaskWithRequest:recursiveRequest delegate:self modes:modes];
     [self.task resume];
 }

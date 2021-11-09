@@ -60,6 +60,7 @@
 
         instance->_taskInfoByTaskID = [NSMutableDictionary dictionary];
 
+        instance->_pluginStartTimestamp = [[NSDate date] timeIntervalSince1970] * 1000LL;
         [NSURLProtocol registerClass:GrowingTKURLProtocol.class];
     });
     return instance;

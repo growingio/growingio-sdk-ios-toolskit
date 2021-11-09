@@ -27,6 +27,7 @@ typedef void(^GrowingTKStreamEventEndBlock)(NSData *);
 
 @interface GrowingTKNetFlowPlugin : NSObject <GrowingTKPluginProtocol, NSStreamDelegate>
 
+@property (nonatomic, assign, readonly) NSTimeInterval pluginStartTimestamp;
 @property (nonatomic, strong) GrowingTKDatabase *db;
 @property (nonatomic, copy, nullable) GrowingTKStreamEventEndBlock streamEndBlock;
 

@@ -1,8 +1,8 @@
 //
-//  GrowingTKWeakObject.m
+//  GrowingTKNetFlowHeaderView.h
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/9/23.
+//  Created by YoloMao on 2021/11/8.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,18 +17,17 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTKWeakObject.h"
+#import <UIKit/UIKit.h>
 
-@implementation GrowingTKWeakObject
+NS_ASSUME_NONNULL_BEGIN
 
-+ (GrowingTKWeakObject *)weakObject:(id)obj {
-    GrowingTKWeakObject *box = [[GrowingTKWeakObject alloc] init];
-    box.obj = obj;
-    return box;
-}
+@class GrowingTKRequestPersistence;
 
-- (id)forwardingTargetForSelector:(SEL)aSelector {
-    return _obj;
-}
+@interface GrowingTKNetFlowHeaderView : UIView
+
+- (instancetype)initWithFrame:(CGRect)frame;
+- (void)configWithRuntimeDatasource:(NSArray <GrowingTKRequestPersistence *>*)datasource;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -51,7 +51,7 @@
         [self.tableView.trailingAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.trailingAnchor]
     ]];
 
-    [self refreshData];
+    self.datasource = [self refreshData];
     [self.tableView reloadData];
 
     if (@available(iOS 10.0, *)) {
@@ -65,8 +65,8 @@
 
 #pragma mark - Private Method
 
-- (void)refreshData {
-    self.datasource = [NSMutableArray array];
+- (NSMutableArray *)refreshData {
+    NSMutableArray *datasource = [NSMutableArray array];
     NSArray *events = GrowingTKEventsListPlugin.plugin.db.getAllEvents.reverseObjectEnumerator.allObjects;
     NSMutableArray *dayKeys = [NSMutableArray array];
     NSMutableArray *dayEvents = [NSMutableArray array];
@@ -94,20 +94,23 @@
     }
 
     for (int i = 0; i < dayKeys.count; i++) {
-        [self.datasource addObject:@{dayKeys[i]: dayEvents[i]}];
+        [datasource addObject:@{dayKeys[i]: dayEvents[i]}];
     }
+    
+    return datasource;
 }
 
 #pragma mark - Action
 
 #if defined(__IPHONE_10_0) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0)
 - (void)refreshAction {
-    [self refreshData];
+    NSMutableArray *datasource = [self refreshData];
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (@available(iOS 10.0, *)) {
             [self.tableView.refreshControl endRefreshing];
         }
+        self.datasource = datasource;
         [self.tableView reloadData];
     });
 }
