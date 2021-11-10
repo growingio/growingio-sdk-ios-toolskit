@@ -183,11 +183,7 @@ UICollectionViewDelegateFlowLayout>
     if (!_collectionView) {
         UICollectionViewFlowLayout *fl = [[UICollectionViewFlowLayout alloc] init];
         _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:fl];
-        if (@available(iOS 13.0, *)) {
-            _collectionView.backgroundColor = [UIColor systemBackgroundColor];
-        } else {
-            _collectionView.backgroundColor = [UIColor whiteColor];
-        }
+        _collectionView.backgroundColor = UIColor.growingtk_white_1;
         _collectionView.showsVerticalScrollIndicator = NO;
         _collectionView.delegate = self;
         _collectionView.dataSource = self;

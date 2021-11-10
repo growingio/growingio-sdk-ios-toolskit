@@ -43,11 +43,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        if (@available(iOS 13.0, *)) {
-            self.backgroundColor = [UIColor systemBackgroundColor];
-        } else {
-            self.backgroundColor = [UIColor whiteColor];
-        }
+        self.backgroundColor = UIColor.growingtk_white_1;
 
         self.globalSequenceIdLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         self.globalSequenceIdLabel.textColor = UIColor.growingtk_black_2;

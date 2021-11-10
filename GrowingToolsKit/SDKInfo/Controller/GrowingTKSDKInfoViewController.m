@@ -65,11 +65,7 @@
     self.tableView =
         [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.growingtk_width, self.view.growingtk_height)
                                      style:UITableViewStyleGrouped];
-    if (@available(iOS 13.0, *)) {
-        self.tableView.backgroundColor = [UIColor systemBackgroundColor];
-    } else {
-        self.tableView.backgroundColor = [UIColor whiteColor];
-    }
+    self.tableView.backgroundColor = UIColor.growingtk_white_1;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.estimatedSectionFooterHeight = 0.01f;

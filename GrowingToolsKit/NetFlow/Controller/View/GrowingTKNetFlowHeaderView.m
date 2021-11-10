@@ -43,11 +43,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
-        if (@available(iOS 13.0, *)) {
-            view.backgroundColor = [UIColor systemBackgroundColor];
-        } else {
-            view.backgroundColor = [UIColor whiteColor];
-        }
+        view.backgroundColor = UIColor.growingtk_white_1;
         view.layer.cornerRadius = 5.0f;
         view.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:view];

@@ -44,20 +44,11 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-
-        if (@available(iOS 13.0, *)) {
-            self.backgroundColor = [UIColor secondarySystemBackgroundColor];
-        } else {
-            self.backgroundColor = [UIColor growingtk_colorWithHex:@"f2f2f7ff"];
-        }
+        self.backgroundColor = UIColor.growingtk_white_2;
 
         self.bgView = [[UIView alloc] initWithFrame:CGRectZero];
         self.bgView.layer.cornerRadius = 5.0f;
-        if (@available(iOS 13.0, *)) {
-            self.bgView.backgroundColor = [UIColor systemBackgroundColor];
-        } else {
-            self.bgView.backgroundColor = [UIColor whiteColor];
-        }
+        self.bgView.backgroundColor = UIColor.growingtk_white_1;
         self.bgView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.bgView];
 

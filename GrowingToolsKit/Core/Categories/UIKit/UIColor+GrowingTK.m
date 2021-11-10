@@ -134,6 +134,20 @@
     return UIColor.grayColor;
 }
 
++ (UIColor *)growingtk_white_1 {
+    if (@available(iOS 13.0, *)) {
+        return UIColor.systemBackgroundColor;
+    }
+    return UIColor.whiteColor;
+}
+
++ (UIColor *)growingtk_white_2 {
+    if (@available(iOS 13.0, *)) {
+        return UIColor.secondarySystemBackgroundColor;
+    }
+    return [UIColor growingtk_colorWithHex:@"F2F2F7"];
+}
+
 + (UIColor *)growingtk_blue {
     if (@available(iOS 13.0, *)) {
         return [UIColor colorWithDynamicProvider:^UIColor *_Nonnull(UITraitCollection *_Nonnull traitCollection) {
@@ -165,7 +179,10 @@
 }
 
 + (UIColor *)growingtk_bg {
-    return [UIColor growingtk_colorWithHex:@"#F4F5F6"];
+    if (@available(iOS 13.0, *)) {
+        return UIColor.tertiarySystemBackgroundColor;
+    }
+    return UIColor.whiteColor;
 }
 
 + (UIColor *)growingtk_randomColor {

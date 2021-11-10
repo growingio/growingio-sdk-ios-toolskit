@@ -31,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSArray<GrowingTKEventPersistence *> *)getAllEvents;
 
+- (NSArray<GrowingTKEventPersistence *> *)getEventsByEventTypes:(NSArray <NSString *>*)eventTypes;
+
 - (BOOL)insertEvent:(GrowingTKEventPersistence *)event;
 
 - (BOOL)insertEvents:(NSArray<GrowingTKEventPersistence *> *)events;

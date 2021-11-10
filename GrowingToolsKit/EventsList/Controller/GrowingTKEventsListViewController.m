@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingTKEventsListViewController.h"
+#import "GrowingTKEventsListHeaderView.h"
 #import "GrowingTKEventsListTableViewCell.h"
 #import "GrowingTKEventDetailViewController.h"
 #import "GrowingTKDefine.h"
@@ -28,10 +29,11 @@
 #import "GrowingTKEventPersistence.h"
 #import "GrowingTKDateUtil.h"
 
-@interface GrowingTKEventsListViewController () <UITableViewDelegate, UITableViewDataSource>
+@interface GrowingTKEventsListViewController () <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSMutableArray *datasource;
+@property (nonatomic, strong) GrowingTKEventsListHeaderView *tableHeaderView;
 
 @end
 
@@ -41,7 +43,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = GrowingTKLocalizedString(@"埋点数据");
+    self.title = self.title ?: GrowingTKLocalizedString(@"埋点数据");
 
     [self.view addSubview:self.tableView];
     [NSLayoutConstraint activateConstraints:@[
@@ -63,11 +65,22 @@
     }
 }
 
+- (void)viewWillTransitionToSize:(CGSize)size
+       withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    [self.tableHeaderView reset];
+}
+
 #pragma mark - Private Method
 
 - (NSMutableArray *)refreshData {
     NSMutableArray *datasource = [NSMutableArray array];
-    NSArray *events = GrowingTKEventsListPlugin.plugin.db.getAllEvents.reverseObjectEnumerator.allObjects;
+    NSArray *events;
+    if (self.eventTypes) {
+        events = [GrowingTKEventsListPlugin.plugin.db getEventsByEventTypes:self.eventTypes].reverseObjectEnumerator.allObjects;
+    }else {
+        events = GrowingTKEventsListPlugin.plugin.db.getAllEvents.reverseObjectEnumerator.allObjects;
+    }
     NSMutableArray *dayKeys = [NSMutableArray array];
     NSMutableArray *dayEvents = [NSMutableArray array];
     NSString *today = GrowingTKLocalizedString(@"今日");
@@ -115,6 +128,30 @@
     });
 }
 #endif
+
+- (void)searchAction:(NSString *)type isChoose:(BOOL)isChoose {
+    GrowingTKEventsListViewController *controller = [[GrowingTKEventsListViewController alloc] init];
+    if (isChoose) {
+        controller.eventTypes = @[type];
+    } else {
+        NSMutableArray *eventTypes = [NSMutableArray array];
+        for (NSString *eventType in self.tableHeaderView.types) {
+            if ([eventType.lowercaseString containsString:type.lowercaseString]) {
+                [eventTypes addObject:eventType];
+            }
+        }
+        controller.eventTypes = eventTypes.copy;
+    }
+    controller.title = [NSString stringWithFormat:@"%@%@", GrowingTKLocalizedString(@"搜索来自"), type];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self.view endEditing:YES];
+    [self.tableHeaderView reset];
+}
 
 #pragma mark - UITableView DataSource & Delegate
 
@@ -164,6 +201,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self.tableHeaderView reset];
+    
     GrowingTKEventDetailViewController *controller = [[GrowingTKEventDetailViewController alloc] init];
     NSDictionary *dic = (NSDictionary *)self.datasource[indexPath.section];
     GrowingTKEventPersistence *event = ((NSArray *)dic[dic.allKeys.firstObject])[indexPath.row];
@@ -177,16 +216,31 @@
     if (!_tableView) {
         _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
         _tableView.translatesAutoresizingMaskIntoConstraints = NO;
-        if (@available(iOS 13.0, *)) {
-            _tableView.backgroundColor = [UIColor systemBackgroundColor];
-        } else {
-            _tableView.backgroundColor = [UIColor whiteColor];
-        }
+        _tableView.backgroundColor = UIColor.growingtk_white_1;
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.sectionFooterHeight = 0.01f;
         [_tableView registerClass:[GrowingTKEventsListTableViewCell class]
             forCellReuseIdentifier:@"GrowingTKEventsListTableViewCell"];
+        
+        if (!self.eventTypes) {
+            CGRect frame = CGRectMake(0, 0, GrowingTKScreenWidth, GrowingTKSizeFrom750(120));
+            UIView *tableHeaderView = [[UIView alloc] initWithFrame:frame];
+            __weak typeof(self) weakSelf = self;
+            _tableHeaderView = [[GrowingTKEventsListHeaderView alloc] initWithFrame:CGRectZero
+                                                                     searchCallback:^(NSString * _Nonnull type, BOOL isChoose) {
+                [weakSelf searchAction:type isChoose:isChoose];
+            }];
+            _tableHeaderView.translatesAutoresizingMaskIntoConstraints = NO;
+            [tableHeaderView addSubview:_tableHeaderView];
+            [NSLayoutConstraint activateConstraints:@[
+                [_tableHeaderView.topAnchor constraintEqualToAnchor:tableHeaderView.topAnchor],
+                [_tableHeaderView.bottomAnchor constraintEqualToAnchor:tableHeaderView.bottomAnchor],
+                [_tableHeaderView.leadingAnchor constraintEqualToAnchor:tableHeaderView.leadingAnchor],
+                [_tableHeaderView.trailingAnchor constraintEqualToAnchor:tableHeaderView.trailingAnchor]
+            ]];
+            _tableView.tableHeaderView = tableHeaderView;
+        }
     }
     return _tableView;
 }

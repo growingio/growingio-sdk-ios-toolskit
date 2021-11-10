@@ -226,11 +226,7 @@
     if (!_requestTableView) {
         _requestTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
         _requestTableView.translatesAutoresizingMaskIntoConstraints = NO;
-        if (@available(iOS 13.0, *)) {
-            _requestTableView.backgroundColor = [UIColor systemBackgroundColor];
-        } else {
-            _requestTableView.backgroundColor = [UIColor whiteColor];
-        }
+        _requestTableView.backgroundColor = UIColor.growingtk_white_1;
         _requestTableView.delegate = self;
         _requestTableView.dataSource = self;
         _requestTableView.sectionFooterHeight = 0.01f;
@@ -246,11 +242,7 @@
     if (!_responseTableView) {
         _responseTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
         _responseTableView.translatesAutoresizingMaskIntoConstraints = NO;
-        if (@available(iOS 13.0, *)) {
-            _responseTableView.backgroundColor = [UIColor systemBackgroundColor];
-        } else {
-            _responseTableView.backgroundColor = [UIColor whiteColor];
-        }
+        _responseTableView.backgroundColor = UIColor.growingtk_white_1;
         _responseTableView.delegate = self;
         _responseTableView.dataSource = self;
         _responseTableView.sectionFooterHeight = 0.01f;

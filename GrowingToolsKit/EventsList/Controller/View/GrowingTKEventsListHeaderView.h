@@ -1,8 +1,8 @@
 //
-//  GrowingTKEventsListViewController.h
+//  GrowingTKEventsListHeaderView.h
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/9/7.
+//  Created by YoloMao on 2021/11/10.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,13 +17,17 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTKBaseViewController.h"
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingTKEventsListViewController : GrowingTKBaseViewController
+@interface GrowingTKEventsListHeaderView : UIView
 
-@property (nonatomic, copy) NSArray <NSString *>*eventTypes;
+@property (nonatomic, copy, readonly) NSArray<NSString *> *types;
+
+- (instancetype)initWithFrame:(CGRect)frame searchCallback:(void(^)(NSString *, BOOL))searchCallback;
+
+- (void)reset;
 
 @end
 

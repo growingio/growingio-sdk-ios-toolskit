@@ -80,6 +80,33 @@ static long long const kGrowingTKEventsDatabaseExpirationTime = 86400000 * 30LL;
     return events.count != 0 ? events : nil;
 }
 
+- (NSArray<GrowingTKEventPersistence *> *)getEventsByEventTypes:(NSArray <NSString *>*)eventTypes {
+    if (self.countOfEvents == 0) {
+        return [[NSArray alloc] init];
+    }
+
+    NSMutableArray<GrowingTKEventPersistence *> *events = [[NSMutableArray alloc] init];
+    [self eventsEnumerateKeysAndValuesUsingBlock:^(NSString *key, NSString *value, NSString *type, BOOL isSend, BOOL *stop) {
+        BOOL contain = NO;
+        for (NSString *eventType in eventTypes) {
+            if ([eventType.lowercaseString isEqualToString:type.lowercaseString]) {
+                contain = YES;
+                break;
+            }
+        }
+        if (!contain) {
+            return;
+        }
+        GrowingTKEventPersistence *event = [[GrowingTKEventPersistence alloc] initWithUUID:key
+                                                                                 eventType:type
+                                                                                jsonString:value
+                                                                                    isSend:isSend];
+        [events addObject:event];
+    }];
+
+    return events.count != 0 ? events : nil;
+}
+
 - (BOOL)insertEvent:(GrowingTKEventPersistence *)event {
     __block BOOL result = NO;
     [self performDatabaseBlock:^(GrowingTKFMDatabase *db, NSError *error) {

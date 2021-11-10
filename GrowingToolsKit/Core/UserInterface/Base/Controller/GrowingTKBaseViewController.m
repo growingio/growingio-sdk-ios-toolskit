@@ -54,11 +54,7 @@
     }
 
     // Dark Mode
-    if (@available(iOS 13.0, *)) {
-        self.view.backgroundColor = [UIColor tertiarySystemBackgroundColor];
-    } else {
-        self.view.backgroundColor = [UIColor whiteColor];
-    }
+    self.view.backgroundColor = UIColor.growingtk_bg;
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {

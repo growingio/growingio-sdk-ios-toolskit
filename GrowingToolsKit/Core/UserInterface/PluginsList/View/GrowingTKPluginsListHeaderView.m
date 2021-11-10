@@ -20,6 +20,7 @@
 #import "GrowingTKPluginsListHeaderView.h"
 #import "GrowingTKDefine.h"
 #import "UIView+GrowingTK.h"
+#import "UIColor+GrowingTK.h"
 
 @interface GrowingTKPluginsListHeaderView ()
 
@@ -32,11 +33,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        if (@available(iOS 13.0, *)) {
-            self.backgroundColor = [UIColor systemBackgroundColor];
-        } else {
-            self.backgroundColor = [UIColor whiteColor];
-        }
+        self.backgroundColor = UIColor.growingtk_white_1;
         self.title = [UILabel new];
         [self addSubview:self.title];
     }

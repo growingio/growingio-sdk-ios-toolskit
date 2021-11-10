@@ -73,11 +73,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        if (@available(iOS 13.0, *)) {
-            self.backgroundColor = [UIColor systemBackgroundColor];
-        } else {
-            self.backgroundColor = [UIColor whiteColor];
-        }
+        self.backgroundColor = UIColor.growingtk_white_1;
         [self addSubview:self.icon];
         [self addSubview:self.name];
         [self.icon addSubview:self.iconImage];

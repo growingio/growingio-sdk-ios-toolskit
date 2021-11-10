@@ -155,11 +155,7 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, GrowingTKScreenWidth, 40)];
-    if (@available(iOS 13.0, *)) {
-        view.backgroundColor = [UIColor secondarySystemBackgroundColor];
-    } else {
-        view.backgroundColor = [UIColor growingtk_colorWithHex:@"f2f2f7ff"];
-    }
+    view.backgroundColor = UIColor.growingtk_white_2;
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(16, 8, GrowingTKScreenWidth - 32, 24)];
     label.text = ((NSDictionary *)self.datasource[section]).allKeys.firstObject;
     label.font = [UIFont systemFontOfSize:GrowingTKSizeFrom750(32)];
@@ -196,11 +192,7 @@
     if (!_tableView) {
         _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
         _tableView.translatesAutoresizingMaskIntoConstraints = NO;
-        if (@available(iOS 13.0, *)) {
-            _tableView.backgroundColor = [UIColor secondarySystemBackgroundColor];
-        } else {
-            _tableView.backgroundColor = [UIColor growingtk_colorWithHex:@"f2f2f7ff"];
-        }
+        _tableView.backgroundColor = UIColor.growingtk_white_2;
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.sectionFooterHeight = 0.01f;
@@ -208,12 +200,17 @@
         [_tableView registerClass:[GrowingTKNetFlowTableViewCell class]
             forCellReuseIdentifier:@"GrowingTKNetFlowTableViewCell"];
 
-        // UITableView.tableHeaderView就算到了didMoveToSuperview，约束中的width还是0
-        // 会导致手写约束报warnings，这里加一层view嵌套来避免
         CGRect frame = CGRectMake(0, 0, GrowingTKScreenWidth, GrowingTKSizeFrom750(280));
-        _tableHeaderView = [[GrowingTKNetFlowHeaderView alloc] initWithFrame:frame];
         UIView *tableHeaderView = [[UIView alloc] initWithFrame:frame];
+        _tableHeaderView = [[GrowingTKNetFlowHeaderView alloc] initWithFrame:CGRectZero];
+        _tableHeaderView.translatesAutoresizingMaskIntoConstraints = NO;
         [tableHeaderView addSubview:_tableHeaderView];
+        [NSLayoutConstraint activateConstraints:@[
+            [_tableHeaderView.topAnchor constraintEqualToAnchor:tableHeaderView.topAnchor],
+            [_tableHeaderView.bottomAnchor constraintEqualToAnchor:tableHeaderView.bottomAnchor],
+            [_tableHeaderView.leadingAnchor constraintEqualToAnchor:tableHeaderView.leadingAnchor],
+            [_tableHeaderView.trailingAnchor constraintEqualToAnchor:tableHeaderView.trailingAnchor]
+        ]];
         _tableView.tableHeaderView = tableHeaderView;
     }
     return _tableView;
