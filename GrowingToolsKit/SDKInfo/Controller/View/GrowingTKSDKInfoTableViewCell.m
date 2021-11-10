@@ -41,6 +41,8 @@
             self.backgroundColor = [UIColor whiteColor];
         }
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        self.titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
+        self.titleLabel.numberOfLines = 2;
         self.titleLabel.textColor = [UIColor growingtk_black_1];
         self.titleLabel.font = [UIFont systemFontOfSize:GrowingTKSizeFrom750(32)];
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -79,11 +81,18 @@
                                           constant:100.0],
             [NSLayoutConstraint constraintWithItem:self.titleLabel
                                          attribute:NSLayoutAttributeHeight
-                                         relatedBy:NSLayoutRelationEqual
+                                         relatedBy:NSLayoutRelationGreaterThanOrEqual
                                             toItem:nil
                                          attribute:NSLayoutAttributeNotAnAttribute
                                         multiplier:1.0
                                           constant:36.0],
+            [NSLayoutConstraint constraintWithItem:self.titleLabel
+                                         attribute:NSLayoutAttributeBottom
+                                         relatedBy:NSLayoutRelationEqual
+                                            toItem:self.contentView
+                                         attribute:NSLayoutAttributeBottom
+                                        multiplier:1.0
+                                          constant:-8.0],
             [NSLayoutConstraint constraintWithItem:self.valueLabel
                                          attribute:NSLayoutAttributeTop
                                          relatedBy:NSLayoutRelationEqual

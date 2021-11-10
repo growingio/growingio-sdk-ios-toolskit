@@ -97,6 +97,7 @@
         @{@"title": GrowingTKLocalizedString(@"SDK版本号"), @"value": sdk.version},
         @{@"title": GrowingTKLocalizedString(@"SDK初始化"), @"value": sdk.initializationDescription},
         @{@"title": @"URL Scheme", @"value": sdk.urlScheme.length > 0 ? sdk.urlScheme : @"未配置"},
+        @{@"title": @"URL Schemes(InfoPlist)", @"value": sdk.urlSchemesInInfoPlist.length > 0 ? sdk.urlSchemesInInfoPlist : @"未配置"},
         @{@"title": @"适配URL Scheme", @"value": (sdk.isAdaptToURLScheme ? @"是" : @"否")},
         @{@"title": @"适配Deep Link", @"value": (sdk.isAdaptToDeepLink ? @"是" : @"否")}
     ]];
@@ -133,6 +134,9 @@
 
         NSString *debugEnabled = sdk.debugEnabled ? @"YES" : @"NO";
         [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"调试模式"), @"value": debugEnabled}];
+        
+        NSString *encryptEnabled = sdk.encryptEnabled ? @"YES" : @"NO";
+        [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"数据加密"), @"value": encryptEnabled}];
 
         NSString *cellularDataLimit =
             [NSString stringWithFormat:@"%luMB", (unsigned long)sdk.cellularDataLimit];

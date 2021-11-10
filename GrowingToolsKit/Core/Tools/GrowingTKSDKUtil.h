@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *subName;
 @property (nonatomic, copy, readonly) NSString *version;
 @property (nonatomic, copy, readonly) NSString *urlScheme;
+@property (nonatomic, copy, readonly) NSString *urlSchemesInInfoPlist;
 @property (nonatomic, copy, readonly) NSString *deviceId;
 @property (nonatomic, copy, readonly) NSString *userId;
 @property (nonatomic, copy, readonly) NSString *userKey;
@@ -52,6 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) NSUInteger excludeEvent;
 @property (nonatomic, assign, readonly) NSUInteger ignoreField;
 @property (nonatomic, assign, readonly) BOOL idMappingEnabled;
+@property (nonatomic, assign, readonly) BOOL encryptEnabled;
 
 // AutoTracker
 @property (nonatomic, assign, readonly) float impressionScale;

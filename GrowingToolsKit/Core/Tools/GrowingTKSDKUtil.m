@@ -29,6 +29,7 @@
 @property (nonatomic, copy, readwrite) NSString *subName;
 @property (nonatomic, copy, readwrite) NSString *version;
 @property (nonatomic, copy, readwrite) NSString *urlScheme;
+@property (nonatomic, copy, readwrite) NSString *urlSchemesInInfoPlist;
 @property (nonatomic, copy, readwrite) NSString *deviceId;
 @property (nonatomic, copy, readwrite) NSString *userId;
 @property (nonatomic, copy, readwrite) NSString *userKey;
@@ -53,6 +54,7 @@
 @property (nonatomic, assign, readwrite) NSUInteger excludeEvent;
 @property (nonatomic, assign, readwrite) NSUInteger ignoreField;
 @property (nonatomic, assign, readwrite) BOOL idMappingEnabled;
+@property (nonatomic, assign, readwrite) BOOL encryptEnabled;
 
 // AutoTracker
 @property (nonatomic, assign, readwrite) float impressionScale;
@@ -461,6 +463,23 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 }
 
 - (NSString *)urlScheme {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    Class class = NSClassFromString(@"GrowingDeviceInfo");
+    SEL selector = NSSelectorFromString(@"currentDeviceInfo");
+    if ([class respondsToSelector:selector]) {
+        id deviceInfo = [class performSelector:selector];
+        SEL selector2 = NSSelectorFromString(@"urlScheme");
+        if ([deviceInfo respondsToSelector:selector2]) {
+            NSString *urlScheme = [deviceInfo performSelector:selector2];
+            return urlScheme ?: @"";
+        }
+    }
+#pragma clang diagnostic pop
+    return @"";
+}
+
+- (NSString *)urlSchemesInInfoPlist {
     NSArray *urlTypes = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleURLTypes"];
     NSMutableArray *array = [NSMutableArray array];
     for (NSDictionary *dic in urlTypes) {
@@ -803,6 +822,29 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
         return ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"idMappingEnabled"]).boolValue;
     } else {
         return NO;
+    }
+}
+
+- (BOOL)encryptEnabled {
+    if (self.isSDK3rdGeneration) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        Class cls = NSClassFromString(@"GrowingEventRequestHeaderAdapter");
+        id adapter = [[cls alloc] init];
+        SEL selector = NSSelectorFromString(@"adaptedRequest:");
+        if ([adapter respondsToSelector:selector]) {
+            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+            request = [adapter performSelector:selector withObject:request];
+            for (NSString *key in request.allHTTPHeaderFields.allKeys) {
+                if ([key isEqualToString:@"X-Crypt-Codec"]) {
+                    return YES;
+                }
+            }
+        }
+#pragma clang diagnostic pop
+        return NO;
+    } else {
+        return YES;
     }
 }
 

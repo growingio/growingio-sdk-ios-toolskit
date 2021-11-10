@@ -72,7 +72,7 @@
         persistence->_viewController = NSStringFromClass(GrowingTKUtil.topViewControllerForKeyWindow.class);
 
         NSData *httpBody = request.HTTPBody;
-        GrowingTKStreamEventEndBlock block = ^(NSData *body) {
+        void(^block)(NSData *) = ^(NSData *body) {
             if (persistence->_requestHeader[@"X-Crypt-Codec"]) {
                 NSURLComponents *components = [[NSURLComponents alloc] initWithString:persistence->_url];
                 unsigned long long timestamp = 0;
