@@ -32,6 +32,7 @@ static NSString *const kGrowingTKProtocolKey = @"com.growingio.toolskit.CustomHT
 @property (nonatomic, assign) NSTimeInterval startTime;
 @property (nonatomic, strong) NSURLResponse *response;
 @property (nonatomic, strong) NSMutableData *responseData;
+@property (nonatomic, strong) NSError *error;
 
 @property (atomic, strong, readwrite) NSURLSessionDataTask *task;
 
@@ -82,6 +83,7 @@ static NSString *const kGrowingTKProtocolKey = @"com.growingio.toolskit.CustomHT
     [GrowingTKRequestPersistence dealWithRequest:self.request
                                         response:self.response
                                     responseData:self.responseData
+                                           error:self.error
                                        startTime:self.startTime
                                   completedBlock:^(GrowingTKRequestPersistence *_Nonnull request) {
         [GrowingTKNetFlowPlugin.plugin.db insertRequest:request];
@@ -111,6 +113,7 @@ static NSString *const kGrowingTKProtocolKey = @"com.growingio.toolskit.CustomHT
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     if (error) {
+        self.error = error;
         [self.client URLProtocol:self didFailWithError:error];
     } else {
         [self.client URLProtocolDidFinishLoading:self];

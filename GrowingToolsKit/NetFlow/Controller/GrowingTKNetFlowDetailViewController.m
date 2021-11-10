@@ -123,6 +123,10 @@
                 [cell showText:text];
             } break;
             case 1: {
+                if (!self.request.requestHeader) {
+                    [cell showText:@"无"];
+                    break;
+                }
                 NSString *jsonString =
                     [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:self.request.requestHeader
                                                                                    options:NSJSONWritingPrettyPrinted
@@ -147,6 +151,10 @@
                 [cell showText:text];
             } break;
             case 1: {
+                if (!self.request.responseHeader) {
+                    [cell showText:@"无"];
+                    break;
+                }
                 NSString *jsonString =
                     [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:self.request.responseHeader
                                                                                    options:NSJSONWritingPrettyPrinted

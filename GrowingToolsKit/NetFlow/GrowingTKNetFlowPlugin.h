@@ -23,13 +23,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class GrowingTKDatabase;
 
-typedef void(^GrowingTKStreamEventEndBlock)(NSData *);
-
-@interface GrowingTKNetFlowPlugin : NSObject <GrowingTKPluginProtocol, NSStreamDelegate>
+@interface GrowingTKNetFlowPlugin : NSObject <GrowingTKPluginProtocol>
 
 @property (nonatomic, assign, readonly) NSTimeInterval pluginStartTimestamp;
 @property (nonatomic, strong) GrowingTKDatabase *db;
-@property (nonatomic, copy, nullable) GrowingTKStreamEventEndBlock streamEndBlock;
 
 #pragma mark - GrowingTKPluginProtocol
 

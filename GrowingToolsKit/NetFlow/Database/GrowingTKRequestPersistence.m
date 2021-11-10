@@ -40,22 +40,27 @@
 + (void)dealWithRequest:(NSURLRequest *)request
                response:(NSURLResponse *)response
            responseData:(NSData *)responseData
+                  error:(NSError *)error
               startTime:(NSTimeInterval)startTime
-         completedBlock:(void(^)(GrowingTKRequestPersistence *))completedBlock {
+         completedBlock:(void (^)(GrowingTKRequestPersistence *))completedBlock {
     dispatch_async(dispatch_get_main_queue(), ^{
         GrowingTKRequestPersistence *persistence = [[GrowingTKRequestPersistence alloc] init];
         persistence->_request = request;
         persistence->_response = response;
         persistence->_responseData = responseData;
         persistence->_startTimestamp = startTime;
-        
+
         persistence->_url = request.URL.absoluteString;
         persistence->_method = request.HTTPMethod;
         persistence->_requestHeader = request.allHTTPHeaderFields;
         persistence->_startTime = [GrowingTKDateUtil.sharedInstance timeStringFromTimestamp:startTime];
-        
+
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        persistence->_statusCode = [NSString stringWithFormat:@"%d",(int)httpResponse.statusCode];
+        persistence->_statusCode = [NSString stringWithFormat:@"%d", (int)httpResponse.statusCode];
+        if (error && httpResponse == nil) {
+            persistence->_statusCode = [NSString stringWithFormat:@"%d", (int)error.code];
+        }
+        
         persistence->_mineType = httpResponse.MIMEType;
         persistence->_endTimestamp = [[NSDate date] timeIntervalSince1970] * 1000LL;
         persistence->_totalDuration = [NSString stringWithFormat:@"%f", (persistence->_endTimestamp - persistence->_startTimestamp) / 1000LL];
@@ -65,7 +70,7 @@
                                                                                                         responseData:responseData]];
         
         persistence->_viewController = NSStringFromClass(GrowingTKUtil.topViewControllerForKeyWindow.class);
-        
+
         NSData *httpBody = request.HTTPBody;
         GrowingTKStreamEventEndBlock block = ^(NSData *body) {
             if (persistence->_requestHeader[@"X-Crypt-Codec"]) {
@@ -86,19 +91,24 @@
             NSUInteger length = [GrowingTKRequestUtil headersLengthForRequest:persistence->_request] + body.length;
             persistence->_uploadFlow = [NSString stringWithFormat:@"%zi", length];
             [persistence generateJsonString];
-            
+
             if (completedBlock) {
                 completedBlock(persistence);
             }
         };
         if (!httpBody) {
-            if ([request.HTTPMethod isEqualToString:@"POST"]) {
-                GrowingTKNetFlowPlugin.plugin.streamEndBlock = block;
-                NSInputStream *stream = request.HTTPBodyStream;
-                [stream setDelegate:GrowingTKNetFlowPlugin.plugin];
-                [stream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-                [stream open];
+            uint8_t buf[1024] = {0};
+            NSInputStream *stream = request.HTTPBodyStream;
+            NSMutableData *data = [[NSMutableData alloc] init];
+            [stream open];
+            while ([stream hasBytesAvailable]) {
+                NSInteger len = [stream read:buf maxLength:1024];
+                if (len > 0 && stream.streamError == nil) {
+                    [data appendBytes:(void *)buf length:len];
+                }
             }
+            [stream close];
+            block(data.copy);
         } else {
             block(httpBody);
         }
@@ -112,12 +122,12 @@
         _requestBody = requestBody;
         _responseBody = responseBody;
         _rawJsonString = jsonString;
-        
+
         NSData *jsonData = [_rawJsonString dataUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:jsonData
                                                                    options:NSJSONReadingMutableContainers
                                                                      error:nil];
-        
+
         _url = dictionary[@"url"];
         _method = dictionary[@"method"];
         _requestHeader = dictionary[@"requestHeader"];
@@ -132,36 +142,110 @@
         _downFlow = dictionary[@"downFlow"];
         _viewController = dictionary[@"viewController"];
     }
-    
+
     return self;
 }
 
 - (void)generateJsonString {
-    NSDictionary *dictionary = @{
-        @"url" : _url,
-        @"method" : _method,
-        @"requestHeader" : _requestHeader,
-        @"responseHeader" : _responseHeader,
-        @"statusCode" : _statusCode,
-        @"mineType" : _mineType,
-        @"startTime" : _startTime,
-        @"startTimestamp" : @(_startTimestamp),
-        @"endTimestamp" : @(_endTimestamp),
-        @"totalDuration" : _totalDuration,
-        @"uploadFlow" : _uploadFlow,
-        @"downFlow" : _downFlow,
-        @"viewController" : _viewController
-    };
+    NSMutableDictionary *dictionary = @{
+        @"url": _url ?: @"",
+        @"method": _method ?: @"",
+        @"statusCode": _statusCode ?: @"",
+        @"mineType": _mineType ?: @"",
+        @"startTime": _startTime ?: @"",
+        @"startTimestamp": @(_startTimestamp),
+        @"endTimestamp": @(_endTimestamp),
+        @"totalDuration": _totalDuration ?: @"",
+        @"uploadFlow": _uploadFlow ?: @"",
+        @"downFlow": _downFlow ?: @"",
+        @"viewController": _viewController ?: @""
+    }.mutableCopy;
+    
+    if (_requestHeader) {
+        dictionary[@"requestHeader"] = _requestHeader;
+    }
+    if (_responseHeader) {
+        dictionary[@"responseHeader"] = _responseHeader;
+    }
+    
     _rawJsonString = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dictionary
                                                                                     options:NSJSONWritingPrettyPrinted
                                                                                       error:nil]
-                                       encoding:NSUTF8StringEncoding];
+                                           encoding:NSUTF8StringEncoding];
 }
 
 #pragma mark - Getter & Setter
 
 - (NSString *)status {
     switch (_statusCode.integerValue) {
+        case NSURLErrorUnknown:
+            return @"Unknown";
+        case NSURLErrorCancelled:
+            return @"Cancelled";
+        case NSURLErrorBadURL:
+            return @"BadURL";
+        case NSURLErrorTimedOut:
+            return @"TimedOut";
+        case NSURLErrorUnsupportedURL:
+            return @"UnsupportedURL";
+        case NSURLErrorCannotFindHost:
+            return @"CannotFindHost";
+        case NSURLErrorCannotConnectToHost:
+            return @"CannotConnectToHost";
+        case NSURLErrorNetworkConnectionLost:
+            return @"NetworkConnectionLost";
+        case NSURLErrorDNSLookupFailed:
+            return @"DNSLookupFailed";
+        case NSURLErrorHTTPTooManyRedirects:
+            return @"HTTPTooManyRedirects";
+        case NSURLErrorResourceUnavailable:
+            return @"ResourceUnavailable";
+        case NSURLErrorNotConnectedToInternet:
+            return @"NotConnectedToInternet";
+        case NSURLErrorRedirectToNonExistentLocation:
+            return @"RedirectToNonExistentLocation";
+        case NSURLErrorBadServerResponse:
+            return @"BadServerResponse";
+        case NSURLErrorUserCancelledAuthentication:
+            return @"UserCancelledAuthentication";
+        case NSURLErrorUserAuthenticationRequired:
+            return @"UserAuthenticationRequired";
+        case NSURLErrorZeroByteResource:
+            return @"ZeroByteResource";
+        case NSURLErrorCannotDecodeRawData:
+            return @"CannotDecodeRawData";
+        case NSURLErrorCannotDecodeContentData:
+            return @"CannotDecodeContentData";
+        case NSURLErrorCannotParseResponse:
+            return @"CannotParseResponse";
+        case NSURLErrorAppTransportSecurityRequiresSecureConnection:
+            return @"AppTransportSecurityRequiresSecureConnection";
+        case NSURLErrorFileDoesNotExist:
+            return @"FileDoesNotExist";
+        case NSURLErrorFileIsDirectory:
+            return @"FileIsDirectory";
+        case NSURLErrorNoPermissionsToReadFile:
+            return @"NoPermissionsToReadFile";
+        case NSURLErrorDataLengthExceedsMaximum:
+            return @"DataLengthExceedsMaximum";
+        case NSURLErrorFileOutsideSafeArea:
+            return @"FileOutsideSafeArea";
+        case NSURLErrorSecureConnectionFailed:
+            return @"SecureConnectionFailed";
+        case NSURLErrorServerCertificateHasBadDate:
+            return @"ServerCertificateHasBadDate";
+        case NSURLErrorServerCertificateUntrusted:
+            return @"ServerCertificateUntrusted";
+        case NSURLErrorServerCertificateHasUnknownRoot:
+            return @"ServerCertificateHasUnknownRoot";
+        case NSURLErrorServerCertificateNotYetValid:
+            return @"ServerCertificateNotYetValid";
+        case NSURLErrorClientCertificateRejected:
+            return @"DataLengthExceedsMaximum";
+        case NSURLErrorClientCertificateRequired:
+            return @"DataLengthExceedsMaximum";
+        case NSURLErrorCannotLoadFromNetwork:
+            return @"CannotLoadFromNetwork";
         case 200:
             return @"OK";
         case 201:
@@ -205,7 +289,7 @@
         case 503:
             return @"Service Unavailable";
         default:
-            return nil;
+            return @"Unknown";
     }
 }
 

@@ -31,8 +31,6 @@
 @property (atomic, strong, readonly) NSMutableDictionary *taskInfoByTaskID;
 @property (atomic, strong, readonly) NSOperationQueue *sessionDelegateQueue;
 
-@property (atomic, strong) NSMutableData *bodyData;
-
 @end
 
 @implementation GrowingTKNetFlowPlugin
@@ -73,7 +71,7 @@
 }
 
 - (NSString *)icon {
-    return @"growingtk_network";
+    return @"growingtk_netFlow";
 }
 
 - (NSString *)pluginName {
@@ -97,38 +95,6 @@
         GrowingTKBaseViewController *controller =
             (GrowingTKBaseViewController *)GrowingTKUtil.topViewControllerForHomeWindow;
         [controller showToast:GrowingTKLocalizedString(@"未集成SDK，请参考帮助文档进行集成")];
-    }
-}
-
-#pragma mark - NSStreamDelegate
-
-- (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode {
-    switch (eventCode) {
-        case NSStreamEventHasBytesAvailable: {
-            if (!self.bodyData) {
-                self.bodyData = [NSMutableData data];
-            }
-            uint8_t buf[1024];
-            NSInteger len = 0;
-            len = [(NSInputStream *)aStream read:buf maxLength:1024];
-            if (len) {
-                [self.bodyData appendBytes:(const void *)buf length:len];
-            }
-        } break;
-        case NSStreamEventEndEncountered: {
-            [aStream close];
-            [aStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-            aStream = nil;
-            if (self.streamEndBlock) {
-                self.streamEndBlock(self.bodyData.copy);
-                self.streamEndBlock = nil;
-            }
-            self.bodyData = nil;
-        } break;
-        case NSStreamEventErrorOccurred: {
-        } break;
-        default:
-            break;
     }
 }
 

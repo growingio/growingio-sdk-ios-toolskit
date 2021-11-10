@@ -46,6 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)dealWithRequest:(NSURLRequest *)request
                response:(NSURLResponse *)response
            responseData:(NSData *)responseData
+                  error:(NSError *)error
               startTime:(NSTimeInterval)startTime
          completedBlock:(void (^)(GrowingTKRequestPersistence *))completedBlock;
 

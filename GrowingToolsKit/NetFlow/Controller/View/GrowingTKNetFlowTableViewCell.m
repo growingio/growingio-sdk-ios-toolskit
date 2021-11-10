@@ -44,7 +44,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        
+
         if (@available(iOS 13.0, *)) {
             self.backgroundColor = [UIColor secondarySystemBackgroundColor];
         } else {
@@ -72,6 +72,7 @@
         self.statusLabel.textColor = UIColor.growingtk_black_2;
         self.statusLabel.font = [UIFont systemFontOfSize:GrowingTKSizeFrom750(24)];
         self.statusLabel.textAlignment = NSTextAlignmentCenter;
+        self.statusLabel.numberOfLines = 2;
         self.statusLabel.adjustsFontSizeToFitWidth = YES;
         self.statusLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.statusLabel];
@@ -155,12 +156,15 @@
 
 - (void)showRequest:(GrowingTKRequestPersistence *)request {
     self.statusCodeLabel.text = request.statusCode;
+    self.statusCodeLabel.textColor = (request.statusCode.intValue >= 200 && request.statusCode.intValue < 300)
+                                         ? UIColor.systemGreenColor
+                                         : UIColor.growingtk_tertiaryBackgroundColor;
     self.statusLabel.text = request.status;
     self.urlStringLabel.text = request.url;
     self.timeLabel.text = request.startTime;
     self.durationLabel.text = [NSString stringWithFormat:@"耗时：%.f毫秒", request.totalDuration.doubleValue * 1000];
     self.methodLabel.text = request.method;
-    
+
     double mb = 1024.0 * 1024.0;
     double kb = 1024.0;
     if (request.uploadFlow.doubleValue > mb) {

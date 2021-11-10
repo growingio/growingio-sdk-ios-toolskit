@@ -21,7 +21,7 @@
 #import "GrowingTKFMDB.h"
 #import "GrowingTKRequestPersistence.h"
 
-static long long const kGrowingTKRequestsDatabaseExpirationTime = 86400000 * 30LL;
+static long long const kGrowingTKRequestsDatabaseExpirationTime = 86400000 * 1LL;
 
 @implementation GrowingTKDatabase (Request)
 
