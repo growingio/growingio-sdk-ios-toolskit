@@ -20,7 +20,6 @@
 #import "GrowingTKURLProtocol.h"
 #import "GrowingTKNetFlowPlugin.h"
 #import "GrowingTKRequestPersistence.h"
-#import "GrowingTKDatabase+Request.h"
 #import "GrowingTKSDKUtil.h"
 
 // https://developer.apple.com/library/archive/samplecode/CustomHTTPProtocol/Listings/CustomHTTPProtocol_Core_Code_CustomHTTPProtocol_m.html
@@ -86,7 +85,7 @@ static NSString *const kGrowingTKProtocolKey = @"com.growingio.toolskit.CustomHT
                                            error:self.error
                                        startTime:self.startTime
                                   completedBlock:^(GrowingTKRequestPersistence *_Nonnull request) {
-        [GrowingTKNetFlowPlugin.plugin.db insertRequest:request];
+        [GrowingTKNetFlowPlugin.plugin insertRequest:request];
     }];
     
     if (self.task) {

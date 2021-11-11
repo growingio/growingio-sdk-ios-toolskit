@@ -26,7 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GrowingTKNetFlowHeaderView : UIView
 
 - (instancetype)initWithFrame:(CGRect)frame;
-- (void)configWithRuntimeDatasource:(NSArray <GrowingTKRequestPersistence *>*)datasource;
 
 @end
 

@@ -23,6 +23,7 @@
 #import "GrowingTKURLProtocol.h"
 #import "GrowingTKDataTaskInfo.h"
 #import "GrowingTKDatabase+Request.h"
+#import "GrowingTKRequestPersistence.h"
 #import "GrowingTKNetFlowViewController.h"
 
 @interface GrowingTKNetFlowPlugin () <NSURLSessionDataDelegate>
@@ -30,6 +31,12 @@
 @property (atomic, strong, readonly) NSURLSession *session;
 @property (atomic, strong, readonly) NSMutableDictionary *taskInfoByTaskID;
 @property (atomic, strong, readonly) NSOperationQueue *sessionDelegateQueue;
+@property (nonatomic, strong) GrowingTKDatabase *db;
+
+@property (nonatomic, assign, readwrite) NSTimeInterval pluginStartTimestamp;
+@property (nonatomic, assign, readwrite) NSUInteger requestCount;
+@property (nonatomic, assign, readwrite) double totalUploadFlow;
+@property (nonatomic, assign, readwrite) NSUInteger requestFailedCount;
 
 @end
 
@@ -59,6 +66,9 @@
         instance->_taskInfoByTaskID = [NSMutableDictionary dictionary];
 
         instance->_pluginStartTimestamp = [[NSDate date] timeIntervalSince1970] * 1000LL;
+        instance->_requestCount = 0;
+        instance->_totalUploadFlow = 0.0f;
+        instance->_requestFailedCount = 0;
         [NSURLProtocol registerClass:GrowingTKURLProtocol.class];
     });
     return instance;
@@ -96,6 +106,22 @@
             (GrowingTKBaseViewController *)GrowingTKUtil.topViewControllerForHomeWindow;
         [controller showToast:GrowingTKLocalizedString(@"未集成SDK，请参考帮助文档进行集成")];
     }
+}
+
+#pragma mark - GrowingTKRequest
+
+- (void)insertRequest:(GrowingTKRequestPersistence *)request {
+    [self.db insertRequest:request];
+    self.requestCount++;
+    if (!(request.statusCode.intValue >= 200 && request.statusCode.intValue < 300)) {
+        self.requestFailedCount ++;
+    }
+    self.totalUploadFlow += request.uploadFlow.doubleValue;
+}
+
+- (NSArray<GrowingTKRequestPersistence *> *)getRequestsWithRequestTimeEarlyThan:(double)requestTime
+                                                                       pageSize:(NSUInteger)pageSize {
+    return [self.db getRequestsWithRequestTimeEarlyThan:requestTime pageSize:pageSize];
 }
 
 #pragma mark - URLSessionDataTask

@@ -166,32 +166,6 @@
     }
 }
 
-#pragma mark - Public Method
-
-- (void)configWithRuntimeDatasource:(NSArray<GrowingTKRequestPersistence *> *)datasource {
-    NSInteger requestCount = datasource.count;
-    double uploadFlow = 0.0;
-    NSInteger requestFailCount = 0;
-    for (GrowingTKRequestPersistence *request in datasource) {
-        uploadFlow += request.uploadFlow.doubleValue;
-        if (!(request.statusCode.intValue >= 200 && request.statusCode.intValue < 300)) {
-            requestFailCount += 1;
-        }
-    }
-
-    self.requestCountLabel.text = [NSString stringWithFormat:@"%ld", (long)requestCount];
-    double mb = 1024.0 * 1024.0;
-    double kb = 1024.0;
-    if (uploadFlow > mb) {
-        self.uploadFlowLabel.text = [NSString stringWithFormat:@"%.2fMB", floor(uploadFlow / mb)];
-    } else if (uploadFlow > kb) {
-        self.uploadFlowLabel.text = [NSString stringWithFormat:@"%.2fKB", floor(uploadFlow / kb)];
-    } else {
-        self.uploadFlowLabel.text = [NSString stringWithFormat:@"%.2fB", uploadFlow];
-    }
-    self.requestFailCountLabel.text = [NSString stringWithFormat:@"%ld", (long)requestFailCount];
-}
-
 #pragma mark - Private Method
 
 - (void)timerAction {
@@ -217,6 +191,21 @@
                                                              floor(fmod(duration, hour) / minute),
                                                              fmod(duration, minute)];
     }
+    
+    NSUInteger requestCount = GrowingTKNetFlowPlugin.plugin.requestCount;
+    double uploadFlow = GrowingTKNetFlowPlugin.plugin.totalUploadFlow;
+    NSUInteger requestFailedCount = GrowingTKNetFlowPlugin.plugin.requestFailedCount;
+    self.requestCountLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)requestCount];
+    double mb = 1024.0 * 1024.0;
+    double kb = 1024.0;
+    if (uploadFlow > mb) {
+        self.uploadFlowLabel.text = [NSString stringWithFormat:@"%.2fMB", floor(uploadFlow / mb)];
+    } else if (uploadFlow > kb) {
+        self.uploadFlowLabel.text = [NSString stringWithFormat:@"%.2fKB", floor(uploadFlow / kb)];
+    } else {
+        self.uploadFlowLabel.text = [NSString stringWithFormat:@"%.2fB", uploadFlow];
+    }
+    self.requestFailCountLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)requestFailedCount];
 }
 
 @end

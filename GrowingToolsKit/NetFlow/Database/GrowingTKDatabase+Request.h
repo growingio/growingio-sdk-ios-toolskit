@@ -31,6 +31,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSArray<GrowingTKRequestPersistence *> *)getAllRequests;
 
+- (NSArray<GrowingTKRequestPersistence *> *)getRequestsWithRequestTimeEarlyThan:(double)requestTime
+                                                                       pageSize:(NSUInteger)pageSize;
+
 - (BOOL)insertRequest:(GrowingTKRequestPersistence *)request;
 
 - (BOOL)insertRequests:(NSArray<GrowingTKRequestPersistence *> *)requests;

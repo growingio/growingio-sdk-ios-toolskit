@@ -21,12 +21,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class GrowingTKDatabase;
+@class GrowingTKRequestPersistence;
 
 @interface GrowingTKNetFlowPlugin : NSObject <GrowingTKPluginProtocol>
-
-@property (nonatomic, assign, readonly) NSTimeInterval pluginStartTimestamp;
-@property (nonatomic, strong) GrowingTKDatabase *db;
 
 #pragma mark - GrowingTKPluginProtocol
 
@@ -37,6 +34,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *key;
 
 - (void)pluginDidLoad;
+
+#pragma mark - GrowingTKRequest
+
+@property (nonatomic, assign, readonly) NSTimeInterval pluginStartTimestamp;
+@property (nonatomic, assign, readonly) NSUInteger requestCount;
+@property (nonatomic, assign, readonly) double totalUploadFlow;
+@property (nonatomic, assign, readonly) NSUInteger requestFailedCount;
+
+- (void)insertRequest:(GrowingTKRequestPersistence *)request;
+- (NSArray<GrowingTKRequestPersistence *> *)getRequestsWithRequestTimeEarlyThan:(double)requestTime
+                                                                       pageSize:(NSUInteger)pageSize;
 
 #pragma mark - URLSessionDataTask
 

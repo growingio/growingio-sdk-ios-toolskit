@@ -30,11 +30,10 @@ static long long const kGrowingTKRequestsDatabaseExpirationTime = 86400000 * 1LL
 - (void)createRequestsTable {
     NSString *sql = @"create table if not exists requeststable("
                     @"id INTEGER PRIMARY KEY,"
-                    @"key text,"
-                    @"requestBody text,"
-                    @"responseBody text,"
-                    @"createAt INTEGER NOT NULL,"
-                    @"jsonString text);";
+                    @"key Double,"  // request time
+                    @"requestBody Text,"
+                    @"responseBody Text,"
+                    @"jsonString Text);";
     [self createTable:sql tableName:@"requeststable" indexs:@[@"id", @"key"]];
 }
 
@@ -83,6 +82,30 @@ static long long const kGrowingTKRequestsDatabaseExpirationTime = 86400000 * 1LL
     return requests.count != 0 ? requests : nil;
 }
 
+- (NSArray<GrowingTKRequestPersistence *> *)getRequestsWithRequestTimeEarlyThan:(double)requestTime
+                                                                       pageSize:(NSUInteger)pageSize {
+    if (self.countOfRequests == 0) {
+        return [[NSArray alloc] init];
+    }
+
+    NSMutableArray<GrowingTKRequestPersistence *> *requests = [[NSMutableArray alloc] init];
+    [self
+        requestsEnumerateKeysAndValuesUsingBlock:^(NSString *key,
+                                                   NSString *jsonString,
+                                                   NSString *requestBody,
+                                                   NSString *responseBody,
+                                                   BOOL *stop) {
+            GrowingTKRequestPersistence *request = [[GrowingTKRequestPersistence alloc] initWithRequestBody:requestBody
+                                                                                               responseBody:responseBody
+                                                                                                 jsonString:jsonString];
+            [requests addObject:request];
+        }
+                            requestTimeEarlyThan:requestTime
+                                           limit:pageSize];
+
+    return requests.count != 0 ? requests : nil;
+}
+
 - (BOOL)insertRequest:(GrowingTKRequestPersistence *)request {
     __block BOOL result = NO;
     [self performDatabaseBlock:^(GrowingTKFMDatabase *db, NSError *error) {
@@ -91,13 +114,11 @@ static long long const kGrowingTKRequestsDatabaseExpirationTime = 86400000 * 1LL
             return;
         }
         result =
-            [db executeUpdate:
-                    @"insert into requeststable(key,requestBody,responseBody,createAt,jsonString) values(?,?,?,?,?)",
-                    [NSString stringWithFormat:@"%f", request.startTimestamp],
-                    request.requestBody,
-                    request.responseBody,
-                    @([[NSDate date] timeIntervalSince1970] * 1000LL),
-                    request.rawJsonString];
+            [db executeUpdate:@"insert into requeststable(key,requestBody,responseBody,jsonString) values(?,?,?,?)",
+                              @(request.startTimestamp),
+                              request.requestBody,
+                              request.responseBody,
+                              request.rawJsonString];
 
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
@@ -120,14 +141,12 @@ static long long const kGrowingTKRequestsDatabaseExpirationTime = 86400000 * 1LL
         }
         for (int i = 0; i < requests.count; i++) {
             GrowingTKRequestPersistence *request = requests[i];
-            result = [db
-                executeUpdate:
-                    @"insert into requeststable(key,requestBody,responseBody,createAt,jsonString) values(?,?,?,?,?)",
-                    [NSString stringWithFormat:@"%f", request.startTimestamp],
-                    request.requestBody,
-                    request.responseBody,
-                    @([[NSDate date] timeIntervalSince1970] * 1000LL),
-                    request.rawJsonString];
+            result =
+                [db executeUpdate:@"insert into requeststable(key,requestBody,responseBody,jsonString) values(?,?,?,?)",
+                                  @(request.startTimestamp),
+                                  request.requestBody,
+                                  request.responseBody,
+                                  request.rawJsonString];
 
             if (!result) {
                 self.databaseError = [self writeErrorInDatabase:db];
@@ -206,7 +225,7 @@ static long long const kGrowingTKRequestsDatabaseExpirationTime = 86400000 * 1LL
             self.databaseError = error;
             return;
         }
-        result = [db executeUpdate:@"delete from requeststable where createAt<=?;", dayBefore];
+        result = [db executeUpdate:@"delete from requeststable where key<=?;", dayBefore];
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
         }
@@ -219,6 +238,14 @@ static long long const kGrowingTKRequestsDatabaseExpirationTime = 86400000 * 1LL
 
 - (void)requestsEnumerateKeysAndValuesUsingBlock:
     (void (^)(NSString *key, NSString *jsonString, NSString *requestBody, NSString *responseBody, BOOL *stop))block {
+    [self requestsEnumerateKeysAndValuesUsingBlock:block requestTimeEarlyThan:0 limit:-1];
+}
+
+- (void)requestsEnumerateKeysAndValuesUsingBlock:
+            (void (^)(NSString *key, NSString *jsonString, NSString *requestBody, NSString *responseBody, BOOL *stop))
+                block
+                            requestTimeEarlyThan:(double)requestTime
+                                           limit:(NSInteger)limit {
     if (!block) {
         return;
     }
@@ -228,9 +255,17 @@ static long long const kGrowingTKRequestsDatabaseExpirationTime = 86400000 * 1LL
             self.databaseError = error;
             return;
         }
-        GrowingTKFMResultSet *set = [db executeQuery:@"select * from requeststable order by id asc"
-                                              values:nil
-                                               error:nil];
+
+        NSString *query = @"select * from requeststable";
+        if (requestTime > 0) {
+            query = [query stringByAppendingFormat:@" WHERE key<%f", requestTime];
+        }
+        query = [query stringByAppendingString:@" ORDER BY id DESC"];
+        if (limit > 0) {
+            query = [query stringByAppendingFormat:@" LIMIT %d", (int)limit];
+        }
+        query = [query stringByAppendingString:@";"];
+        GrowingTKFMResultSet *set = [db executeQuery:query values:nil error:nil];
         if (!set) {
             self.databaseError = [self readErrorInDatabase:db];
             return;
