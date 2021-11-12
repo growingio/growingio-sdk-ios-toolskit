@@ -24,6 +24,7 @@
 #import "UIImage+GrowingTK.h"
 #import "UIView+GrowingTK.h"
 #import "UIColor+GrowingTK.h"
+#import "GrowingTKNumberUtil.h"
 
 @interface GrowingTKNetFlowDetailViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -106,19 +107,32 @@
             case 0: {
                 double mb = 1024.0 * 1024.0;
                 double kb = 1024.0;
-                NSString *uploadFlow = nil;
-                if (self.request.uploadFlow.doubleValue > mb) {
-                    uploadFlow = [NSString stringWithFormat:@"%.2fMB", floor(self.request.uploadFlow.doubleValue / mb)];
-                } else if (self.request.uploadFlow.doubleValue > kb) {
-                    uploadFlow = [NSString stringWithFormat:@"%.2fKB", floor(self.request.uploadFlow.doubleValue / kb)];
+                double uploadFlow = self.request.uploadFlow.doubleValue;
+                double requestBodyLength = self.request.requestBodyLength.doubleValue;
+                NSString *length = nil;
+                NSString *groupingSepUploadFlow = [GrowingTKNumberUtil.sharedInstance groupingSeparator:@(uploadFlow)];
+                NSString *groupingSepRequestBodyLength =
+                    [GrowingTKNumberUtil.sharedInstance groupingSeparator:@(requestBodyLength)];
+                if (uploadFlow > mb) {
+                    length = [NSString stringWithFormat:@"%.2f MB (%@ bytes, Body %@ bytes)",
+                                                        uploadFlow / mb,
+                                                        groupingSepUploadFlow,
+                                                        groupingSepRequestBodyLength];
+                } else if (uploadFlow > kb) {
+                    length = [NSString stringWithFormat:@"%.2f KB (%@ bytes, Body %@ bytes)",
+                                                        uploadFlow / kb,
+                                                        groupingSepUploadFlow,
+                                                        groupingSepRequestBodyLength];
                 } else {
-                    uploadFlow = [NSString stringWithFormat:@"%.2fB", self.request.uploadFlow.doubleValue];
+                    length = [NSString stringWithFormat:@"%@ bytes, Body %@ bytes",
+                                                        groupingSepUploadFlow,
+                                                        groupingSepRequestBodyLength];
                 }
 
                 NSString *text = [NSString stringWithFormat:@"链接：%@\n请求方式：%@\n请求大小：%@\n耗时：%.f毫秒",
                                                             self.request.url,
                                                             self.request.method,
-                                                            uploadFlow,
+                                                            length,
                                                             self.request.totalDuration.doubleValue * 1000];
                 [cell showText:text];
             } break;
@@ -206,6 +220,11 @@
     [view addSubview:label];
 
     return view;
+}
+
+- (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    GrowingTKNetFlowDetailTableViewCell *detailCell = (GrowingTKNetFlowDetailTableViewCell *)cell;
+    [detailCell clearText];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {

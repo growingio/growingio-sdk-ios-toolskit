@@ -1,8 +1,8 @@
 //
-//  GrowingTKNetFlowDetailTableViewCell.h
+//  GrowingTKNumberUtil.h
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/11/9.
+//  Created by YoloMao on 2021/11/11.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,15 +17,17 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingTKNetFlowDetailTableViewCell : UITableViewCell
+@interface GrowingTKNumberUtil : NSObject
 
-- (void)showText:(NSString *)text;
+@property (nonatomic, strong) NSNumberFormatter *defaultFormatter;
 
-- (void)clearText;
++ (instancetype)sharedInstance;
+
+- (NSString *)groupingSeparator:(NSNumber *)number;
 
 @end
 

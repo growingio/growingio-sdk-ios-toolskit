@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *url;
 @property (nonatomic, copy, readonly) NSString *method;
 @property (nonatomic, copy, readonly) NSString *requestBody;
+@property (nonatomic, copy, readonly) NSString *requestBodyLength;
 @property (nonatomic, copy, readonly) NSDictionary *requestHeader;
 @property (nonatomic, copy, readonly) NSString *statusCode;
 @property (nonatomic, copy, readonly) NSString *status;

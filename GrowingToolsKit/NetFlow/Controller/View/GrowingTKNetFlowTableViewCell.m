@@ -158,12 +158,13 @@
 
     double mb = 1024.0 * 1024.0;
     double kb = 1024.0;
-    if (request.uploadFlow.doubleValue > mb) {
-        self.uploadFlowLabel.text = [NSString stringWithFormat:@"↑%.2fMB", floor(request.uploadFlow.doubleValue / mb)];
-    } else if (request.uploadFlow.doubleValue > kb) {
-        self.uploadFlowLabel.text = [NSString stringWithFormat:@"↑%.2fKB", floor(request.uploadFlow.doubleValue / kb)];
+    double uploadFlow = request.uploadFlow.doubleValue;
+    if (uploadFlow > mb) {
+        self.uploadFlowLabel.text = [NSString stringWithFormat:@"↑%.2f MB", uploadFlow / mb];
+    } else if (uploadFlow > kb) {
+        self.uploadFlowLabel.text = [NSString stringWithFormat:@"↑%.2f KB", uploadFlow / kb];
     } else {
-        self.uploadFlowLabel.text = [NSString stringWithFormat:@"↑%.2fB", request.uploadFlow.doubleValue];
+        self.uploadFlowLabel.text = [NSString stringWithFormat:@"↑%.2f bytes", uploadFlow];
     }
 }
 

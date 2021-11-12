@@ -199,11 +199,11 @@
     double mb = 1024.0 * 1024.0;
     double kb = 1024.0;
     if (uploadFlow > mb) {
-        self.uploadFlowLabel.text = [NSString stringWithFormat:@"%.2fMB", floor(uploadFlow / mb)];
+        self.uploadFlowLabel.text = [NSString stringWithFormat:@"%.2f MB", uploadFlow / mb];
     } else if (uploadFlow > kb) {
-        self.uploadFlowLabel.text = [NSString stringWithFormat:@"%.2fKB", floor(uploadFlow / kb)];
+        self.uploadFlowLabel.text = [NSString stringWithFormat:@"%.2f KB", uploadFlow / kb];
     } else {
-        self.uploadFlowLabel.text = [NSString stringWithFormat:@"%.2fB", uploadFlow];
+        self.uploadFlowLabel.text = [NSString stringWithFormat:@"%.2f bytes", uploadFlow];
     }
     self.requestFailCountLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)requestFailedCount];
 }

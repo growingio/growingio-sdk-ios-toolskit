@@ -73,6 +73,7 @@
 
         NSData *httpBody = request.HTTPBody;
         void(^block)(NSData *) = ^(NSData *body) {
+            NSData *requestBody = body.copy;
             if (persistence->_requestHeader[@"X-Crypt-Codec"]) {
                 NSURLComponents *components = [[NSURLComponents alloc] initWithString:persistence->_url];
                 unsigned long long timestamp = 0;
@@ -82,14 +83,16 @@
                         break;
                     }
                 }
-                body = [GrowingTKRequestUtil decryptData:body factor:timestamp & 0xFF];
+                requestBody = [GrowingTKRequestUtil decryptData:requestBody factor:timestamp & 0xFF];
             }
             if (persistence->_requestHeader[@"X-Compress-Codec"]) {
-                body = [GrowingTKRequestUtil uncompressData:body];
+                requestBody = [GrowingTKRequestUtil uncompressData:requestBody];
             }
-            persistence->_requestBody = [GrowingTKUtil convertJsonFromData:body] ?: @"";
-            NSUInteger length = [GrowingTKRequestUtil headersLengthForRequest:persistence->_request] + body.length;
-            persistence->_uploadFlow = [NSString stringWithFormat:@"%zi", length];
+            persistence->_requestBody = [GrowingTKUtil convertJsonFromData:requestBody] ?: @"";
+            NSUInteger bodyLength = body.length;
+            NSUInteger headersLength = [GrowingTKRequestUtil headersLengthForRequest:persistence->_request];
+            persistence->_requestBodyLength = [NSString stringWithFormat:@"%zi", bodyLength];
+            persistence->_uploadFlow = [NSString stringWithFormat:@"%zi", bodyLength + headersLength];
             [persistence generateJsonString];
 
             if (completedBlock) {
@@ -138,6 +141,7 @@
         _startTimestamp = ((NSNumber *)dictionary[@"startTimestamp"]).doubleValue;
         _endTimestamp = ((NSNumber *)dictionary[@"endTimestamp"]).doubleValue;
         _totalDuration = dictionary[@"totalDuration"];
+        _requestBodyLength = dictionary[@"requestBodyLength"];
         _uploadFlow = dictionary[@"uploadFlow"];
         _downFlow = dictionary[@"downFlow"];
         _viewController = dictionary[@"viewController"];
@@ -156,6 +160,7 @@
         @"startTimestamp": @(_startTimestamp),
         @"endTimestamp": @(_endTimestamp),
         @"totalDuration": _totalDuration ?: @"",
+        @"requestBodyLength": _requestBodyLength ?: @"",
         @"uploadFlow": _uploadFlow ?: @"",
         @"downFlow": _downFlow ?: @"",
         @"viewController": _viewController ?: @""
