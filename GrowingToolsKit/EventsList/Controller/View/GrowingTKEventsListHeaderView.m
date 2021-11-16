@@ -35,8 +35,10 @@
         return self.searchTextField;
     } else {
         for (UIView *view in self.subviews) {
-            if ([view isKindOfClass:[UITextField class]]) {
-                return (UITextField *)view;
+            for (UIView *subView in view.subviews) {
+                if ([subView isKindOfClass:[UITextField class]]) {
+                    return (UITextField *)subView;
+                }
             }
         }
     }
