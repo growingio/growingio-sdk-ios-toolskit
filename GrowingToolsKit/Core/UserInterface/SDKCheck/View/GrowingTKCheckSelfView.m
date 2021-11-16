@@ -208,8 +208,8 @@ static CGFloat const CheckButtonHeight = 130.0f;
         if (sdk.isSDK3rdGeneration) {
             [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
                          @"check": @(0),
-                         @"checkMessage": @"正在获取Project ID",
-                         @"title": @"Project ID",
+                         @"checkMessage": @"正在获取项目 ID",
+                         @"title": @"项目 ID",
                          @"value": sdk.projectId
                      }]];
         } else if (sdk.isSDK2ndGeneration) {

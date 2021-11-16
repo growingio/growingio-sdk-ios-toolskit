@@ -99,10 +99,8 @@
     ]];
 
     if (sdk.isInitialized) {
-        if (sdk.isSDK3rdGeneration) {
-            [sdkInfo addObject:@{@"title": @"Project ID", @"value": sdk.projectId}];
-        } else if (sdk.isSDK2ndGeneration) {
-            [sdkInfo addObject:@{@"title": @"Account ID", @"value": sdk.projectId}];
+        [sdkInfo addObject:@{@"title": @"项目 ID", @"value": sdk.projectId}];
+        if (sdk.isSDK2ndGeneration) {
             [sdkInfo addObject:@{@"title": @"采样率", @"value": [NSString stringWithFormat:@"%.3f%%", sdk.sampling * 100]}];
             [sdkInfo addObject:@{@"title": @"采集模式", @"value": sdk.sdk2ndAspectMode}];
         }
