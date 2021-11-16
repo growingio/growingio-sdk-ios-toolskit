@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingTKEventDetailViewController.h"
+#import "GrowingTKCopyTextView.h"
 #import "GrowingTKEventPersistence.h"
 #import "UIImage+GrowingTK.h"
 #import "UIView+GrowingTK.h"
@@ -26,7 +27,7 @@
 @interface GrowingTKEventDetailViewController ()
 
 @property (nonatomic, strong) UILabel *typeLabel;
-@property (nonatomic, strong) UITextView *textView;
+@property (nonatomic, strong) GrowingTKCopyTextView *textView;
 @property (nonatomic, strong) UIButton *closeButton;
 
 @end
@@ -152,13 +153,11 @@
     return _typeLabel;
 }
 
-- (UITextView *)textView {
+- (GrowingTKCopyTextView *)textView {
     if (!_textView) {
-        _textView = [[UITextView alloc] initWithFrame:CGRectZero];
+        _textView = [[GrowingTKCopyTextView alloc] initWithFrame:CGRectZero];
         _textView.font = [UIFont systemFontOfSize:GrowingTKSizeFrom750(32)];
         _textView.textColor = UIColor.growingtk_labelColor;
-        _textView.editable = NO;
-        _textView.selectable = NO;
         _textView.translatesAutoresizingMaskIntoConstraints = NO;
     }
     return _textView;
