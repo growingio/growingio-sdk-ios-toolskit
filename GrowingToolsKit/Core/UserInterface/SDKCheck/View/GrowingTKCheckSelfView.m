@@ -53,7 +53,7 @@ static CGFloat const CheckButtonHeight = 130.0f;
         [self addSubview:self.checkButton];
         [self addSubview:self.tableView];
         
-        self.tableViewHeightConstraint = [self.tableView.heightAnchor constraintEqualToConstant:80.0f];
+        self.tableViewHeightConstraint = [self.tableView.heightAnchor constraintEqualToConstant:95.0f];
         self.tableViewLimitedHeightConstraint = [self.tableView.heightAnchor constraintEqualToConstant:200.0f];
         
         self.constraintsForPortrait = @[
@@ -163,66 +163,63 @@ static CGFloat const CheckButtonHeight = 130.0f;
     NSMutableArray *sdkInfo = [NSMutableArray arrayWithArray:@[
         [NSMutableDictionary dictionaryWithDictionary:@{
             @"check": @(0),
-            @"checkMessage": @"正在获取SDK",
-            @"title": @"SDK",
-            @"value": sdk.isIntegrated ? sdk.nameDescription : @"未集成",
+            @"checkMessage": GrowingTKLocalizedString(@"正在获取SDK"),
+            @"title": GrowingTKLocalizedString(@"SDK"),
+            @"value": sdk.isIntegrated ? sdk.nameDescription : GrowingTKLocalizedString(@"未集成"),
             @"bad": @(!sdk.isIntegrated)
         }],
         [NSMutableDictionary dictionaryWithDictionary:@{
             @"check": @(0),
-            @"checkMessage": @"正在获取SDK版本号",
+            @"checkMessage": GrowingTKLocalizedString(@"正在获取SDK版本号"),
             @"title": GrowingTKLocalizedString(@"SDK版本号"),
             @"value": sdk.version
         }],
         [NSMutableDictionary dictionaryWithDictionary:@{
             @"check": @(0),
-            @"checkMessage": @"正在获取SDK初始化状态",
+            @"checkMessage": GrowingTKLocalizedString(@"正在获取SDK初始化状态"),
             @"title": GrowingTKLocalizedString(@"SDK初始化"),
             @"value": sdk.initializationDescription,
             @"bad": @(!(sdk.isInitialized))
         }],
         [NSMutableDictionary dictionaryWithDictionary:@{
             @"check": @(0),
-            @"checkMessage": @"正在获取URL Scheme配置",
-            @"title": @"URL Scheme",
-            @"value": sdk.urlScheme.length > 0 ? sdk.urlScheme : @"未配置",
+            @"checkMessage": GrowingTKLocalizedString(@"正在获取URL Scheme配置"),
+            @"title": GrowingTKLocalizedString(@"URL Scheme"),
+            @"value": sdk.urlScheme.length > 0 ? sdk.urlScheme : GrowingTKLocalizedString(@"未配置"),
             @"bad": @(sdk.urlScheme.length == 0)
         }],
         [NSMutableDictionary dictionaryWithDictionary:@{
             @"check": @(0),
-            @"checkMessage": @"是否适配URL Scheme",
-            @"title": @"适配URL Scheme",
-            @"value": sdk.isAdaptToURLScheme ? @"是" : @"否",
+            @"checkMessage": GrowingTKLocalizedString(@"是否适配URL Scheme"),
+            @"title": GrowingTKLocalizedString(@"适配URL Scheme"),
+            @"value": GrowingTKLocalizedString(sdk.isAdaptToURLScheme ? @"YES" : @"NO"),
             @"bad": @(!sdk.isAdaptToURLScheme)
-        }],
-        [NSMutableDictionary dictionaryWithDictionary:@{
-            @"check": @(0),
-            @"checkMessage": @"是否适配Deep Link",
-            @"title": @"适配Deep Link",
-            @"value": sdk.isAdaptToDeepLink ? @"是" : @"否",
-            @"bad": @(!sdk.isAdaptToDeepLink)
         }]
     ]];
+    
+    if (sdk.isSDK2ndGeneration) {
+        [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
+                    @"check": @(0),
+                    @"checkMessage": GrowingTKLocalizedString(@"是否适配Deep Link"),
+                    @"title": GrowingTKLocalizedString(@"适配Deep Link"),
+                    @"value": GrowingTKLocalizedString(sdk.isAdaptToDeepLink ? @"YES" : @"NO"),
+                    @"bad": @(!sdk.isAdaptToDeepLink)
+        }]];
+    }
 
     if (sdk.isInitialized) {
-        if (sdk.isSDK3rdGeneration) {
+        [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
+                     @"check": @(0),
+                     @"checkMessage": GrowingTKLocalizedString(@"正在获取项目 ID"),
+                     @"title": GrowingTKLocalizedString(@"项目 ID"),
+                     @"value": sdk.projectId
+                 }]];
+        
+        if (sdk.isSDK2ndGeneration) {
             [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
                          @"check": @(0),
-                         @"checkMessage": @"正在获取项目 ID",
-                         @"title": @"项目 ID",
-                         @"value": sdk.projectId
-                     }]];
-        } else if (sdk.isSDK2ndGeneration) {
-            [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
-                         @"check": @(0),
-                         @"checkMessage": @"正在获取Account ID",
-                         @"title": @"Account ID",
-                         @"value": sdk.projectId
-                     }]];
-            [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
-                         @"check": @(0),
-                         @"checkMessage": @"正在获取采样率",
-                         @"title": @"采样率",
+                         @"checkMessage": GrowingTKLocalizedString(@"正在获取采样率"),
+                         @"title": GrowingTKLocalizedString(@"采样率"),
                          @"value": [NSString stringWithFormat:@"%.3f%%", sdk.sampling * 100],
                          @"bad": @(sdk.sampling == 0)
                      }]];
@@ -231,8 +228,8 @@ static CGFloat const CheckButtonHeight = 130.0f;
         if (sdk.dataSourceId.length > 0) {
             [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
                          @"check": @(0),
-                         @"checkMessage": @"正在获取DataSource ID",
-                         @"title": @"DataSource ID",
+                         @"checkMessage": GrowingTKLocalizedString(@"正在获取DataSource ID"),
+                         @"title": GrowingTKLocalizedString(@"DataSource ID"),
                          @"value": sdk.dataSourceId
                      }]];
         }
@@ -242,25 +239,25 @@ static CGFloat const CheckButtonHeight = 130.0f;
                         && ![GrowingTKUtil isDomain:dataCollectionServerHost]);
         [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
                      @"check": @(0),
-                     @"checkMessage": @"正在获取ServerHost",
-                     @"title": @"ServerHost",
+                     @"checkMessage": GrowingTKLocalizedString(@"正在获取ServerHost"),
+                     @"title": GrowingTKLocalizedString(@"ServerHost"),
                      @"value": dataCollectionServerHost,
                      @"bad": @(hostBad)
                  }]];
 
-        NSString *debugEnabled = sdk.debugEnabled ? @"YES" : @"NO";
+        NSString *debugEnabled = GrowingTKLocalizedString(sdk.debugEnabled ? @"YES" : @"NO");
         [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
                      @"check": @(0),
-                     @"checkMessage": @"是否调试",
+                     @"checkMessage": GrowingTKLocalizedString(@"是否调试"),
                      @"title": GrowingTKLocalizedString(@"调试模式"),
                      @"value": debugEnabled,
                      @"bad": @(sdk.debugEnabled)
                  }]];
 
-        NSString *dataCollectionEnabled = sdk.dataCollectionEnabled ? @"YES" : @"NO";
+        NSString *dataCollectionEnabled = GrowingTKLocalizedString(sdk.dataCollectionEnabled ? @"YES" : @"NO");
         [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
                      @"check": @(0),
-                     @"checkMessage": @"是否允许采集数据",
+                     @"checkMessage": GrowingTKLocalizedString(@"是否允许采集数据"),
                      @"title": GrowingTKLocalizedString(@"是否采集数据"),
                      @"value": dataCollectionEnabled,
                      @"bad": @(!(sdk.dataCollectionEnabled))
@@ -297,9 +294,9 @@ static CGFloat const CheckButtonHeight = 130.0f;
     if (self.datasource.count > 0 || self.checkButton.tag > 0) {
         return nil;
     }
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 80)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 95)];
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
-    label.text = @"CHECK-SELF";
+    label.text = GrowingTKLocalizedString(@"CHECK-SELF");
     label.font = [UIFont systemFontOfSize:18 weight:UIFontWeightBold];
     label.textColor = UIColor.growingtk_secondaryBackgroundColor;
     label.textAlignment = NSTextAlignmentCenter;
@@ -307,15 +304,16 @@ static CGFloat const CheckButtonHeight = 130.0f;
     [view addSubview:label];
 
     UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectZero];
-    label2.text = @"点击检查埋点 SDK 是否集成成功";
+    label2.text = GrowingTKLocalizedString(@"点击检查埋点 SDK 是否集成成功");
     label2.font = [UIFont systemFontOfSize:13 weight:UIFontWeightSemibold];
     label2.textColor = UIColor.growingtk_black_1;
     label2.textAlignment = NSTextAlignmentCenter;
+    label2.numberOfLines = 0;
     label2.translatesAutoresizingMaskIntoConstraints = NO;
     [view addSubview:label2];
 
     UILabel *label3 = [[UILabel alloc] initWithFrame:CGRectZero];
-    label3.text = @"BY GROWINGIO";
+    label3.text = GrowingTKLocalizedString(@"By GrowingIO");
     label3.font = [UIFont systemFontOfSize:12 weight:UIFontWeightLight];
     label3.textColor = UIColor.growingtk_black_1;
     label3.textAlignment = NSTextAlignmentCenter;
@@ -327,8 +325,8 @@ static CGFloat const CheckButtonHeight = 130.0f;
         [label.heightAnchor constraintEqualToConstant:20.0f],
         [label.centerXAnchor constraintEqualToAnchor:view.centerXAnchor],
         [label2.topAnchor constraintEqualToAnchor:label.bottomAnchor constant:5.0f],
-        [label2.heightAnchor constraintEqualToConstant:15.0f],
-        [label2.centerXAnchor constraintEqualToAnchor:view.centerXAnchor],
+        [label2.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:20.0f],
+        [label2.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-20.0f],
         [label3.topAnchor constraintEqualToAnchor:label2.bottomAnchor constant:5.0f],
         [label3.heightAnchor constraintEqualToConstant:15.0f],
         [label3.centerXAnchor constraintEqualToAnchor:view.centerXAnchor]
@@ -339,7 +337,7 @@ static CGFloat const CheckButtonHeight = 130.0f;
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForHeaderInSection:(NSInteger)section {
     // https://stackoverflow.com/questions/42246153/returning-cgfloat-leastnormalmagnitude-for-uitableview-section-header-causes-cra
-    return (self.datasource.count > 0 || self.checkButton.tag > 0) ? 1.01f : 80.0f;
+    return (self.datasource.count > 0 || self.checkButton.tag > 0) ? 1.01f : 95.0f;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {

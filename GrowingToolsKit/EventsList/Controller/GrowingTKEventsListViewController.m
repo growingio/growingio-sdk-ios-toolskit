@@ -142,7 +142,7 @@
         }
         controller.eventTypes = eventTypes.copy;
     }
-    controller.title = [NSString stringWithFormat:@"%@%@", GrowingTKLocalizedString(@"搜索来自"), type];
+    controller.title = [NSString stringWithFormat:@"%@ %@", GrowingTKLocalizedString(@"搜索来自"), type];
     [self.navigationController pushViewController:controller animated:YES];
 }
 

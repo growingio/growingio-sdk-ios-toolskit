@@ -12,10 +12,42 @@
     "SDK信息" = "SDKInfo";
     "埋点数据" = "EventsList";
     "XPath跟踪" = "XPathTrack";
+    "网络请求" = "NetFlow";
+    
+    // #Common
     "未集成SDK，请参考帮助文档进行集成" = "SDK is not integrated. Please refer to the help document for integration";
     "未集成无埋点SDK，请参考帮助文档进行集成" = "AutoTrack SDK is not integrated. Please refer to the help document for integration";
+    "已初始化" = "Initialized";
+    "未初始化" = "Uninitialized";
+    "延迟初始化" = "Delay-Initialized";
+    "耗时" = "Consume";
+    "是" = "YES";
+    "否" = "NO";
+    "天" = "day";
+    "小时" = "h";
+    "分" = "min";
+    "秒" = "s";
+    "毫秒" = "ms";
+    "无" = "NULL";
     
-    //SDK信息
+    // #Check Self
+    "点击检查埋点 SDK 是否集成成功" = "Click to check whether the SDK is successfully integrated";
+    "为用户提供最好的埋点服务" = "Provide the best service to user";
+    "正在获取SDK" = "Getting SDK information";
+    "正在获取SDK版本号" = "Getting SDK version";
+    "正在获取SDK初始化状态" = "Getting SDK initialization status";
+    "正在获取URL Scheme配置" = "Getting URL Scheme";
+    "是否适配URL Scheme" = "Adapt to URL Scheme or not";
+    "是否适配Deep Link" = "Adapt to Deep Link or not";
+    "正在获取项目 ID" = "Getting 项目 ID";
+    "正在获取采样率" = "Getting Sampling";
+    "正在获取DataSource ID" = "Getting Datasource ID";
+    "正在获取ServerHost" = "Getting ServerHost";
+    "是否调试" = "DebugEnabled or not";
+    "是否允许采集数据" = "DataCollectionEnabled or not";
+
+    // #SDK信息
+    "一键截图" = "Screenshot";
     "复制" = "Copy";
     "App信息" = "App Info";
     "手机信息" = "iPhone Info";
@@ -42,10 +74,13 @@
     "使用App期间" = "While Using the App";
     "始终" = "Always";
     "用户关闭服务" = "Off";
-    //SDK
+    // ##SDK
     "SDK版本号" = "Version";
     "SDK初始化" = "Initialization";
+    "适配URL Scheme" = "Adapt To URL Scheme";
+    "适配Deep Link" = "Adapt To Deep Link";
     "调试模式" = "DebugEnabled";
+    "数据加密" = "EncryptEnabled";
     "每日流量限制" = "CellularDataLimit";
     "当前流量使用" = "CellularDataUsed";
     "数据发送间隔" = "DataUploadInterval";
@@ -54,4 +89,39 @@
     "事件过滤" = "ExcludeEvent";
     "事件属性过滤" = "IgnoreField";
     "曝光事件比例因子" = "ImpressionScale";
+    "未集成" = "Not integrated";
+    "未配置" = "Not configured";
+    
+    // #埋点数据
+    "类型" = "TYPE";
+    "输入要搜索的事件类型" = "Enter the type of event to search for";
+    "搜索来自" = "Search For";
+    "今日" = "Today";
+    "昨日" = "Yesterday";
+    "已发送" = "Sent";
+    "未发送" = "NotSent";
+    
+    // #XPath跟踪
+    "请拖动中间的圆点选择控件" = "Drag the middle dot to select the control";
+    "当前" = "Current";
+    "列表: 是" = "IsList: YES";
+    "位置" = "Index";
+
+    // #网络请求
+    "运行期间" = "During Runtime";
+    "已持续运行" = "Running";
+    "请求数量" = "Requests Count";
+    "数据上传" = "Data upload";
+    "请求失败" = "Failed Count";
+    "请求" = "Request";
+    "响应" = "Response";
+    "消息体" = "Content";
+    "请求头" = "Request Header";
+    "响应头" = "Response Header";
+    "请求数据" = "Request Body";
+    "链接" = "URL";
+    "请求方式" = "Method";
+    "请求大小" = "Request Size";
+    "返回码" = "Status Code";
+    "返回信息" = "Status";
 }

@@ -27,6 +27,7 @@
 
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *valueLabel;
+@property (nonatomic, strong) NSLayoutConstraint *titleLabelWidthConstraint;
 
 @end
 
@@ -53,77 +54,19 @@
         self.valueLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.valueLabel];
 
+        self.titleLabelWidthConstraint = [self.titleLabel.widthAnchor constraintGreaterThanOrEqualToConstant:100.0f];
+        
         [NSLayoutConstraint activateConstraints:@[
-            [NSLayoutConstraint constraintWithItem:self.titleLabel
-                                         attribute:NSLayoutAttributeTop
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self.contentView
-                                         attribute:NSLayoutAttributeTop
-                                        multiplier:1.0
-                                          constant:8.0],
-            [NSLayoutConstraint constraintWithItem:self.titleLabel
-                                         attribute:NSLayoutAttributeLeading
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self.contentView
-                                         attribute:NSLayoutAttributeLeading
-                                        multiplier:1.0
-                                          constant:16.0],
-            [NSLayoutConstraint constraintWithItem:self.titleLabel
-                                         attribute:NSLayoutAttributeWidth
-                                         relatedBy:NSLayoutRelationGreaterThanOrEqual
-                                            toItem:nil
-                                         attribute:NSLayoutAttributeNotAnAttribute
-                                        multiplier:1.0
-                                          constant:100.0],
-            [NSLayoutConstraint constraintWithItem:self.titleLabel
-                                         attribute:NSLayoutAttributeHeight
-                                         relatedBy:NSLayoutRelationGreaterThanOrEqual
-                                            toItem:nil
-                                         attribute:NSLayoutAttributeNotAnAttribute
-                                        multiplier:1.0
-                                          constant:36.0],
-            [NSLayoutConstraint constraintWithItem:self.titleLabel
-                                         attribute:NSLayoutAttributeBottom
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self.contentView
-                                         attribute:NSLayoutAttributeBottom
-                                        multiplier:1.0
-                                          constant:-8.0],
-            [NSLayoutConstraint constraintWithItem:self.valueLabel
-                                         attribute:NSLayoutAttributeTop
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self.contentView
-                                         attribute:NSLayoutAttributeTop
-                                        multiplier:1.0
-                                          constant:8.0],
-            [NSLayoutConstraint constraintWithItem:self.valueLabel
-                                         attribute:NSLayoutAttributeTrailing
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self.contentView
-                                         attribute:NSLayoutAttributeTrailing
-                                        multiplier:1.0
-                                          constant:-16.0],
-            [NSLayoutConstraint constraintWithItem:self.valueLabel
-                                         attribute:NSLayoutAttributeBottom
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self.contentView
-                                         attribute:NSLayoutAttributeBottom
-                                        multiplier:1.0
-                                          constant:-8.0],
-            [NSLayoutConstraint constraintWithItem:self.valueLabel
-                                         attribute:NSLayoutAttributeLeading
-                                         relatedBy:NSLayoutRelationEqual
-                                            toItem:self.titleLabel
-                                         attribute:NSLayoutAttributeTrailing
-                                        multiplier:1.0
-                                          constant:10.0],
-            [NSLayoutConstraint constraintWithItem:self.valueLabel
-                                         attribute:NSLayoutAttributeHeight
-                                         relatedBy:NSLayoutRelationGreaterThanOrEqual
-                                            toItem:nil
-                                         attribute:NSLayoutAttributeNotAnAttribute
-                                        multiplier:1.0
-                                          constant:36.0]
+            [self.titleLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:8.0f],
+            [self.titleLabel.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:16.0f],
+            self.titleLabelWidthConstraint,
+            [self.titleLabel.heightAnchor constraintGreaterThanOrEqualToConstant:36.0f],
+            [self.titleLabel.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant:-8.0f],
+            [self.valueLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:8.0f],
+            [self.valueLabel.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-16.0f],
+            [self.valueLabel.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant:-8.0f],
+            [self.valueLabel.leadingAnchor constraintEqualToAnchor:self.titleLabel.trailingAnchor constant:10.0f],
+            [self.valueLabel.heightAnchor constraintGreaterThanOrEqualToConstant:36.0f]
         ]];
     }
     return self;
@@ -166,6 +109,14 @@
         cnValue = value;
     }
     self.valueLabel.text = cnValue;
+    
+    CGFloat width = [self.valueLabel sizeThatFits:CGSizeMake(CGFLOAT_MAX, 36.0f)].width;
+    if (width < (GrowingTKScreenWidth - 200.0f - 42.0f)) {
+        self.titleLabelWidthConstraint.constant = 200.0f;
+    } else {
+        self.titleLabelWidthConstraint.constant = 100.0f;
+    }
+    [self setNeedsUpdateConstraints];
 }
 
 @end

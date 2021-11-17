@@ -148,41 +148,24 @@
     return [UIColor growingtk_colorWithHex:@"F2F2F7"];
 }
 
-+ (UIColor *)growingtk_blue {
-    if (@available(iOS 13.0, *)) {
-        return [UIColor colorWithDynamicProvider:^UIColor *_Nonnull(UITraitCollection *_Nonnull traitCollection) {
-            if (traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
-                return [UIColor growingtk_colorWithHex:@"#1A0D41"];
-            } else {
-                return [UIColor systemBlueColor];
-            }
-        }];
-    }
-    return [UIColor growingtk_colorWithHex:@"#1A0D41"];
-}
-
-+ (UIColor *)growingtk_orange {
-    return [UIColor growingtk_colorWithHex:@"#FF5E30"];
-}
-
-+ (UIColor *)growingtk_line {
-    if (@available(iOS 13.0, *)) {
-        return [UIColor colorWithDynamicProvider:^UIColor *_Nonnull(UITraitCollection *_Nonnull traitCollection) {
-            if (traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
-                return [UIColor growingtk_colorWithHex:@"#000000" alpha:0.1];
-            } else {
-                return [UIColor growingtk_colorWithHex:@"#68686B" alpha:0.6];
-            }
-        }];
-    }
-    return [UIColor growingtk_colorWithHex:@"#000000" alpha:0.1];
-}
-
-+ (UIColor *)growingtk_bg {
++ (UIColor *)growingtk_bg_1 {
     if (@available(iOS 13.0, *)) {
         return UIColor.tertiarySystemBackgroundColor;
     }
     return UIColor.whiteColor;
+}
+
++ (UIColor *)growingtk_bg_2 {
+    if (@available(iOS 13.0, *)) {
+        return [UIColor colorWithDynamicProvider:^UIColor *_Nonnull(UITraitCollection *_Nonnull traitCollection) {
+            if (traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
+                return [UIColor growingtk_colorWithHex:@"#F4F5F6"];
+            } else {
+                return [UIColor growingtk_colorWithHex:@"#353537"];
+            }
+        }];
+    }
+    return [UIColor growingtk_colorWithHex:@"#F4F5F6"];
 }
 
 + (UIColor *)growingtk_randomColor {

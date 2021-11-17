@@ -37,10 +37,11 @@
 }
 
 - (void)growingtk_didMoveToSuperview {
-    if ([NSStringFromClass(self.growingtk_viewController.class) hasPrefix:@"GrowingTK"]
-        || [NSStringFromClass(self.growingtk_viewController.navigationController.class) hasPrefix:@"GrowingTK"]
-        || [NSStringFromClass(self.growingtk_viewController.presentingViewController.class) hasPrefix:@"GrowingTK"]
-        || [NSStringFromClass(self.window.class) hasPrefix:@"GrowingTK"]) {
+    NSString *prefix = @"GrowingTK";
+    if ([NSStringFromClass(self.growingtk_viewController.class) hasPrefix:prefix]
+        || [NSStringFromClass(self.growingtk_viewController.navigationController.class) hasPrefix:prefix]
+        || [NSStringFromClass(self.growingtk_viewController.presentingViewController.class) hasPrefix:prefix]
+        || [NSStringFromClass(self.window.class) hasPrefix:prefix]) {
         [GrowingTKSDKUtil.sharedInstance ignoreView:self];
     }
     

@@ -153,7 +153,10 @@
     self.statusLabel.text = request.status;
     self.urlStringLabel.text = request.url;
     self.timeLabel.text = request.startTime;
-    self.durationLabel.text = [NSString stringWithFormat:@"耗时：%.f毫秒", request.totalDuration.doubleValue * 1000];
+    self.durationLabel.text = [NSString stringWithFormat:@"%@：%.f%@",
+                                                         GrowingTKLocalizedString(@"耗时"),
+                                                         request.totalDuration.doubleValue * 1000,
+                                                         GrowingTKLocalizedString(@"毫秒")];
     self.methodLabel.text = request.method;
 
     double mb = 1024.0 * 1024.0;

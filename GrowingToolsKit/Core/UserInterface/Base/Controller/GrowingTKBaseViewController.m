@@ -54,7 +54,7 @@
     }
 
     // Dark Mode
-    self.view.backgroundColor = UIColor.growingtk_bg;
+    self.view.backgroundColor = UIColor.growingtk_bg_1;
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {

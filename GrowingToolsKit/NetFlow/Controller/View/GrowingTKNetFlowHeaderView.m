@@ -174,24 +174,35 @@
     double day = 86400.0;
     double hour = 3600.0;
     double minute = 60.0;
+    NSString *d = GrowingTKLocalizedString(@"天");
+    NSString *h = GrowingTKLocalizedString(@"小时");
+    NSString *m = GrowingTKLocalizedString(@"分");
+    NSString *s = GrowingTKLocalizedString(@"秒");
     if (duration < minute) {
-        self.durationLabel.text = [NSString stringWithFormat:@"%.f秒", duration];
+        self.durationLabel.text = [NSString stringWithFormat:@"%.f%@", duration, s];
     } else if (duration < hour) {
         self.durationLabel.text =
-            [NSString stringWithFormat:@"%.f分%.f秒", floor(duration / minute), fmod(duration, minute)];
+            [NSString stringWithFormat:@"%.f%@%.f%@", floor(duration / minute), m, fmod(duration, minute), s];
     } else if (duration < day) {
-        self.durationLabel.text = [NSString stringWithFormat:@"%.f小时%.f分%.f秒",
+        self.durationLabel.text = [NSString stringWithFormat:@"%.f%@%.f%@%.f%@",
                                                              floor(duration / hour),
+                                                             h,
                                                              floor(fmod(duration, hour) / minute),
-                                                             fmod(duration, minute)];
+                                                             m,
+                                                             fmod(duration, minute),
+                                                             s];
     } else {
-        self.durationLabel.text = [NSString stringWithFormat:@"%.f天%.f小时%.f分%.f秒",
+        self.durationLabel.text = [NSString stringWithFormat:@"%.f%@%.f%@%.f%@%.f%@",
                                                              floor(duration / day),
+                                                             d,
                                                              floor(fmod(duration, day) / hour),
+                                                             h,
                                                              floor(fmod(duration, hour) / minute),
-                                                             fmod(duration, minute)];
+                                                             m,
+                                                             fmod(duration, minute),
+                                                             s];
     }
-    
+
     NSUInteger requestCount = GrowingTKNetFlowPlugin.plugin.requestCount;
     double uploadFlow = GrowingTKNetFlowPlugin.plugin.totalUploadFlow;
     NSUInteger requestFailedCount = GrowingTKNetFlowPlugin.plugin.requestFailedCount;

@@ -96,31 +96,18 @@ UICollectionViewDelegateFlowLayout>
             [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter
                                                withReuseIdentifier:GrowingTKPluginsListFooterID
                                                       forIndexPath:indexPath];
-        UIColor *dyColor;
-        if (@available(iOS 13.0, *)) {
-            dyColor =
-                [UIColor colorWithDynamicProvider:^UIColor *_Nonnull(UITraitCollection *_Nonnull traitCollection) {
-                    if (traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
-                        return [UIColor growingtk_colorWithHex:@"#F4F5F6"];
-                    } else {
-                        return [UIColor growingtk_colorWithHex:@"#353537"];
-                    }
-                }];
-        } else {
-            dyColor = [UIColor growingtk_colorWithHex:@"#F4F5F6"];
-        }
         if (indexPath.section == (self.dataSource.count - 1)) {
             NSString *str = GrowingTKLocalizedString(@"当前版本");
             NSString *last = [NSString stringWithFormat:@"%@：V%@", str, GrowingToolsKitVersion];
             foot.title.text = last;
-            foot.title.textColor = [UIColor growingtk_colorWithHex:@"#999999"];
+            foot.title.textColor = UIColor.growingtk_black_3;
             foot.title.textAlignment = NSTextAlignmentCenter;
             foot.title.font = [UIFont systemFontOfSize:GrowingTKSizeFrom750(24)];
         } else {
             foot.title.text = nil;
         }
 
-        foot.backgroundColor = dyColor;
+        foot.backgroundColor = UIColor.growingtk_bg_2;
         view = foot;
     } else {
         view = [[UICollectionReusableView alloc] init];

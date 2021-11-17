@@ -33,9 +33,10 @@
 }
 
 - (void)growingtk_viewWillAppear:(BOOL)animated {
-    if ([NSStringFromClass(self.class) hasPrefix:@"GrowingTK"]
-        || [NSStringFromClass(self.navigationController.class) hasPrefix:@"GrowingTK"]
-        || [NSStringFromClass(self.presentingViewController.class) hasPrefix:@"GrowingTK"]) {
+    NSString *prefix = @"GrowingTK";
+    if ([NSStringFromClass(self.class) hasPrefix:prefix]
+        || [NSStringFromClass(self.navigationController.class) hasPrefix:prefix]
+        || [NSStringFromClass(self.presentingViewController.class) hasPrefix:prefix]) {
         [GrowingTKSDKUtil.sharedInstance ignoreViewController:self];
     }
     

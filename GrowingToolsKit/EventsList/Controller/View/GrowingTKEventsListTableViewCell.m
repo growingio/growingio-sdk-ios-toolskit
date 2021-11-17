@@ -99,7 +99,7 @@
             [self.pathLabel.leadingAnchor constraintEqualToAnchor:self.typeLabel.leadingAnchor],
             [self.pathLabel.widthAnchor constraintEqualToAnchor:self.typeLabel.widthAnchor],
             [self.sendStatusLabel.leadingAnchor constraintEqualToAnchor:self.typeLabel.trailingAnchor constant:margin],
-            [self.sendStatusLabel.widthAnchor constraintEqualToConstant:GrowingTKSizeFrom750(90)],
+            [self.sendStatusLabel.widthAnchor constraintEqualToConstant:GrowingTKSizeFrom750(110)],
             [self.sendStatusLabel.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
             [self.timeLabel.leadingAnchor constraintEqualToAnchor:self.sendStatusLabel.trailingAnchor constant:margin],
             [self.timeLabel.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-margin],
@@ -123,7 +123,7 @@
     self.pathLabelTopConstraint.active = event.path.length > 0;
     self.typeLabelCenterYConstraint.active = event.path.length <= 0;
 
-    self.sendStatusLabel.text = event.isSend ? @"已发送" : @"未发送";
+    self.sendStatusLabel.text = GrowingTKLocalizedString(event.isSend ? @"已发送" : @"未发送");
     self.sendStatusLabel.textColor =
         event.isSend ? UIColor.growingtk_labelColor : UIColor.growingtk_tertiaryBackgroundColor;
 

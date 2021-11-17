@@ -28,12 +28,12 @@ static long long const kGrowingTKRequestsDatabaseExpirationTime = 86400000 * 1LL
 #pragma mark - Public Methods
 
 - (void)createRequestsTable {
-    NSString *sql = @"create table if not exists requeststable("
+    NSString *sql = @"CREATE TABLE IF NOT EXISTS requeststable("
                     @"id INTEGER PRIMARY KEY,"
-                    @"key Double,"  // request time
-                    @"requestBody Text,"
-                    @"responseBody Text,"
-                    @"jsonString Text);";
+                    @"key DOUBLE,"  // request time
+                    @"requestBody TEXT,"
+                    @"responseBody TEXT,"
+                    @"jsonString TEXT);";
     [self createTable:sql tableName:@"requeststable" indexs:@[@"id", @"key"]];
 }
 
@@ -45,7 +45,7 @@ static long long const kGrowingTKRequestsDatabaseExpirationTime = 86400000 * 1LL
             count = -1;
             return;
         }
-        GrowingTKFMResultSet *set = [db executeQuery:@"select count(*) from requeststable" values:nil error:nil];
+        GrowingTKFMResultSet *set = [db executeQuery:@"SELECT COUNT(*) FROM requeststable" values:nil error:nil];
         if (!set) {
             self.databaseError = [self readErrorInDatabase:db];
             count = -1;
@@ -114,7 +114,7 @@ static long long const kGrowingTKRequestsDatabaseExpirationTime = 86400000 * 1LL
             return;
         }
         result =
-            [db executeUpdate:@"insert into requeststable(key,requestBody,responseBody,jsonString) values(?,?,?,?)",
+            [db executeUpdate:@"INSERT INTO requeststable(key,requestBody,responseBody,jsonString) VALUES(?,?,?,?)",
                               @(request.startTimestamp),
                               request.requestBody,
                               request.responseBody,
@@ -142,7 +142,7 @@ static long long const kGrowingTKRequestsDatabaseExpirationTime = 86400000 * 1LL
         for (int i = 0; i < requests.count; i++) {
             GrowingTKRequestPersistence *request = requests[i];
             result =
-                [db executeUpdate:@"insert into requeststable(key,requestBody,responseBody,jsonString) values(?,?,?,?)",
+                [db executeUpdate:@"INSERT INTO requeststable(key,requestBody,responseBody,jsonString) VALUES(?,?,?,?)",
                                   @(request.startTimestamp),
                                   request.requestBody,
                                   request.responseBody,
@@ -165,7 +165,7 @@ static long long const kGrowingTKRequestsDatabaseExpirationTime = 86400000 * 1LL
             self.databaseError = error;
             return;
         }
-        result = [db executeUpdate:@"delete from requeststable where key=?;", key];
+        result = [db executeUpdate:@"DELETE FROM requeststable WHERE key=?;", key];
 
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
@@ -188,7 +188,7 @@ static long long const kGrowingTKRequestsDatabaseExpirationTime = 86400000 * 1LL
         }
 
         for (NSString *key in keys) {
-            result = [db executeUpdate:@"delete from requeststable where key=?;", key];
+            result = [db executeUpdate:@"DELETE FROM requeststable WHERE key=?;", key];
             if (!result) {
                 self.databaseError = [self writeErrorInDatabase:db];
                 break;
@@ -206,7 +206,7 @@ static long long const kGrowingTKRequestsDatabaseExpirationTime = 86400000 * 1LL
             self.databaseError = error;
             return;
         }
-        result = [db executeUpdate:@"delete from requeststable" values:nil error:nil];
+        result = [db executeUpdate:@"DELETE FROM requeststable" values:nil error:nil];
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
         }
@@ -225,7 +225,7 @@ static long long const kGrowingTKRequestsDatabaseExpirationTime = 86400000 * 1LL
             self.databaseError = error;
             return;
         }
-        result = [db executeUpdate:@"delete from requeststable where key<=?;", dayBefore];
+        result = [db executeUpdate:@"DELETE FROM requeststable WHERE key<=?;", dayBefore];
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
         }
@@ -256,7 +256,7 @@ static long long const kGrowingTKRequestsDatabaseExpirationTime = 86400000 * 1LL
             return;
         }
 
-        NSString *query = @"select * from requeststable";
+        NSString *query = @"SELECT * FROM requeststable";
         if (requestTime > 0) {
             query = [query stringByAppendingFormat:@" WHERE key<%f", requestTime];
         }

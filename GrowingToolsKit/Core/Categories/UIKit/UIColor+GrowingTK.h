@@ -34,12 +34,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIColor *)growingtk_black_3;                   //#999999
 + (UIColor *)growingtk_labelColor;                // labelColor
 + (UIColor *)growingtk_secondaryLabelColor;       // secondaryLabelColor
-+ (UIColor *)growingtk_white_1;                   //#FFFFFF
-+ (UIColor *)growingtk_white_2;                   //#F2F2F7
-+ (UIColor *)growingtk_blue;                      //#1A0D41
-+ (UIColor *)growingtk_orange;                    //#FF5E30
-+ (UIColor *)growingtk_line;                      //[UIColor growingtk_colorWithHex:@"000000" andAlpha:0.1];
-+ (UIColor *)growingtk_bg;                        //#FFFFFF
++ (UIColor *)growingtk_white_1;                   // systemBackgroundColor
++ (UIColor *)growingtk_white_2;                   // secondarySystemBackgroundColor
++ (UIColor *)growingtk_bg_1;                      // tertiarySystemBackgroundColor
++ (UIColor *)growingtk_bg_2;                      //#F4F5F6
 + (UIColor *)growingtk_randomColor;
 
 @end

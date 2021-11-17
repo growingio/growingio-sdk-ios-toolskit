@@ -38,7 +38,7 @@
     [self.view addSubview:self.checkView];
 
     UILabel *label = [[UILabel alloc] init];
-    label.text = @"GOALS";
+    label.text = GrowingTKLocalizedString(@"GOALS");
     label.font = [UIFont systemFontOfSize:15 weight:UIFontWeightBold];
     label.textColor = UIColor.growingtk_secondaryBackgroundColor;
     label.textAlignment = NSTextAlignmentCenter;
@@ -46,7 +46,7 @@
     [self.view addSubview:label];
 
     UILabel *label2 = [[UILabel alloc] init];
-    label2.text = @"为用户提供最好的埋点服务";
+    label2.text = GrowingTKLocalizedString(@"为用户提供最好的埋点服务");
     label2.font = [UIFont systemFontOfSize:10];
     label2.textColor = UIColor.growingtk_black_1;
     label2.textAlignment = NSTextAlignmentCenter;

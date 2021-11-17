@@ -123,7 +123,7 @@ static CGFloat const kInfoViewMargin = 24.0f;
         self.infoViewBottomConstraint.constant = -infoViewMargin;
         self.infoViewLeadingConstraint.constant = infoViewMargin;
         
-        [self resetInfoLabelText:@"请拖动中间的圆点选择控件"];
+        [self resetInfoLabelText:GrowingTKLocalizedString(@"请拖动中间的圆点选择控件")];
         self.circleView.center = self.view.center;
         self.maskView.frame = CGRectZero;
     });
@@ -171,8 +171,8 @@ static CGFloat const kInfoViewMargin = 24.0f;
     
     self.latestMaskedView = view;
     id <GrowingTKNode>node = (id<GrowingTKNode>)view;
-    UIColor * borderColor = MASK_BORDER_COLOR;
-    UIColor * backgroundColor = MASK_BACKGROUND_COLOR;
+    UIColor *borderColor = MASK_BORDER_COLOR;
+    UIColor *backgroundColor = MASK_BACKGROUND_COLOR;
 
     if ([node isKindOfClass:[WKWebView class]] && node.growingtk_hybrid) {
         // WebView
@@ -325,7 +325,7 @@ static CGFloat const kInfoViewMargin = 24.0f;
         CGFloat contentSize = CIRCLE_SIZE - padding * 2;
         _circleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, circleSize, circleSize)];
         _circleView.layer.cornerRadius = circleSize / 2.0f;
-        _circleView.backgroundColor = [UIColor growingtk_colorWithHex:@"FF4824" alpha:0.3f];
+        _circleView.backgroundColor = [UIColor growingtk_colorWithHex:@"#FF4824" alpha:0.3f];
 
         UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(padding, padding, contentSize, contentSize)];
         contentView.layer.cornerRadius = contentSize / 2.0f;
@@ -342,10 +342,10 @@ static CGFloat const kInfoViewMargin = 24.0f;
 - (UIView *)infoView {
     if (!_infoView) {
         _infoView = [[UIView alloc] initWithFrame:CGRectZero];
-        _infoView.backgroundColor = [UIColor growingtk_colorWithHex:@"0x000000" alpha:0.5f];
+        _infoView.backgroundColor = [UIColor growingtk_colorWithHex:@"#000000" alpha:0.5f];
         _infoView.layer.cornerRadius = GrowingTKSizeFrom750(8);
         _infoView.layer.borderWidth = 1.0f;
-        _infoView.layer.borderColor = [UIColor growingtk_colorWithHex:@"0x999999" alpha:0.2].CGColor;
+        _infoView.layer.borderColor = [UIColor growingtk_colorWithHex:@"#999999" alpha:0.2f].CGColor;
         UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self
                                                                               action:@selector(infoViewPan:)];
         [_infoView addGestureRecognizer:pan];

@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingTKViewNode.h"
+#import "GrowingTKDefine.h"
 #import "GrowingTKSDKUtil.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
@@ -103,7 +104,7 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
                 _path = [element valueForKey:@"page"];
                 _xPath = [element valueForKey:@"xpath"];
                 if (_xPath.length == 0) {
-                    _xPath = @"当前SDK不支持此控件圈选";
+                    _xPath = GrowingTKLocalizedString(@"当前SDK不支持此控件圈选");
                 }
                 _index = ((NSNumber *)[element valueForKey:@"index"]).intValue;
                 _hasListParent = _index >= 0;
@@ -149,15 +150,15 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 
 - (NSString *)toString {
     NSMutableArray *array = [NSMutableArray array];
-    [array addObject:[NSString stringWithFormat:@"当前: %@", self.viewName]];
+    [array addObject:[NSString stringWithFormat:@"%@: %@", GrowingTKLocalizedString(@"当前"), self.viewName]];
     if (self.viewContent.length > 0) {
-        [array addObject:[NSString stringWithFormat:@"内容: %@", self.viewContent]];
+        [array addObject:[NSString stringWithFormat:@"%@: %@", GrowingTKLocalizedString(@"内容"), self.viewContent]];
     }
     if (self.hasListParent) {
-        [array addObject:[NSString stringWithFormat:@"列表: %@", @"是"]];
+        [array addObject:GrowingTKLocalizedString(@"列表: 是")];
     }
     if (self.index >= 0) {
-        [array addObject:[NSString stringWithFormat:@"位置: %@", @(self.index)]];
+        [array addObject:[NSString stringWithFormat:@"%@: %@", GrowingTKLocalizedString(@"位置"), @(self.index)]];
     }
     [array addObject:[NSString stringWithFormat:@"path: %@", self.path]];
     [array addObject:[NSString stringWithFormat:@"xpath: %@", self.xPath]];

@@ -21,6 +21,7 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import "NSObject+GrowingTKSwizzle.h"
+#import "GrowingTKDefine.h"
 
 @interface GrowingTKSDKUtil ()
 
@@ -254,10 +255,16 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 }
 
 - (NSString *)initializationDescription {
-    return self.isInitialized ? (self.delayInitialized
-                                     ? [NSString stringWithFormat:@"延迟初始化(耗时: %.2fms)", self.initializationTime]
-                                     : [NSString stringWithFormat:@"已初始化(耗时: %.2fms)", self.initializationTime])
-                              : @"未初始化";
+    return self.isInitialized
+               ? (self.delayInitialized ? [NSString stringWithFormat:@"%@(%@: %.2fms)",
+                                                                     GrowingTKLocalizedString(@"延迟初始化"),
+                                                                     GrowingTKLocalizedString(@"耗时"),
+                                                                     self.initializationTime]
+                                        : [NSString stringWithFormat:@"%@(%@: %.2fms)",
+                                                                     GrowingTKLocalizedString(@"已初始化"),
+                                                                     GrowingTKLocalizedString(@"耗时"),
+                                                                     self.initializationTime])
+               : GrowingTKLocalizedString(@"未初始化");
 }
 
 - (NSString *)excludeEventDescription {

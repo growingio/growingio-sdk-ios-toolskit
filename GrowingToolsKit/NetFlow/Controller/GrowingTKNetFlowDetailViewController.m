@@ -47,10 +47,10 @@
     [self.view addSubview:self.requestTableView];
     [self.view addSubview:self.responseTableView];
 
-    CGFloat margin = 12.0f;
-    CGFloat closeButtonSideLength = 30.0f;
-    CGFloat segmentedControlWidth = 150.0f;
-    CGFloat segmentedControlHeight = 40.0f;
+    CGFloat margin = GrowingTKSizeFrom750(24.0f);
+    CGFloat closeButtonSideLength = GrowingTKSizeFrom750(60.0f);
+    CGFloat segmentedControlWidth = GrowingTKSizeFrom750(320.0f);
+    CGFloat segmentedControlHeight = GrowingTKSizeFrom750(80.0f);
     [NSLayoutConstraint activateConstraints:@[
         [self.segmentedControl.centerYAnchor constraintEqualToAnchor:self.closeButton.centerYAnchor],
         [self.segmentedControl.centerXAnchor
@@ -129,16 +129,21 @@
                                                         groupingSepRequestBodyLength];
                 }
 
-                NSString *text = [NSString stringWithFormat:@"链接：%@\n请求方式：%@\n请求大小：%@\n耗时：%.f毫秒",
+                NSString *text = [NSString stringWithFormat:@"%@：%@\n%@：%@\n%@：%@\n%@：%.f%@",
+                                                            GrowingTKLocalizedString(@"链接"),
                                                             self.request.url,
+                                                            GrowingTKLocalizedString(@"请求方式"),
                                                             self.request.method,
+                                                            GrowingTKLocalizedString(@"请求大小"),
                                                             length,
-                                                            self.request.totalDuration.doubleValue * 1000];
+                                                            GrowingTKLocalizedString(@"耗时"),
+                                                            self.request.totalDuration.doubleValue * 1000,
+                                                            GrowingTKLocalizedString(@"毫秒")];
                 [cell showText:text];
             } break;
             case 1: {
                 if (!self.request.requestHeader) {
-                    [cell showText:@"无"];
+                    [cell showText:GrowingTKLocalizedString(@"无")];
                     break;
                 }
                 NSString *jsonString =
@@ -158,15 +163,18 @@
     } else {
         switch (indexPath.section) {
             case 0: {
-                NSString *text = [NSString stringWithFormat:@"链接：%@\n返回码：%@\n返回信息：%@",
+                NSString *text = [NSString stringWithFormat:@"%@：%@\n%@：%@\n%@：%@",
+                                                            GrowingTKLocalizedString(@"链接"),
                                                             self.request.url,
+                                                            GrowingTKLocalizedString(@"返回码"),
                                                             self.request.statusCode,
+                                                            GrowingTKLocalizedString(@"返回信息"),
                                                             self.request.status];
                 [cell showText:text];
             } break;
             case 1: {
                 if (!self.request.responseHeader) {
-                    [cell showText:@"无"];
+                    [cell showText:GrowingTKLocalizedString(@"无")];
                     break;
                 }
                 NSString *jsonString =
@@ -222,7 +230,9 @@
     return view;
 }
 
-- (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView
+    didEndDisplayingCell:(UITableViewCell *)cell
+       forRowAtIndexPath:(NSIndexPath *)indexPath {
     GrowingTKNetFlowDetailTableViewCell *detailCell = (GrowingTKNetFlowDetailTableViewCell *)cell;
     [detailCell clearText];
 }

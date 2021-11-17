@@ -41,14 +41,6 @@
         return YES;
     }
 
-    //    if (self.childViewControllers.count > 1) {
-    //        NSString *className = NSStringFromClass(self.childViewControllers.lastObject.class);
-    //        //部分ViewController不支持响应interactivePopGestureRecognizer
-    //        if ([className isEqualToString:@"AViewController"]) {
-    //            return NO;
-    //        }
-    //    }
-
     return self.childViewControllers.count > 1;
 }
 

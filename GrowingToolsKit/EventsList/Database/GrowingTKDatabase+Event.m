@@ -28,12 +28,12 @@ static long long const kGrowingTKEventsDatabaseExpirationTime = 86400000 * 30LL;
 #pragma mark - Public Methods
 
 - (void)createEventsTable {
-    NSString *sql = @"create table if not exists eventstable("
+    NSString *sql = @"CREATE TABLE IF NOT EXISTS eventstable("
                     @"id INTEGER PRIMARY KEY,"
-                    @"key text,"
-                    @"value text,"
+                    @"key TEXT,"
+                    @"value TEXT,"
                     @"createAt INTEGER NOT NULL,"
-                    @"type text,"
+                    @"type TEXT,"
                     @"isSend INTEGER);";
     [self createTable:sql tableName:@"eventstable" indexs:@[@"id", @"key"]];
 }
@@ -46,7 +46,7 @@ static long long const kGrowingTKEventsDatabaseExpirationTime = 86400000 * 30LL;
             count = -1;
             return;
         }
-        GrowingTKFMResultSet *set = [db executeQuery:@"select count(*) from eventstable" values:nil error:nil];
+        GrowingTKFMResultSet *set = [db executeQuery:@"SELECT COUNT(*) FROM eventstable" values:nil error:nil];
         if (!set) {
             self.databaseError = [self readErrorInDatabase:db];
             count = -1;
@@ -114,7 +114,7 @@ static long long const kGrowingTKEventsDatabaseExpirationTime = 86400000 * 30LL;
             self.databaseError = error;
             return;
         }
-        result = [db executeUpdate:@"insert into eventstable(key,value,createAt,type,isSend) values(?,?,?,?,?)",
+        result = [db executeUpdate:@"INSERT INTO eventstable(key,value,createAt,type,isSend) VALUES(?,?,?,?,?)",
                                    event.eventUUID,
                                    event.rawJsonString,
                                    @([[NSDate date] timeIntervalSince1970] * 1000LL),
@@ -142,7 +142,7 @@ static long long const kGrowingTKEventsDatabaseExpirationTime = 86400000 * 30LL;
         }
         for (int i = 0; i < events.count; i++) {
             GrowingTKEventPersistence *event = events[i];
-            result = [db executeUpdate:@"insert into eventstable(key,value,createAt,type,isSend) values(?,?,?,?,?)",
+            result = [db executeUpdate:@"INSERT INTO eventstable(key,value,createAt,type,isSend) VALUES(?,?,?,?,?)",
                                        event.eventUUID,
                                        event.rawJsonString,
                                        @([[NSDate date] timeIntervalSince1970] * 1000LL),
@@ -166,7 +166,7 @@ static long long const kGrowingTKEventsDatabaseExpirationTime = 86400000 * 30LL;
             self.databaseError = error;
             return;
         }
-        result = [db executeUpdate:@"update eventstable set isSend=? where key=?;", @(1), key];
+        result = [db executeUpdate:@"UPDATE eventstable SET isSend=? WHERE key=?;", @(1), key];
 
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
@@ -183,7 +183,7 @@ static long long const kGrowingTKEventsDatabaseExpirationTime = 86400000 * 30LL;
             self.databaseError = error;
             return;
         }
-        result = [db executeUpdate:@"delete from eventstable where key=?;", key];
+        result = [db executeUpdate:@"DELETE FROM eventstable WHERE key=?;", key];
 
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
@@ -206,7 +206,7 @@ static long long const kGrowingTKEventsDatabaseExpirationTime = 86400000 * 30LL;
         }
 
         for (NSString *key in keys) {
-            result = [db executeUpdate:@"delete from eventstable where key=?;", key];
+            result = [db executeUpdate:@"DELETE FROM eventstable WHERE key=?;", key];
             if (!result) {
                 self.databaseError = [self writeErrorInDatabase:db];
                 break;
@@ -224,7 +224,7 @@ static long long const kGrowingTKEventsDatabaseExpirationTime = 86400000 * 30LL;
             self.databaseError = error;
             return;
         }
-        result = [db executeUpdate:@"delete from eventstable" values:nil error:nil];
+        result = [db executeUpdate:@"DELETE FROM eventstable" values:nil error:nil];
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
         }
@@ -243,7 +243,7 @@ static long long const kGrowingTKEventsDatabaseExpirationTime = 86400000 * 30LL;
             self.databaseError = error;
             return;
         }
-        result = [db executeUpdate:@"delete from eventstable where createAt<=?;", dayBefore];
+        result = [db executeUpdate:@"DELETE FROM eventstable WHERE createAt<=?;", dayBefore];
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
         }
@@ -265,7 +265,7 @@ static long long const kGrowingTKEventsDatabaseExpirationTime = 86400000 * 30LL;
             self.databaseError = error;
             return;
         }
-        GrowingTKFMResultSet *set = [db executeQuery:@"select * from eventstable order by id asc" values:nil error:nil];
+        GrowingTKFMResultSet *set = [db executeQuery:@"SELECT * FROM eventstable ORDER BY id ASC" values:nil error:nil];
         if (!set) {
             self.databaseError = [self readErrorInDatabase:db];
             return;

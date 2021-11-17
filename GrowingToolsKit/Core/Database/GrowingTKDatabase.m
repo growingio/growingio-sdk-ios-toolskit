@@ -77,7 +77,7 @@ static NSString *const kGrowingTKDirCommonPrefix = @"com.growingio.";
             return;
         }
         
-        NSString *createIndexSql = @"create index if not exists eventstable_%@_index on %@ (%@);";
+        NSString *createIndexSql = @"CREATE INDEX IF NOT EXISTS eventstable_%@_index ON %@ (%@);";
         for (NSString *index in indexs) {
             NSString *create = [NSString stringWithFormat:createIndexSql, index, tableName, index];
             if (![db executeUpdate:create]) {

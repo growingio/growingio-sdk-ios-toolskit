@@ -76,8 +76,8 @@
     __weak typeof(self) weakSelf = self;
     GrowingTKNavigationItemView *customView =
         [[GrowingTKNavigationItemView alloc] initRightButtonWithFrame:CGRectMake(0, 0, 90, 44)
-                                                                 text:@"一键截图"
-                                                            textColor:UIColor.growingtk_orange
+                                                                 text:GrowingTKLocalizedString(@"一键截图")
+                                                            textColor:UIColor.growingtk_primaryBackgroundColor
                                                                action:^{
                                                                    __strong typeof(weakSelf) self = weakSelf;
                                                                    [self snapshotAction];
@@ -89,47 +89,47 @@
 - (void)initData {
     GrowingTKSDKUtil *sdk = GrowingTKSDKUtil.sharedInstance;
     NSMutableArray *sdkInfo = [NSMutableArray arrayWithArray:@[
-        @{@"title": @"SDK", @"value": sdk.isIntegrated ? sdk.nameDescription : @"未集成"},
+        @{@"title":  GrowingTKLocalizedString(@"SDK"), @"value": sdk.isIntegrated ? sdk.nameDescription : GrowingTKLocalizedString(@"未集成")},
         @{@"title": GrowingTKLocalizedString(@"SDK版本号"), @"value": sdk.version},
         @{@"title": GrowingTKLocalizedString(@"SDK初始化"), @"value": sdk.initializationDescription},
-        @{@"title": @"URL Scheme", @"value": sdk.urlScheme.length > 0 ? sdk.urlScheme : @"未配置"},
-        @{@"title": @"URL Schemes(InfoPlist)", @"value": sdk.urlSchemesInInfoPlist.length > 0 ? sdk.urlSchemesInInfoPlist : @"未配置"},
-        @{@"title": @"适配URL Scheme", @"value": (sdk.isAdaptToURLScheme ? @"是" : @"否")},
-        @{@"title": @"适配Deep Link", @"value": (sdk.isAdaptToDeepLink ? @"是" : @"否")}
+        @{@"title":  GrowingTKLocalizedString(@"URL Scheme"), @"value": sdk.urlScheme.length > 0 ? sdk.urlScheme : GrowingTKLocalizedString(@"未配置")},
+        @{@"title":  GrowingTKLocalizedString(@"URL Schemes(InfoPlist)"), @"value": sdk.urlSchemesInInfoPlist.length > 0 ? sdk.urlSchemesInInfoPlist : GrowingTKLocalizedString(@"未配置")},
+        @{@"title": GrowingTKLocalizedString(@"适配URL Scheme"), @"value": GrowingTKLocalizedString(sdk.isAdaptToURLScheme ? @"YES" : @"NO")},
+        @{@"title": GrowingTKLocalizedString(@"适配Deep Link"), @"value": GrowingTKLocalizedString(sdk.isAdaptToDeepLink ? @"YES" : @"NO")}
     ]];
 
     if (sdk.isInitialized) {
-        [sdkInfo addObject:@{@"title": @"项目 ID", @"value": sdk.projectId}];
+        [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"项目 ID"), @"value": sdk.projectId}];
         if (sdk.isSDK2ndGeneration) {
-            [sdkInfo addObject:@{@"title": @"采样率", @"value": [NSString stringWithFormat:@"%.3f%%", sdk.sampling * 100]}];
-            [sdkInfo addObject:@{@"title": @"采集模式", @"value": sdk.sdk2ndAspectMode}];
+            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"采样率"), @"value": [NSString stringWithFormat:@"%.3f%%", sdk.sampling * 100]}];
+            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"采集模式"), @"value": sdk.sdk2ndAspectMode}];
         }
 
         if (sdk.dataSourceId.length > 0) {
-            [sdkInfo addObject:@{@"title": @"DataSource ID", @"value": sdk.dataSourceId}];
+            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"DataSource ID"), @"value": sdk.dataSourceId}];
         }
 
-        [sdkInfo addObject:@{@"title": @"Device ID", @"value": sdk.deviceId}];
+        [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"Device ID"), @"value": sdk.deviceId}];
 
         NSString *userId = sdk.userId;
-        [sdkInfo addObject:@{@"title": @"User ID", @"value": userId.length > 0 ? userId : @"未配置"}];
+        [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"User ID"), @"value": userId.length > 0 ? userId : GrowingTKLocalizedString(@"未配置")}];
 
-        [sdkInfo addObject:@{@"title": @"Session ID", @"value": sdk.sessionId}];
+        [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"Session ID"), @"value": sdk.sessionId}];
         
         if (sdk.isSDK3rdGeneration) {
-            NSString *idMappingEnabled = sdk.idMappingEnabled ? @"YES" : @"NO";
-            [sdkInfo addObject:@{@"title": @"Id Mapping", @"value": idMappingEnabled}];
+            NSString *idMappingEnabled = GrowingTKLocalizedString(sdk.idMappingEnabled ? @"YES" : @"NO");
+            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"Id Mapping"), @"value": idMappingEnabled}];
             
             if (sdk.idMappingEnabled) {
                 NSString *userKey = sdk.userKey;
-                [sdkInfo addObject:@{@"title": @"User Key", @"value": userKey.length > 0 ? userKey : @"未配置"}];
+                [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"User Key"), @"value": userKey.length > 0 ? userKey : GrowingTKLocalizedString(@"未配置")}];
             }
         }
 
-        NSString *debugEnabled = sdk.debugEnabled ? @"YES" : @"NO";
+        NSString *debugEnabled = GrowingTKLocalizedString(sdk.debugEnabled ? @"YES" : @"NO");
         [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"调试模式"), @"value": debugEnabled}];
         
-        NSString *encryptEnabled = sdk.encryptEnabled ? @"YES" : @"NO";
+        NSString *encryptEnabled = GrowingTKLocalizedString(sdk.encryptEnabled ? @"YES" : @"NO");
         [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"数据加密"), @"value": encryptEnabled}];
 
         NSString *cellularDataLimit =
@@ -149,7 +149,7 @@
         [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"是否采集数据"), @"value": dataCollectionEnabled}];
 
         NSString *dataCollectionServerHost = sdk.dataCollectionServerHost;
-        [sdkInfo addObject:@{@"title": @"ServerHost", @"value": dataCollectionServerHost}];
+        [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"ServerHost"), @"value": dataCollectionServerHost}];
 
         if (sdk.isSDK3rdGeneration) {
             NSString *excludeEvent = sdk.excludeEventDescription;
@@ -233,10 +233,10 @@
         @{
             @"title": GrowingTKLocalizedString(@"App信息"),
             @"array": @[
-                @{@"title": @"AppName", @"value": appName},
-                @{@"title": @"Bundle ID", @"value": bundleIdentifier},
-                @{@"title": @"Version", @"value": bundleVersion},
-                @{@"title": @"VersionCode", @"value": bundleShortVersionString}
+                @{@"title": GrowingTKLocalizedString(@"AppName"), @"value": appName},
+                @{@"title": GrowingTKLocalizedString(@"Bundle ID"), @"value": bundleIdentifier},
+                @{@"title": GrowingTKLocalizedString(@"Version"), @"value": bundleVersion},
+                @{@"title": GrowingTKLocalizedString(@"VersionCode"), @"value": bundleShortVersionString}
             ]
         },
         @{
