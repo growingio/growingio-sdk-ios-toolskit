@@ -25,7 +25,7 @@
 + (UIViewController *)topViewControllerForKeyWindow {
     UIViewController *controller = [self topViewController:GrowingTKUtil.keyWindow.rootViewController];
     while (controller.presentedViewController) {
-        [self topViewController:controller.presentedViewController];
+        controller = [self topViewController:controller.presentedViewController];
     }
     return controller;
 }
@@ -33,7 +33,7 @@
 + (UIViewController *)topViewControllerForHomeWindow {
     UIViewController *controller = [self topViewController:GrowingTKHomeWindow.sharedInstance.rootViewController];
     while (controller.presentedViewController) {
-        [self topViewController:controller.presentedViewController];
+        controller = [self topViewController:controller.presentedViewController];
     }
     return controller;
 }
