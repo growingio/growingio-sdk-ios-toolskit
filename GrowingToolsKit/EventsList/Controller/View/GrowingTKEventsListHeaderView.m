@@ -72,7 +72,7 @@
         [self addSubview:self.searchBar];
 
         self.typeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        self.typeButton.backgroundColor = UIColor.growingtk_primaryBackgroundColor;
+        self.typeButton.backgroundColor = UIColor.growingtk_secondaryBackgroundColor;
         self.typeButton.layer.cornerRadius = 5.0f;
         self.typeButton.titleLabel.font = [UIFont systemFontOfSize:GrowingTKSizeFrom750(28) weight:UIFontWeightBold];
         [self.typeButton setTitle:GrowingTKLocalizedString(@"类型") forState:UIControlStateNormal];

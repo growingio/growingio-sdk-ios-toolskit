@@ -26,7 +26,6 @@ typedef void (^GrowingTKNavigationItemViewClickBlock)(void);
 
 @interface GrowingTKNavigationItemView ()
 
-@property (nonatomic, strong) UIImageView *backImageView;
 @property (nonatomic, copy) GrowingTKNavigationItemViewClickBlock clickBlock;
 
 @end
@@ -79,18 +78,11 @@ typedef void (^GrowingTKNavigationItemViewClickBlock)(void);
     UIImageView *backImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 10, self.frame.size.height)];
     backImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     if (!image) {
-        if (@available(iOS 13.0, *)) {
-            image = UITraitCollection.currentTraitCollection.userInterfaceStyle == UIUserInterfaceStyleDark
-                            ? [UIImage growingtk_imageNamed:@"growingtk_icon_back_white"]
-                            : [UIImage growingtk_imageNamed:@"growingtk_icon_back_black"];
-        } else {
-            image = [UIImage growingtk_imageNamed:@"growingtk_icon_back_black"];
-        }
+        image = [UIImage growingtk_imageNamed:@"growingtk_icon_back"];
     }
     backImageView.image = image;
     backImageView.contentMode = UIViewContentModeCenter;
     [self addSubview:backImageView];
-    self.backImageView = backImageView;
 
     if (text && text.length > 0) {
         CGFloat leading = backImageView.frame.size.width + GrowingTKSizeFrom750(8);
@@ -142,22 +134,6 @@ typedef void (^GrowingTKNavigationItemViewClickBlock)(void);
 - (void)clickAction {
     if (self.clickBlock) {
         self.clickBlock();
-    }
-}
-
-#pragma mark - Dark Mode
-
-- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
-    [super traitCollectionDidChange:previousTraitCollection];
-    if (@available(iOS 13.0, *)) {
-        if ([self.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:previousTraitCollection]) {
-            if (self.backImageView) {
-                self.backImageView.image =
-                    UITraitCollection.currentTraitCollection.userInterfaceStyle == UIUserInterfaceStyleDark
-                        ? [UIImage growingtk_imageNamed:@"growingtk_icon_back_white"]
-                        : [UIImage growingtk_imageNamed:@"growingtk_icon_back_black"];
-            }
-        }
     }
 }
 

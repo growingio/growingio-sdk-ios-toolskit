@@ -163,21 +163,6 @@
     return self.kStatusBarStyle;
 }
 
-#pragma mark - Dark Mode
-
-- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
-    [super traitCollectionDidChange:previousTraitCollection];
-    if (@available(iOS 13.0, *)) {
-        if ([self.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:previousTraitCollection]) {
-            [self setNeedsStatusBarAppearanceUpdate];
-            self.triangleView.image =
-                UITraitCollection.currentTraitCollection.userInterfaceStyle == UIUserInterfaceStyleDark
-                    ? [UIImage growingtk_imageNamed:@"growingtk_triangle_black"]
-                    : [UIImage growingtk_imageNamed:@"growingtk_triangle"];
-        }
-    }
-}
-
 #pragma mark - Getter & Setter
 
 - (UIStatusBarStyle)kStatusBarStyle {
@@ -194,7 +179,6 @@
     if (!_mainView) {
         _mainView = [[UIView alloc] initWithFrame:CGRectZero];
         _mainView.translatesAutoresizingMaskIntoConstraints = NO;
-        _mainView.backgroundColor = UIColor.whiteColor;
     }
 
     return _mainView;
@@ -223,16 +207,8 @@
 - (UIImageView *)triangleView {
     if (!_triangleView) {
         _triangleView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        _triangleView.image = [UIImage growingtk_imageNamed:@"growingtk_triangle"];
         _triangleView.translatesAutoresizingMaskIntoConstraints = NO;
-        _triangleView.tintColor = UIColor.blackColor;
-        if (@available(iOS 13.0, *)) {
-            _triangleView.image =
-                UITraitCollection.currentTraitCollection.userInterfaceStyle == UIUserInterfaceStyleDark
-                    ? [UIImage growingtk_imageNamed:@"growingtk_triangle_black"]
-                    : [UIImage growingtk_imageNamed:@"growingtk_triangle"];
-        } else {
-            _triangleView.image = [UIImage growingtk_imageNamed:@"growingtk_triangle"];
-        }
     }
 
     return _triangleView;

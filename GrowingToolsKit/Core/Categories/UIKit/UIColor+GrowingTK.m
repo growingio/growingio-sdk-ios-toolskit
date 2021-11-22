@@ -136,14 +136,26 @@
 
 + (UIColor *)growingtk_white_1 {
     if (@available(iOS 13.0, *)) {
-        return UIColor.systemBackgroundColor;
+        return [UIColor colorWithDynamicProvider:^UIColor *_Nonnull(UITraitCollection *_Nonnull traitCollection) {
+            if (traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
+                return UIColor.whiteColor;
+            } else {
+                return [UIColor growingtk_colorWithHex:@"#232323"];
+            }
+        }];
     }
     return UIColor.whiteColor;
 }
 
 + (UIColor *)growingtk_white_2 {
     if (@available(iOS 13.0, *)) {
-        return UIColor.secondarySystemBackgroundColor;
+        return [UIColor colorWithDynamicProvider:^UIColor *_Nonnull(UITraitCollection *_Nonnull traitCollection) {
+            if (traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
+                return UIColor.secondarySystemBackgroundColor;
+            } else {
+                return [UIColor growingtk_colorWithHex:@"#181818"];
+            }
+        }];
     }
     return [UIColor growingtk_colorWithHex:@"F2F2F7"];
 }

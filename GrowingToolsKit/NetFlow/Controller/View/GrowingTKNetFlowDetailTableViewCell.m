@@ -38,6 +38,7 @@
     if (self) {
         self.textView = [[GrowingTKCopyTextView alloc] initWithFrame:CGRectZero];
         self.textView.textColor = UIColor.growingtk_black_1;
+        self.textView.backgroundColor = UIColor.clearColor;
         self.textView.font = [UIFont systemFontOfSize:GrowingTKSizeFrom750(28)];
         self.textView.textContainerInset = UIEdgeInsetsZero;
         self.textView.textContainer.lineFragmentPadding = 0;

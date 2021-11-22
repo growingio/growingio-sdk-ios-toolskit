@@ -35,6 +35,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.view.backgroundColor = UIColor.growingtk_white_1;
     [self.view addSubview:self.checkView];
 
     UILabel *label = [[UILabel alloc] init];

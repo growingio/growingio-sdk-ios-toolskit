@@ -176,7 +176,7 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, GrowingTKScreenWidth, 40)];
-    view.backgroundColor = UIColor.growingtk_primaryBackgroundColor;
+    view.backgroundColor = UIColor.growingtk_secondaryBackgroundColor;
 
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(16, 8, GrowingTKScreenWidth - 32, 24)];
     label.text = ((NSDictionary *)self.datasource[section]).allKeys.firstObject;

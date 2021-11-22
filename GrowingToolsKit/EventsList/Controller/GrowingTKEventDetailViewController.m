@@ -68,6 +68,58 @@
 
 #pragma mark - Private Method
 
+- (UIColor *)punctuationColor {
+    if (@available(iOS 13.0, *)) {
+        return [UIColor colorWithDynamicProvider:^UIColor *_Nonnull(UITraitCollection *_Nonnull traitCollection) {
+            if (traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
+                return [UIColor growingtk_colorWithHex:@"#495560"];
+            } else {
+                return [UIColor growingtk_colorWithHex:@"#D4D4D4"];
+            }
+        }];
+    }
+    return [UIColor growingtk_colorWithHex:@"#495560"];
+}
+
+- (UIColor *)keyColor {
+    if (@available(iOS 13.0, *)) {
+        return [UIColor colorWithDynamicProvider:^UIColor *_Nonnull(UITraitCollection *_Nonnull traitCollection) {
+            if (traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
+                return [UIColor growingtk_colorWithHex:@"#92288F"];
+            } else {
+                return [UIColor growingtk_colorWithHex:@"#9ADBFF"];
+            }
+        }];
+    }
+    return [UIColor growingtk_colorWithHex:@"#92288F"];
+}
+
+- (UIColor *)stringColor {
+    if (@available(iOS 13.0, *)) {
+        return [UIColor colorWithDynamicProvider:^UIColor *_Nonnull(UITraitCollection *_Nonnull traitCollection) {
+            if (traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
+                return [UIColor growingtk_colorWithHex:@"#49BA57"];
+            } else {
+                return [UIColor growingtk_colorWithHex:@"#D09176"];
+            }
+        }];
+    }
+    return [UIColor growingtk_colorWithHex:@"#49BA57"];
+}
+
+- (UIColor *)numberColor {
+    if (@available(iOS 13.0, *)) {
+        return [UIColor colorWithDynamicProvider:^UIColor *_Nonnull(UITraitCollection *_Nonnull traitCollection) {
+            if (traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight) {
+                return [UIColor growingtk_colorWithHex:@"#25AAE2"];
+            } else {
+                return [UIColor growingtk_colorWithHex:@"#B3CCA5"];
+            }
+        }];
+    }
+    return [UIColor growingtk_colorWithHex:@"#25AAE2"];
+}
+
 - (NSAttributedString *)beautifulJsonString {
     NSMutableAttributedString *beautifulJsonString = [[NSMutableAttributedString alloc] init];
     if (self.event.rawJsonString.length == 0) {
@@ -92,20 +144,20 @@
     
     NSDictionary *dic = (NSDictionary *)jsonObject;
     NSDictionary<NSAttributedStringKey, id> *punctuationAttributes = @{
-        NSForegroundColorAttributeName: [UIColor growingtk_colorWithHex:@"#495560"],
+        NSForegroundColorAttributeName: self.punctuationColor,
         NSFontAttributeName: [UIFont systemFontOfSize:GrowingTKSizeFrom750(32)]
     };
     NSDictionary<NSAttributedStringKey, id> *keyAttributes = @{
-        NSForegroundColorAttributeName: [UIColor growingtk_colorWithHex:@"#92288F"],
+        NSForegroundColorAttributeName: self.keyColor,
         NSFontAttributeName: [UIFont systemFontOfSize:GrowingTKSizeFrom750(32)],
         NSParagraphStyleAttributeName :style
     };
     NSDictionary<NSAttributedStringKey, id> *stringValueAttributes = @{
-        NSForegroundColorAttributeName: [UIColor growingtk_colorWithHex:@"#49BA57"],
+        NSForegroundColorAttributeName: self.stringColor,
         NSFontAttributeName: [UIFont systemFontOfSize:GrowingTKSizeFrom750(32)]
     };
     NSDictionary<NSAttributedStringKey, id> *numberValueAttributes = @{
-        NSForegroundColorAttributeName: [UIColor growingtk_colorWithHex:@"#25AAE2"],
+        NSForegroundColorAttributeName: self.numberColor,
         NSFontAttributeName: [UIFont systemFontOfSize:GrowingTKSizeFrom750(32)]
     };
 
@@ -158,6 +210,7 @@
         _textView = [[GrowingTKCopyTextView alloc] initWithFrame:CGRectZero];
         _textView.font = [UIFont systemFontOfSize:GrowingTKSizeFrom750(32)];
         _textView.textColor = UIColor.growingtk_labelColor;
+        _textView.backgroundColor = UIColor.clearColor;
         _textView.translatesAutoresizingMaskIntoConstraints = NO;
     }
     return _textView;
@@ -167,7 +220,7 @@
     if (!_closeButton) {
         _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _closeButton.translatesAutoresizingMaskIntoConstraints = NO;
-        [_closeButton setBackgroundImage:[UIImage growingtk_imageNamed:@"growingtk_close_orange"]
+        [_closeButton setBackgroundImage:[UIImage growingtk_imageNamed:@"growingtk_close"]
                                 forState:UIControlStateNormal];
         [_closeButton addTarget:self action:@selector(closeAction) forControlEvents:UIControlEventTouchUpInside];
     }

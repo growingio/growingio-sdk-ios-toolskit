@@ -194,7 +194,7 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, GrowingTKScreenWidth, 40)];
-    view.backgroundColor = UIColor.growingtk_primaryBackgroundColor;
+    view.backgroundColor = UIColor.growingtk_secondaryBackgroundColor;
 
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(16, 8, GrowingTKScreenWidth - 32, 24)];
     if (tableView == self.requestTableView) {
@@ -303,7 +303,7 @@
     if (!_closeButton) {
         _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _closeButton.translatesAutoresizingMaskIntoConstraints = NO;
-        [_closeButton setBackgroundImage:[UIImage growingtk_imageNamed:@"growingtk_close_orange"]
+        [_closeButton setBackgroundImage:[UIImage growingtk_imageNamed:@"growingtk_close"]
                                 forState:UIControlStateNormal];
         [_closeButton addTarget:self action:@selector(closeAction) forControlEvents:UIControlEventTouchUpInside];
     }

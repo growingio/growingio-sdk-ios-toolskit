@@ -390,7 +390,6 @@ static CGFloat const CheckButtonHeight = 130.0f;
                                                                    self.growingtk_height - CheckButtonHeight)
                                                   style:UITableViewStyleGrouped];
         _tableView.translatesAutoresizingMaskIntoConstraints = NO;
-        _tableView.backgroundColor = UIColor.growingtk_white_1;
         _tableView.backgroundColor = UIColor.clearColor;
         _tableView.delegate = self;
         _tableView.dataSource = self;
