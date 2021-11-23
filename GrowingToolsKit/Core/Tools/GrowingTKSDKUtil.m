@@ -236,7 +236,8 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 }
 
 - (BOOL)isSDK2ndGeneration {
-    return NSClassFromString(@"Growing") != nil;
+    //兼容使用了upgrade的情形
+    return NSClassFromString(@"Growing") != nil && !self.isSDK3rdGeneration;
 }
 
 - (BOOL)isSDKAutoTrack {
