@@ -25,8 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)showText:(NSString *)text;
 
-- (void)clearText;
-
 @end
 
 NS_ASSUME_NONNULL_END

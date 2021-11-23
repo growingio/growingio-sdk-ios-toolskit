@@ -87,8 +87,4 @@
     [self.textView setNeedsUpdateConstraints];
 }
 
-- (void)clearText {
-    self.textView.attributedText = nil;
-}
-
 @end

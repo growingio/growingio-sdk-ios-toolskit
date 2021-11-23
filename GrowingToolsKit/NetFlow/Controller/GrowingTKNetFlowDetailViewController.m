@@ -230,13 +230,6 @@
     return view;
 }
 
-- (void)tableView:(UITableView *)tableView
-    didEndDisplayingCell:(UITableViewCell *)cell
-       forRowAtIndexPath:(NSIndexPath *)indexPath {
-    GrowingTKNetFlowDetailTableViewCell *detailCell = (GrowingTKNetFlowDetailTableViewCell *)cell;
-    [detailCell clearText];
-}
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return UITableViewAutomaticDimension;
 }
