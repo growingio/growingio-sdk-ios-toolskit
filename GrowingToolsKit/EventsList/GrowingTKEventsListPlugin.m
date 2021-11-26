@@ -106,7 +106,7 @@
 }
 
 - (NSString *)name {
-    return GrowingTKLocalizedString(@"埋点数据");
+    return GrowingTKLocalizedString(@"事件库");
 }
 
 - (NSString *)icon {

@@ -26,11 +26,11 @@ typedef NS_ENUM(NSUInteger, GrowingTKDefaultPluginType) {
     // *************** SDK工具 ***************
     // SDK信息
     GrowingTKDefaultPluginType_SDKInfoPlugin,
-    // 埋点数据
+    // 事件库
     GrowingTKDefaultPluginType_EventsListPlugin,
     // XPath跟踪
     GrowingTKDefaultPluginType_XPathTrackPlugin,
-    // 网络请求
+    // 网络记录
     GrowingTKDefaultPluginType_NetFlowPlugin,
     // 日志显示
     GrowingTKDefaultPluginType_LogPlugin,

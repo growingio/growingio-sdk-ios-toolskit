@@ -42,7 +42,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = GrowingTKLocalizedString(@"网络请求");
+    self.title = GrowingTKLocalizedString(@"网络记录");
 
     [self.view addSubview:self.tableView];
     [NSLayoutConstraint activateConstraints:@[

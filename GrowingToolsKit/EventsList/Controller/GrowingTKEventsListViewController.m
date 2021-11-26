@@ -43,7 +43,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = self.title ?: GrowingTKLocalizedString(@"埋点数据");
+    self.title = self.title ?: GrowingTKLocalizedString(@"事件库");
 
     [self.view addSubview:self.tableView];
     [NSLayoutConstraint activateConstraints:@[

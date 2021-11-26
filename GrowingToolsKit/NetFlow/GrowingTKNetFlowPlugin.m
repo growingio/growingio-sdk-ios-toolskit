@@ -77,7 +77,7 @@
 #pragma mark - GrowingTKPluginProtocol
 
 - (NSString *)name {
-    return GrowingTKLocalizedString(@"网络请求");
+    return GrowingTKLocalizedString(@"网络记录");
 }
 
 - (NSString *)icon {

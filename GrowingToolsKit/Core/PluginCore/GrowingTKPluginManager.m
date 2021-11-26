@@ -49,17 +49,11 @@ NSString *GrowingTKDefaultModuleName(void) {
 
 - (void)setupDefaultPlugins {
     // *************** 平台工具 ***************
-    // SDK信息
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_SDKInfoPlugin];
-    // 埋点数据
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_EventsListPlugin];
-    // XPath跟踪
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_XPathTrackPlugin];
-    // 网络请求
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_NetFlowPlugin];
-    // 日志显示
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_LogPlugin];
-    // Hybrid测试
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_HybridPlugin];
 }
 

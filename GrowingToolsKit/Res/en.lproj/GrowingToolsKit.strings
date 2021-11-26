@@ -10,9 +10,9 @@
     "SDK工具" = "SDK";
     "当前版本" = "Current Version";
     "SDK信息" = "SDKInfo";
-    "埋点数据" = "EventsList";
+    "事件库" = "EventsList";
     "XPath跟踪" = "XPathTrack";
-    "网络请求" = "NetFlow";
+    "网络记录" = "NetFlow";
     
     // #Common
     "未集成SDK，请参考帮助文档进行集成" = "SDK is not integrated. Please refer to the help document for integration";
@@ -92,7 +92,7 @@
     "未集成" = "Not integrated";
     "未配置" = "Not configured";
     
-    // #埋点数据
+    // #事件库
     "类型" = "TYPE";
     "输入要搜索的事件类型" = "Enter the type of event to search for";
     "搜索来自" = "Search For";
@@ -107,7 +107,7 @@
     "列表: 是" = "IsList: YES";
     "位置" = "Index";
 
-    // #网络请求
+    // #网络记录
     "运行期间" = "During Runtime";
     "已持续运行" = "Running";
     "请求数量" = "Requests Count";
