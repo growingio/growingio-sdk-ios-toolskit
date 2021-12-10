@@ -88,7 +88,11 @@
             if (persistence->_requestHeader[@"X-Compress-Codec"]) {
                 requestBody = [GrowingTKRequestUtil uncompressData:requestBody];
             }
-            persistence->_requestBody = [GrowingTKUtil convertJsonFromData:requestBody] ?: @"";
+            if ([persistence->_requestHeader[@"Content-Type"] isEqualToString:@"application/protobuf"]) {
+                persistence->_requestBody = [GrowingTKRequestUtil convertProtobufDataToJSON:requestBody];
+            } else {
+                persistence->_requestBody = [GrowingTKUtil convertJsonFromData:requestBody] ?: @"";
+            }
             NSUInteger bodyLength = body.length;
             NSUInteger headersLength = [GrowingTKRequestUtil headersLengthForRequest:persistence->_request];
             persistence->_requestBodyLength = [NSString stringWithFormat:@"%zi", bodyLength];
@@ -173,10 +177,7 @@
         dictionary[@"responseHeader"] = _responseHeader;
     }
     
-    _rawJsonString = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dictionary
-                                                                                    options:NSJSONWritingPrettyPrinted
-                                                                                      error:nil]
-                                           encoding:NSUTF8StringEncoding];
+    _rawJsonString = [GrowingTKUtil convertJSONFromJSONObject:dictionary];
 }
 
 #pragma mark - Getter & Setter

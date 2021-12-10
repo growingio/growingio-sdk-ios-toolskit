@@ -19,6 +19,7 @@
 
 #import "GrowingTKRequestUtil.h"
 #include "GrowingTKLZ4.h"
+#import "GrowingTKUtil.h"
 
 @implementation GrowingTKRequestUtil
 
@@ -91,6 +92,40 @@
         return data;
     }
     return [[NSData alloc] initWithBytesNoCopy:out_buff length:out_size freeWhenDone:YES];
+}
+
++ (NSString *)convertProtobufDataToJSON:(NSData *)data {
+    Class cls = NSClassFromString(@"GrowingPBEventV3List");
+    if (!cls) {
+        return @"";
+    }
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    SEL selector = NSSelectorFromString(@"parseFromData:error:");
+    if ([cls respondsToSelector:selector]) {
+        id list = [cls performSelector:selector withObject:data withObject:nil];
+        if (list) {
+            NSArray *array = [list valueForKey:@"valuesArray"];
+            if (array.count > 0) {
+                NSMutableArray *jsonArray = [NSMutableArray array];
+                for (id protobuf in array) {
+                    SEL toJsonObject = NSSelectorFromString(@"growingHelper_jsonObject");
+                    if ([protobuf respondsToSelector:toJsonObject]) {
+                        id jsonObject = [protobuf performSelector:toJsonObject];
+                        if (jsonObject) {
+                            [jsonArray addObject:jsonObject];
+                        }
+                    }
+                }
+                if ([NSJSONSerialization isValidJSONObject:jsonArray]) {
+                    return [GrowingTKUtil convertJSONFromJSONObject:jsonArray];
+                }
+            }
+        }
+    }
+#pragma clang diagnostic pop
+    
+    return @"";
 }
 
 @end

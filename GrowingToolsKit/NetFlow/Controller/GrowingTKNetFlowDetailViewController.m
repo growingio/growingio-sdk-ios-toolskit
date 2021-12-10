@@ -25,6 +25,7 @@
 #import "UIView+GrowingTK.h"
 #import "UIColor+GrowingTK.h"
 #import "GrowingTKNumberUtil.h"
+#import "GrowingTKUtil.h"
 
 @interface GrowingTKNetFlowDetailViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -146,12 +147,7 @@
                     [cell showText:GrowingTKLocalizedString(@"无")];
                     break;
                 }
-                NSString *jsonString =
-                    [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:self.request.requestHeader
-                                                                                   options:NSJSONWritingPrettyPrinted
-                                                                                     error:nil]
-                                          encoding:NSUTF8StringEncoding];
-                jsonString = [jsonString stringByReplacingOccurrencesOfString:@"\\/" withString:@"/"];
+                NSString *jsonString = [GrowingTKUtil convertJSONFromJSONObject:self.request.requestHeader];
                 [cell showText:jsonString];
             } break;
             case 2: {
@@ -177,12 +173,7 @@
                     [cell showText:GrowingTKLocalizedString(@"无")];
                     break;
                 }
-                NSString *jsonString =
-                    [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:self.request.responseHeader
-                                                                                   options:NSJSONWritingPrettyPrinted
-                                                                                     error:nil]
-                                          encoding:NSUTF8StringEncoding];
-                jsonString = [jsonString stringByReplacingOccurrencesOfString:@"\\/" withString:@"/"];
+                NSString *jsonString = [GrowingTKUtil convertJSONFromJSONObject:self.request.responseHeader];
                 [cell showText:jsonString];
             } break;
             default:

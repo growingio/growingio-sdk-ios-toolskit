@@ -31,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSData *)uncompressData:(NSData *)data;
 
++ (NSString *)convertProtobufDataToJSON:(NSData *)data;
+
 @end
 
 NS_ASSUME_NONNULL_END

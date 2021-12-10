@@ -13,7 +13,6 @@ target 'Example' do
   pod 'GrowingAnalytics/Autotracker'
 #  pod 'GrowingAnalytics/Tracker'
 #  pod 'GrowingAnalytics/Hybrid'
-  pod 'GrowingAnalytics/ENABLE_ENCRYPTION' #启用加密
 #  pod 'GrowingAnalytics/Advertising'
 #  pod 'GrowingAnalytics/DISABLE_IDFA' #禁用idfa
 

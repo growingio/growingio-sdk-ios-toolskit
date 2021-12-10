@@ -37,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)convertJsonFromData:(NSData *)data;
 
++ (NSString *)convertJSONFromJSONObject:(id)jsonObject;
+
 + (NSDictionary *)convertDicFromData:(NSData *)data;
 
 @end

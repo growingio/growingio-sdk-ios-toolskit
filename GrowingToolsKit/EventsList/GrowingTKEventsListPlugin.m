@@ -51,9 +51,23 @@
     if (GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration) {
     // *************** SDK 3.0 ***************
     sdk3AvoidKVCCrash : {
-        Class class = NSClassFromString(@"GrowingEventPersistence");
+        Class class = NSClassFromString(@"GrowingEventJSONPersistence");
         if (!class) {
-            return;
+            class = NSClassFromString(@"GrowingEventPersistence");
+            if (!class) {
+                return;
+            }
+        }
+        Method originMethod = class_getInstanceMethod(class, NSSelectorFromString(@"valueForUndefinedKey:"));
+        IMP swizzledImplementation = (IMP)growingtk_valueForUndefinedKey;
+        if (!class_addMethod(class, method_getName(originMethod), swizzledImplementation, "@@:@")) {
+            method_setImplementation(originMethod, swizzledImplementation);
+        }
+    }
+    sdk3ProtobufAvoidKVCCrash : {
+        Class class = NSClassFromString(@"GrowingEventProtobufPersistence");
+        if (!class) {
+            goto sdk3EventTrack;
         }
         Method originMethod = class_getInstanceMethod(class, NSSelectorFromString(@"valueForUndefinedKey:"));
         IMP swizzledImplementation = (IMP)growingtk_valueForUndefinedKey;
@@ -147,11 +161,22 @@ static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSS
     [invocation invokeWithTarget:obj];
 
     if (event) {
-        GrowingTKEventPersistence *e =
-            [[GrowingTKEventPersistence alloc] initWithUUID:[event valueForKey:@"eventUUID"]
-                                                  eventType:[event valueForKey:@"eventType"]
-                                                 jsonString:[event valueForKey:@"rawJsonString"]
-                                                     isSend:NO];
+        NSString *jsonString = [event valueForKey:@"rawJsonString"];
+        if (jsonString.length == 0) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+            SEL toJsonObject = NSSelectorFromString(@"toJSONObject");
+            if ([event respondsToSelector:toJsonObject]) {
+                id jsonObject = [event performSelector:toJsonObject];
+                jsonString = [GrowingTKUtil convertJSONFromJSONObject:jsonObject];
+            }
+#pragma clang diagnostic pop
+        }
+
+        GrowingTKEventPersistence *e = [[GrowingTKEventPersistence alloc] initWithUUID:[event valueForKey:@"eventUUID"]
+                                                                             eventType:[event valueForKey:@"eventType"]
+                                                                            jsonString:jsonString
+                                                                                isSend:NO];
         [GrowingTKEventsListPlugin.plugin.db insertEvent:e];
     } else {
         [GrowingTKEventsListPlugin.plugin.db updateEventDidSend:key];

@@ -121,28 +121,38 @@
 }
 
 - (NSAttributedString *)beautifulJsonString {
-    NSMutableAttributedString *beautifulJsonString = [[NSMutableAttributedString alloc] init];
     if (self.event.rawJsonString.length == 0) {
-        return beautifulJsonString;
+        return [[NSAttributedString alloc] init];
     }
 
     NSData *jsonData = [self.event.rawJsonString dataUsingEncoding:NSUTF8StringEncoding];
     id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
     if (![NSJSONSerialization isValidJSONObject:jsonObject]) {
-        return beautifulJsonString;
+        return [[NSAttributedString alloc] init];
     }
 
     if (![jsonObject isKindOfClass:[NSDictionary class]]) {
-        return beautifulJsonString;
+        return [[NSAttributedString alloc] init];
     }
+    
+    NSDictionary *dic = (NSDictionary *)jsonObject;
+    return [self createStringFromDic:dic attributeIndent:20.0f closingBraceIndent:0.0f];
+}
+
+- (NSAttributedString *)createStringFromDic:(NSDictionary *)dic
+                            attributeIndent:(CGFloat)attributeIndent
+                         closingBraceIndent:(CGFloat)closingBraceIndent {
+    typedef NSMutableAttributedString * (^CreateStringBlock)(NSString *, NSDictionary<NSAttributedStringKey, id> *);
+    CreateStringBlock createString = ^(NSString *string, NSDictionary<NSAttributedStringKey, id> *attributes) {
+        return [[NSMutableAttributedString alloc] initWithString:string attributes:attributes];
+    };
     
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
     style.lineSpacing = 5.0f;
-    style.firstLineHeadIndent = 20.0f;
+    style.firstLineHeadIndent = attributeIndent > 0 ? attributeIndent : 20.0f;
     style.headIndent = 0.0f;
     style.lineBreakMode = NSLineBreakByCharWrapping;
     
-    NSDictionary *dic = (NSDictionary *)jsonObject;
     NSDictionary<NSAttributedStringKey, id> *punctuationAttributes = @{
         NSForegroundColorAttributeName: self.punctuationColor,
         NSFontAttributeName: [UIFont systemFontOfSize:GrowingTKSizeFrom750(32)]
@@ -160,30 +170,44 @@
         NSForegroundColorAttributeName: self.numberColor,
         NSFontAttributeName: [UIFont systemFontOfSize:GrowingTKSizeFrom750(32)]
     };
-
-    typedef NSMutableAttributedString * (^CreateStringBlock)(NSString *, NSDictionary<NSAttributedStringKey, id> *);
-    CreateStringBlock createString = ^(NSString *string, NSDictionary<NSAttributedStringKey, id> *attributes) {
-        return [[NSMutableAttributedString alloc] initWithString:string attributes:attributes];
-    };
-
+    
+    NSMutableAttributedString *beautifulJsonString = [[NSMutableAttributedString alloc] init];
+    
     [beautifulJsonString appendAttributedString:createString(@"{\n", punctuationAttributes)];
     for (NSString *key in dic.allKeys) {
         NSString *keyString = [NSString stringWithFormat:@"\"%@\"", key];
         [beautifulJsonString appendAttributedString:createString(keyString, keyAttributes)];
 
-        [beautifulJsonString appendAttributedString:createString(@":", punctuationAttributes)];
+        [beautifulJsonString appendAttributedString:createString(@" : ", punctuationAttributes)];
 
-        NSString *valueString = [dic[key] isKindOfClass:[NSNumber class]]
-                                    ? [NSString stringWithFormat:@"%@", dic[key]]
-                                    : [NSString stringWithFormat:@"\"%@\"", dic[key]];
-        NSDictionary<NSAttributedStringKey, id> *valueAttributes =
-            [dic[key] isKindOfClass:[NSNumber class]] ? numberValueAttributes : stringValueAttributes;
-        [beautifulJsonString appendAttributedString:createString(valueString, valueAttributes)];
+        if ([dic[key] isKindOfClass:[NSDictionary class]]) {
+            [beautifulJsonString appendAttributedString:[self createStringFromDic:(NSDictionary *)(dic[key])
+                                                                  attributeIndent:attributeIndent + 20.0f
+                                                               closingBraceIndent:attributeIndent]];
+        } else if ([dic[key] isKindOfClass:[NSNumber class]]) {
+            NSString *valueString = [NSString stringWithFormat:@"%@", dic[key]];
+            [beautifulJsonString appendAttributedString:createString(valueString, numberValueAttributes)];
+        } else {
+            NSString *valueString = [NSString stringWithFormat:@"\"%@\"", dic[key]];
+            [beautifulJsonString appendAttributedString:createString(valueString, stringValueAttributes)];
+        }
 
         NSString *dotString = (key != dic.allKeys.lastObject) ? @",\n" : @"\n";
         [beautifulJsonString appendAttributedString:createString(dotString, punctuationAttributes)];
     }
-    [beautifulJsonString appendAttributedString:createString(@"}", punctuationAttributes)];
+    
+    NSMutableParagraphStyle *closingBraceStyle = [[NSMutableParagraphStyle alloc] init];
+    closingBraceStyle.lineSpacing = 5.0f;
+    closingBraceStyle.firstLineHeadIndent = closingBraceIndent;
+    closingBraceStyle.headIndent = 0.0f;
+    closingBraceStyle.lineBreakMode = NSLineBreakByCharWrapping;
+    NSDictionary<NSAttributedStringKey, id> *closingBraceAttributes = @{
+        NSForegroundColorAttributeName: self.punctuationColor,
+        NSFontAttributeName: [UIFont systemFontOfSize:GrowingTKSizeFrom750(32)],
+        NSParagraphStyleAttributeName :closingBraceStyle
+    };
+    [beautifulJsonString appendAttributedString:createString(@"}", closingBraceAttributes)];
+    
     return beautifulJsonString;
 }
 

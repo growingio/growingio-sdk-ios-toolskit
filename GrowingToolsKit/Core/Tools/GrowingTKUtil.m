@@ -100,16 +100,27 @@
     NSString *jsonString = nil;
     id jsonObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     if ([NSJSONSerialization isValidJSONObject:jsonObject]) {
+        return [self convertJSONFromJSONObject:jsonObject];
+    } else {
+        jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    }
+    return jsonString;
+}
+
++ (NSString *)convertJSONFromJSONObject:(id)jsonObject {
+    NSString *jsonString = nil;
+    @try {
         jsonString = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonObject
                                                                                     options:NSJSONWritingPrettyPrinted
                                                                                       error:nil]
                                            encoding:NSUTF8StringEncoding];
         // NSJSONSerialization escapes forward slashes. We want pretty json, so run through and unescape the slashes.
         jsonString = [jsonString stringByReplacingOccurrencesOfString:@"\\/" withString:@"/"];
-    } else {
-        jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    } @catch (NSException *exception) {
+        
     }
-    return jsonString;
+    
+    return jsonString ?: @"";
 }
 
 + (NSDictionary *)convertDicFromData:(NSData *)data {

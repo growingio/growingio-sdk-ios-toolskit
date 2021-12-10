@@ -28,6 +28,7 @@ static NSString *const kGrowingProjectId = @"91eaf9b283361032";
 #if SDK3rd
     GrowingSDKConfiguration *configuration = [GrowingSDKConfiguration configurationWithProjectId:kGrowingProjectId];
     configuration.debugEnabled = YES;
+    configuration.encryptEnabled = YES;
     configuration.dataCollectionServerHost = @"http://uat-api.growingio.com";
     //    configuration.dataCollectionServerHost = @"https://run.mocky.io/v3/08999138-a180-431d-a136-051f3c6bd306";
     [GrowingSDK startWithConfiguration:configuration launchOptions:launchOptions];
