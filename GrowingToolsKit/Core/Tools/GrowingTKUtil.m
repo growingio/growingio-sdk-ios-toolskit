@@ -50,9 +50,25 @@
 }
 
 + (UIWindow *)keyWindow {
+    if (@available(iOS 13.0, *)) {
+        for (UIWindowScene *windowScene in [UIApplication sharedApplication].connectedScenes) {
+            if (windowScene.activationState == UISceneActivationStateForegroundActive) {
+                if (@available(iOS 15.0, *)) {
+                    return windowScene.keyWindow;
+                }
+                NSArray *windows = windowScene.windows;
+                for (UIWindow *window in windows) {
+                    if (!window.hidden) {
+                        return window;
+                    }
+                }
+            }
+        }
+    }
+    
     UIWindow *keyWindow = nil;
-    if ([[UIApplication sharedApplication].delegate respondsToSelector:@selector(window)]) {
-        keyWindow = [[UIApplication sharedApplication].delegate window];
+    if ([UIApplication.sharedApplication.delegate respondsToSelector:@selector(window)]) {
+        keyWindow = UIApplication.sharedApplication.delegate.window;
     } else {
         NSArray *windows = [UIApplication sharedApplication].windows;
         for (UIWindow *window in windows) {

@@ -109,6 +109,7 @@
 		04A6FAF224E662E9006C72F0 /* GIOChildsAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF124E662E9006C72F0 /* GIOChildsAddViewController.m */; };
 		04A6FAF524E67215006C72F0 /* GIOBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */; };
 		04F675662628293800077374 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04F675652628293800077374 /* AdSupport.framework */; };
+		34B932182767215B00025C94 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B932172767215A00025C94 /* SceneDelegate.m */; };
 		4223513425ED0B130082B431 /* WebSocketTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4223513325ED0B130082B431 /* WebSocketTests.m */; };
 		42ADE26C250B292900CA7268 /* HybridTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 42ADE26B250B292900CA7268 /* HybridTests.m */; };
 		42F753BD256E2E46002F0D37 /* HTTPStubsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F753BC256E2E46002F0D37 /* HTTPStubsHelper.m */; };
@@ -270,6 +271,8 @@
 		04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOBaseViewController.m; sourceTree = "<group>"; };
 		04F675652628293800077374 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		11EA2ABB8F1029820A3234DB /* Pods_ExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		34B932162767215A00025C94 /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
+		34B932172767215A00025C94 /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		4223513325ED0B130082B431 /* WebSocketTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebSocketTests.m; sourceTree = "<group>"; };
 		42ADE26B250B292900CA7268 /* HybridTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybridTests.m; sourceTree = "<group>"; };
 		42F753BB256E2E46002F0D37 /* HTTPStubsHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTTPStubsHelper.h; sourceTree = "<group>"; };
@@ -348,6 +351,8 @@
 		046530BA24DD4271002D254C /* Example */ = {
 			isa = PBXGroup;
 			children = (
+				34B932162767215A00025C94 /* SceneDelegate.h */,
+				34B932172767215A00025C94 /* SceneDelegate.m */,
 				046530D924DD4271002D254C /* AliyunEmasServices-Info.plist */,
 				046530DE24DD4271002D254C /* APITests */,
 				046530BE24DD4271002D254C /* AppDelegate.h */,
@@ -1005,6 +1010,7 @@
 				0465315324DD4272002D254C /* GIOActionSheetViewController.m in Sources */,
 				0465314C24DD4272002D254C /* main.m in Sources */,
 				0465314A24DD4272002D254C /* SecondViewController.m in Sources */,
+				34B932182767215B00025C94 /* SceneDelegate.m in Sources */,
 				0465314224DD4272002D254C /* PageAttributesEventViewController.m in Sources */,
 				0465315724DD4272002D254C /* GIOMultiViewController.m in Sources */,
 				0465314324DD4272002D254C /* GIOClickEventViewController.m in Sources */,

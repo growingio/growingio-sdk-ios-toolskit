@@ -9,7 +9,6 @@
 #import "AppDelegate.h"
 #import <UserNotifications/UserNotifications.h>
 #import <CoreServices/CoreServices.h>
-static NSString *const kGrowingProjectId = @"91eaf9b283361032";
 
 #ifdef DEBUG
 #import <GrowingToolsKit/GrowingToolsKit.h>
@@ -22,15 +21,17 @@ static NSString *const kGrowingProjectId = @"91eaf9b283361032";
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    if (@available(iOS 13.0, *)) {
+        return YES;
+    }
 #ifdef DEBUG
     [GrowingToolsKit start];
 #endif
 #if SDK3rd
-    GrowingSDKConfiguration *configuration = [GrowingSDKConfiguration configurationWithProjectId:kGrowingProjectId];
+    GrowingSDKConfiguration *configuration = [GrowingSDKConfiguration configurationWithProjectId:@"91eaf9b283361032"];
     configuration.debugEnabled = YES;
     configuration.encryptEnabled = YES;
-    configuration.dataCollectionServerHost = @"http://uat-api.growingio.com";
-    //    configuration.dataCollectionServerHost = @"https://run.mocky.io/v3/08999138-a180-431d-a136-051f3c6bd306";
+    configuration.dataCollectionServerHost = @"https://run.mocky.io/v3/08999138-a180-431d-a136-051f3c6bd306";
     [GrowingSDK startWithConfiguration:configuration launchOptions:launchOptions];
 #elif SDK2nd
     [Growing setEnableLog:YES];
@@ -158,6 +159,24 @@ static NSString *const kGrowingProjectId = @"91eaf9b283361032";
 #endif
     restorationHandler(nil);
     return YES;
+}
+
+#pragma mark - UISceneSession lifecycle
+
+- (UISceneConfiguration *)application:(UIApplication *)application
+configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
+                              options:(UISceneConnectionOptions *)options API_AVAILABLE(ios(13.0)) {
+    // Called when a new scene session is being created.
+    // Use this method to select a configuration to create the new scene with.
+    return [[UISceneConfiguration alloc] initWithName:@"Default Configuration" sessionRole:connectingSceneSession.role];
+}
+
+
+- (void)application:(UIApplication *)application
+didDiscardSceneSessions:(NSSet<UISceneSession *> *)sceneSessions API_AVAILABLE(ios(13.0)) {
+    // Called when the user discards a scene session.
+    // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
+    // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
 }
 
 @end

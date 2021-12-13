@@ -11,6 +11,7 @@ target 'Example' do
   project 'Example/Example'
 # SDK 3.0
   pod 'GrowingAnalytics/Autotracker'
+#  pod 'GrowingAnalytics/Protobuf'
 #  pod 'GrowingAnalytics/Tracker'
 #  pod 'GrowingAnalytics/Hybrid'
 #  pod 'GrowingAnalytics/Advertising'
