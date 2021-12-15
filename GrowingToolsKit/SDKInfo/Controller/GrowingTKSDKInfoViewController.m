@@ -235,8 +235,8 @@
             @"array": @[
                 @{@"title": GrowingTKLocalizedString(@"AppName"), @"value": appName},
                 @{@"title": GrowingTKLocalizedString(@"Bundle ID"), @"value": bundleIdentifier},
-                @{@"title": GrowingTKLocalizedString(@"Version"), @"value": bundleVersion},
-                @{@"title": GrowingTKLocalizedString(@"VersionCode"), @"value": bundleShortVersionString}
+                @{@"title": GrowingTKLocalizedString(@"Version"), @"value": bundleShortVersionString},
+                @{@"title": GrowingTKLocalizedString(@"Build"), @"value": bundleVersion}
             ]
         },
         @{
@@ -317,15 +317,16 @@
 
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *sectionView =
-        [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.growingtk_width, GrowingTKSizeFrom750(120))];
+        [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.growingtk_width, GrowingTKSizeFrom750(80))];
+    sectionView.backgroundColor = UIColor.growingtk_secondaryBackgroundColor;
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(GrowingTKSizeFrom750(32),
                                                                     0,
                                                                     GrowingTKScreenWidth - GrowingTKSizeFrom750(32),
-                                                                    GrowingTKSizeFrom750(120))];
+                                                                    GrowingTKSizeFrom750(80))];
     NSDictionary *dic = self.dataArray[section];
     titleLabel.text = dic[@"title"];
-    titleLabel.font = [UIFont systemFontOfSize:GrowingTKSizeFrom750(28)];
-    titleLabel.textColor = [UIColor growingtk_black_3];
+    titleLabel.font = [UIFont systemFontOfSize:GrowingTKSizeFrom750(32)];
+    titleLabel.textColor = UIColor.whiteColor;
     [sectionView addSubview:titleLabel];
     return sectionView;
 }
@@ -335,7 +336,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return GrowingTKSizeFrom750(120);
+    return GrowingTKSizeFrom750(80);
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {

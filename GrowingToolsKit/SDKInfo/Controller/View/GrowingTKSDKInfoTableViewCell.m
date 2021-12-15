@@ -60,13 +60,13 @@
             [self.titleLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:8.0f],
             [self.titleLabel.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:16.0f],
             self.titleLabelWidthConstraint,
-            [self.titleLabel.heightAnchor constraintGreaterThanOrEqualToConstant:36.0f],
+            [self.titleLabel.heightAnchor constraintGreaterThanOrEqualToConstant:24.0f],
             [self.titleLabel.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant:-8.0f],
             [self.valueLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:8.0f],
             [self.valueLabel.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-16.0f],
             [self.valueLabel.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant:-8.0f],
             [self.valueLabel.leadingAnchor constraintEqualToAnchor:self.titleLabel.trailingAnchor constant:10.0f],
-            [self.valueLabel.heightAnchor constraintGreaterThanOrEqualToConstant:36.0f]
+            [self.valueLabel.heightAnchor constraintGreaterThanOrEqualToConstant:24.0f]
         ]];
     }
     return self;
