@@ -55,7 +55,12 @@ static NSString *const kGrowingTKProtocolKey = @"com.growingio.toolskit.CustomHT
     }
     
     GrowingTKSDKUtil *sdk = GrowingTKSDKUtil.sharedInstance;
-    return [request.URL.absoluteString containsString:sdk.dataCollectionServerHost];
+    if (sdk.isSDK2ndGeneration) {
+        return [request.URL.absoluteString containsString:sdk.dataCollectionServerHost]
+        || [request.URL.absoluteString containsString:@"t.growingio.com"]/* activate */;
+    } else {
+        return [request.URL.absoluteString containsString:sdk.dataCollectionServerHost];
+    }
 }
 
 + (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request {
