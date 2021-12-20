@@ -64,6 +64,8 @@ NS_ASSUME_NONNULL_BEGIN
 // SDK 2.0
 @property (nonatomic, assign, readonly) float sampling;
 @property (nonatomic, copy, readonly) NSString *sdk2ndAspectMode;
+@property (nonatomic, assign, readonly) BOOL readClipBoardEnabled;
+@property (nonatomic, assign, readonly) BOOL asaEnabled;
 
 + (instancetype)sharedInstance;
 

@@ -103,6 +103,8 @@
         if (sdk.isSDK2ndGeneration) {
             [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"采样率"), @"value": [NSString stringWithFormat:@"%.3f%%", sdk.sampling * 100]}];
             [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"采集模式"), @"value": sdk.sdk2ndAspectMode}];
+            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"剪贴板权限"), @"value": GrowingTKLocalizedString(sdk.readClipBoardEnabled ? @"YES" : @"NO")}];
+            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"ASA 归因分析"), @"value": GrowingTKLocalizedString(sdk.asaEnabled ? @"YES" : @"NO")}];
         }
 
         if (sdk.dataSourceId.length > 0) {

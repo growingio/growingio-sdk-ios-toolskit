@@ -66,6 +66,8 @@
 // SDK 2.0
 @property (nonatomic, assign, readwrite) float sampling;
 @property (nonatomic, copy, readwrite) NSString *sdk2ndAspectMode;
+@property (nonatomic, assign, readwrite) BOOL readClipBoardEnabled;
+@property (nonatomic, assign, readwrite) BOOL asaEnabled;
 
 // Private
 @property (nonatomic, strong, nullable) NSObject *sdk3rdConfiguration;
@@ -926,6 +928,32 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
     SEL selector = NSSelectorFromString(@"getAspectMode");
     NSInteger mode = ((NSInteger(*)(id, SEL))objc_msgSend)(class, selector);
     return mode == 1 ? @"AspectModeDynamicSwizzling" : @"AspectModeSubClass";
+}
+
+- (BOOL)readClipBoardEnabled {
+    if (self.isSDK3rdGeneration) {
+        return NO;
+    } else if (self.isSDK2ndGeneration) {
+#ifdef GROWING_SDK2nd
+        // dangerous, may cause 'dyld: Symbol not found'
+        extern BOOL g_readClipBoardEnable;
+        return g_readClipBoardEnable;
+#endif
+    }
+    return NO;
+}
+
+- (BOOL)asaEnabled {
+    if (self.isSDK3rdGeneration) {
+        return NO;
+    } else if (self.isSDK2ndGeneration) {
+#ifdef GROWING_SDK2nd
+        // dangerous, may cause 'dyld: Symbol not found'
+        extern BOOL g_asaEnabled;
+        return g_asaEnabled;
+#endif
+    }
+    return NO;
 }
 
 - (NSObject *)sdk3rdConfiguration {
