@@ -10,9 +10,7 @@
 #import <UserNotifications/UserNotifications.h>
 #import <CoreServices/CoreServices.h>
 
-#ifdef DEBUG
-#import <GrowingToolsKit/GrowingToolsKit.h>
-#endif
+#import "SDKUtil.h"
 
 @interface AppDelegate () <UNUserNotificationCenterDelegate>
 
@@ -24,20 +22,8 @@
     if (@available(iOS 13.0, *)) {
         return YES;
     }
-#ifdef DEBUG
-    [GrowingToolsKit start];
-#endif
-#if SDK3rd
-    GrowingSDKConfiguration *configuration = [GrowingSDKConfiguration configurationWithProjectId:@"91eaf9b283361032"];
-    configuration.debugEnabled = YES;
-    configuration.encryptEnabled = YES;
-    configuration.dataCollectionServerHost = @"https://run.mocky.io/v3/08999138-a180-431d-a136-051f3c6bd306";
-    [GrowingSDK startWithConfiguration:configuration launchOptions:launchOptions];
-#elif SDK2nd
-    [Growing setEnableLog:YES];
-    [Growing setFlushInterval:3.0f];
-    [Growing startWithAccountId:@"0a1b4118dd954ec3bcc69da5138bdb96"];
-#endif
+    
+    [SDKUtil start];
     // 自动化测试会有授权弹窗
     //   [self registerRemoteNotification];
 

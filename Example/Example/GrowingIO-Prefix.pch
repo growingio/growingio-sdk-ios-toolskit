@@ -13,6 +13,7 @@
 
 #define SDK3rd 1
 #define SDK2nd 0
+#define DELAY_INITIALIZED 0
 #define Autotracker 1
 
 #if SDK3rd && Autotracker

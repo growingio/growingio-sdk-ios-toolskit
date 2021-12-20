@@ -109,7 +109,10 @@
 		04A6FAF224E662E9006C72F0 /* GIOChildsAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF124E662E9006C72F0 /* GIOChildsAddViewController.m */; };
 		04A6FAF524E67215006C72F0 /* GIOBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */; };
 		04F675662628293800077374 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04F675652628293800077374 /* AdSupport.framework */; };
+		3432E695276B36FB009A53D9 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3432E694276B36FA009A53D9 /* iAd.framework */; };
+		3432E697276B3722009A53D9 /* AdServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3432E696276B3722009A53D9 /* AdServices.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		34B932182767215B00025C94 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B932172767215A00025C94 /* SceneDelegate.m */; };
+		34BDC330277026940030B3CE /* SDKUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BDC32F277026940030B3CE /* SDKUtil.m */; };
 		4223513425ED0B130082B431 /* WebSocketTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4223513325ED0B130082B431 /* WebSocketTests.m */; };
 		42ADE26C250B292900CA7268 /* HybridTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 42ADE26B250B292900CA7268 /* HybridTests.m */; };
 		42F753BD256E2E46002F0D37 /* HTTPStubsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F753BC256E2E46002F0D37 /* HTTPStubsHelper.m */; };
@@ -271,8 +274,12 @@
 		04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOBaseViewController.m; sourceTree = "<group>"; };
 		04F675652628293800077374 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		11EA2ABB8F1029820A3234DB /* Pods_ExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3432E694276B36FA009A53D9 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
+		3432E696276B3722009A53D9 /* AdServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdServices.framework; path = System/Library/Frameworks/AdServices.framework; sourceTree = SDKROOT; };
 		34B932162767215A00025C94 /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
 		34B932172767215A00025C94 /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
+		34BDC32E277026940030B3CE /* SDKUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDKUtil.h; sourceTree = "<group>"; };
+		34BDC32F277026940030B3CE /* SDKUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SDKUtil.m; sourceTree = "<group>"; };
 		4223513325ED0B130082B431 /* WebSocketTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebSocketTests.m; sourceTree = "<group>"; };
 		42ADE26B250B292900CA7268 /* HybridTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybridTests.m; sourceTree = "<group>"; };
 		42F753BB256E2E46002F0D37 /* HTTPStubsHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTTPStubsHelper.h; sourceTree = "<group>"; };
@@ -337,8 +344,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
+				3432E697276B3722009A53D9 /* AdServices.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
 				491D2D8D2500E2D9001CB289 /* MapKit.framework in Frameworks */,
+				3432E695276B36FB009A53D9 /* iAd.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
 				DB4A57BCAF407C6A96A7BA4F /* Pods_Example.framework in Frameworks */,
 				04F675662628293800077374 /* AdSupport.framework in Frameworks */,
@@ -351,10 +360,12 @@
 		046530BA24DD4271002D254C /* Example */ = {
 			isa = PBXGroup;
 			children = (
-				34B932162767215A00025C94 /* SceneDelegate.h */,
-				34B932172767215A00025C94 /* SceneDelegate.m */,
 				046530D924DD4271002D254C /* AliyunEmasServices-Info.plist */,
 				046530DE24DD4271002D254C /* APITests */,
+				34BDC32E277026940030B3CE /* SDKUtil.h */,
+				34BDC32F277026940030B3CE /* SDKUtil.m */,
+				34B932162767215A00025C94 /* SceneDelegate.h */,
+				34B932172767215A00025C94 /* SceneDelegate.m */,
 				046530BE24DD4271002D254C /* AppDelegate.h */,
 				046530FF24DD4271002D254C /* AppDelegate.m */,
 				046530D124DD4271002D254C /* Assets.xcassets */,
@@ -649,6 +660,8 @@
 		6003F58C195388D20070C39A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3432E696276B3722009A53D9 /* AdServices.framework */,
+				3432E694276B36FA009A53D9 /* iAd.framework */,
 				04F675652628293800077374 /* AdSupport.framework */,
 				491D2D8C2500E2D9001CB289 /* MapKit.framework */,
 				6003F58D195388D20070C39A /* Foundation.framework */,
@@ -991,6 +1004,7 @@
 				0465314824DD4272002D254C /* GIOPageEventViewController.m in Sources */,
 				0465313E24DD4272002D254C /* GIOAttributesTrackViewController.m in Sources */,
 				0465314624DD4272002D254C /* GIOVisitEventViewController.m in Sources */,
+				34BDC330277026940030B3CE /* SDKUtil.m in Sources */,
 				0465313924DD4272002D254C /* GIOConstants.m in Sources */,
 				0465313724DD4272002D254C /* GIODataProcessOperation.m in Sources */,
 				0465314924DD4272002D254C /* FirstViewController.m in Sources */,
