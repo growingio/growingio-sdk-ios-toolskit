@@ -86,6 +86,15 @@
                                                  selector:@selector(applicationDidFinishLaunching)
                                                      name:UIApplicationDidFinishLaunchingNotification
                                                    object:nil];
+        
+        if (@available(iOS 13.0, *)) {
+            if (instance.sceneDelegate) {
+                [[NSNotificationCenter defaultCenter] addObserver:instance
+                                                         selector:@selector(sceneWillConnect)
+                                                             name:UISceneWillConnectNotification
+                                                           object:nil];
+            }
+        }
     });
     return instance;
 }
@@ -361,9 +370,7 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
     return nil;
 }
 
-#pragma mark - Notification
-
-- (void)applicationDidFinishLaunching {
+- (void)configDelayInitialized {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     if (self.isSDK3rdGeneration) {
@@ -386,6 +393,16 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
         }
     }
 #pragma clang diagnostic pop
+}
+
+#pragma mark - Notification
+
+- (void)applicationDidFinishLaunching {
+    [self configDelayInitialized];
+}
+
+- (void)sceneWillConnect {
+    [self configDelayInitialized];
 }
 
 #pragma mark - Setter & Getter
