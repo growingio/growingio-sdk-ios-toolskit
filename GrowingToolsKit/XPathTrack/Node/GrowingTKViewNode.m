@@ -32,6 +32,7 @@
 #pragma mark - Swizzle
 
 + (void)load {
+#ifdef DEBUG
     if (GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration) {
         // *************** SDK 3.0 ***************
     sdk3AvoidKVCCrash : {
@@ -46,7 +47,7 @@
         }
     }
         // *************** SDK 3.0 ***************
-    } else {
+    } else if (GrowingTKSDKUtil.sharedInstance.isSDK2ndGeneration) {
         // *************** SDK 2.0 ***************
     sdk2AvoidKVCCrash : {
         Class class = NSClassFromString(@"GrowingElement");
@@ -61,6 +62,7 @@
     }
         // *************** SDK 2.0 ***************
     }
+#endif
 }
 
 static id growingtk_valueForUndefinedKey(NSString *key) {

@@ -27,9 +27,11 @@
 #pragma mark Swizzle
 
 + (void)load {
+#ifdef DEBUG
     [self growingtk_swizzleMethod:@selector(viewWillAppear:)
                        withMethod:@selector(growingtk_viewWillAppear:)
                             error:nil];
+#endif
 }
 
 - (void)growingtk_viewWillAppear:(BOOL)animated {

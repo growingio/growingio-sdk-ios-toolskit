@@ -31,9 +31,11 @@
 #pragma mark Swizzle
 
 + (void)load {
+#ifdef DEBUG
     [self growingtk_swizzleMethod:@selector(didMoveToSuperview)
                        withMethod:@selector(growingtk_didMoveToSuperview)
                             error:nil];
+#endif
 }
 
 - (void)growingtk_didMoveToSuperview {

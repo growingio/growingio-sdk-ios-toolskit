@@ -137,6 +137,7 @@ static BOOL growingtk_webView_addBridge(WKWebView *webView) {
 #pragma mark - Load
 
 + (void)load {
+#ifdef DEBUG
     Class cls = self.class;
 
     class_addMethod(cls, @selector(growingtk_nodeUpdateMask:point:), (IMP)_growingtk_nodeUpdateMask, "v@:B{");
@@ -152,6 +153,7 @@ static BOOL growingtk_webView_addBridge(WKWebView *webView) {
     [cls growingtk_swizzleMethod:@selector(loadData:MIMEType:characterEncodingName:baseURL:)
                       withMethod:@selector(growingtk_loadData:MIMEType:characterEncodingName:baseURL:)
                            error:nil];
+#endif
 }
 
 - (void)setGrowingtk_hybrid:(BOOL)growingtk_hybrid {

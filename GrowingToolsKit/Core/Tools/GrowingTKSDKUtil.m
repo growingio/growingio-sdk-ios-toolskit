@@ -104,6 +104,7 @@
 #pragma mark - Swizzle
 
 + (void)load {
+#ifdef DEBUG
     if (GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration) {
         // *************** SDK 3.0 ***************
     sdk3AvoidKVCCrash : {
@@ -175,6 +176,7 @@
         // *************** SDK 2.0 ***************
     }
 end:;
+#endif
 }
 
 static id growingtk_sdk3rdInit(NSString *module,
