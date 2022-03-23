@@ -99,6 +99,11 @@ static void growingtk_webView_addUserScripts(WKUserContentController *contentCon
 }
 
 static BOOL growingtk_webView_addBridge(WKWebView *webView) {
+    if (NSClassFromString(@"GrowingTouchPopupManager")
+        && [NSStringFromClass(webView.class) isEqualToString:@"GrowingTouchPopupWebView"]) {
+        return NO;
+    }
+    
     SEL sel = GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration ? NSSelectorFromString(@"growingViewDontTrack")
                                                                  : NSSelectorFromString(@"growingAttributesDonotTrack");
     BOOL dontTrack = ((BOOL(*)(id, SEL))objc_msgSend)(webView, sel);
