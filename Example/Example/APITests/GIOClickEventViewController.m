@@ -24,8 +24,9 @@
     [super viewDidLoad];
 #if SDK3rd && Autotracker
      self.segmentControl.growingUniqueTag = @"language-selector";
-
+#if !SDKCDP
      self.growingPageAttributes = @{@"greet": @"hello"};
+#endif
     self.growingPageIgnorePolicy = GrowingIgnoreChildren;
     
    self.parentViewController.growingPageIgnorePolicy = GrowingIgnoreAll;

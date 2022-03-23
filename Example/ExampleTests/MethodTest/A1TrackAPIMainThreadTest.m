@@ -409,7 +409,7 @@ static GrowingBaseEvent *originalEvent = nil;
     UIViewController *vc = [UIViewController new];
     XCTestExpectation *expectation = [self expectationWithDescription:@"setPageVariable:toViewController: fail"];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        vc.growingPageAttributes = @{@"PageVariable": @"pageVariable"};
+//        vc.growingPageAttributes = @{@"PageVariable": @"pageVariable"};
         [expectation fulfill];
     });
     

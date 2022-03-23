@@ -28,7 +28,7 @@
 }
 
 - (void)configRandomPageAttributes {
-#if SDK3rd && Autotracker
+#if SDK3rd && Autotracker && !SDKCDP
     self.growingPageAttributes = [self getRandomAttributes];
 #endif
 }
@@ -40,7 +40,7 @@
 - (IBAction)setPageAttributesOutRangeBtnClick:(UIButton *)sender {
     
     NSDictionary *pval = [GIOConstants getLargeDictionary];
-#if SDK3rd && Autotracker
+#if SDK3rd && Autotracker && !SDKCDP
     self.growingPageAttributes = pval;
 #endif
     NSLog(@"setPageVariable largeDic length is:%ld",pval.count);

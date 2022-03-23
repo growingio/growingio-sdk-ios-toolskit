@@ -10,9 +10,9 @@ workspace 'GrowingToolsKit.xcworkspace'
 target 'Example' do
   project 'Example/Example'
 # SDK 3.0
-  pod 'GrowingAnalytics/Autotracker'
+  pod 'GrowingAnalytics-cdp/Autotracker'
 #  pod 'GrowingAnalytics/Protobuf'
-#  pod 'GrowingAnalytics/Tracker'
+#  pod 'GrowingAnalytics-cdp/Tracker'
 #  pod 'GrowingAnalytics/Hybrid'
 #  pod 'GrowingAnalytics/Advertising'
 #  pod 'GrowingAnalytics/DISABLE_IDFA' #禁用idfa

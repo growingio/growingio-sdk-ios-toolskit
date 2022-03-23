@@ -104,11 +104,11 @@
 #endif
 
     } else if ([self.eventType isEqualToString:@"CONVERSION_VARIABLES"]) {
-#if SDK3rd
+#if SDK3rd && !SDKCDP
         [[GrowingSDK sharedInstance] setConversionVariables:atts];
 #endif
     } else if ([self.eventType isEqualToString:@"VISITOR_ATTRIBUTES"]) {
-#if SDK3rd
+#if SDK3rd && !SDKCDP
         [[GrowingSDK sharedInstance] setVisitorAttributes:atts];
 #endif
     }
