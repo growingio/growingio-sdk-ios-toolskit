@@ -104,12 +104,15 @@ static BOOL growingtk_webView_addBridge(WKWebView *webView) {
         return NO;
     }
     
-    SEL sel = GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration ? NSSelectorFromString(@"growingViewDontTrack")
-                                                                 : NSSelectorFromString(@"growingAttributesDonotTrack");
-    BOOL dontTrack = ((BOOL(*)(id, SEL))objc_msgSend)(webView, sel);
-    if (dontTrack) {
-        return NO;
+    if (GrowingTKSDKUtil.sharedInstance.isSDKAutoTrack) {
+        SEL sel = GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration ? NSSelectorFromString(@"growingViewDontTrack")
+                                                                     : NSSelectorFromString(@"growingAttributesDonotTrack");
+        BOOL dontTrack = ((BOOL(*)(id, SEL))objc_msgSend)(webView, sel);
+        if (dontTrack) {
+            return NO;
+        }
     }
+
     WKUserContentController *contentController = webView.configuration.userContentController;
     growingtk_webView_addScriptMessageHandler(contentController);
     growingtk_webView_addUserScripts(contentController);
