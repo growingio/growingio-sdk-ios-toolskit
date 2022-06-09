@@ -96,7 +96,11 @@
 
 - (NSString *)path {
     if (!_path) {
-        _path = self.dictionary[@"path"] ?: self.dictionary[@"p"];
+        if ([self.eventType isEqualToString:@"CUSTOM"] || [self.eventType isEqualToString:@"cstm"]) {
+            _path = self.dictionary[@"eventName"] ?: self.dictionary[@"n"];
+        } else {
+            _path = self.dictionary[@"path"] ?: self.dictionary[@"p"];
+        }
     }
     return _path;
 }
