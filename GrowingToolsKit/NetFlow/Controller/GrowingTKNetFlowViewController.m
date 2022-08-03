@@ -21,6 +21,7 @@
 #import "GrowingTKNetFlowHeaderView.h"
 #import "GrowingTKNetFlowTableViewCell.h"
 #import "GrowingTKNetFlowDetailViewController.h"
+#import "GrowingTKNavigationTitleView.h"
 #import "GrowingTKNetFlowPlugin.h"
 #import "GrowingTKDatabase+Request.h"
 #import "GrowingTKRequestPersistence.h"
@@ -31,6 +32,7 @@
 @interface GrowingTKNetFlowViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) GrowingTKNavigationTitleView *titleView;
 @property (nonatomic, strong) GrowingTKNetFlowHeaderView *tableHeaderView;
 @property (nonatomic, strong) NSMutableArray *datasource;
 @property (nonatomic, strong) NSMutableArray *allRequests;
@@ -42,7 +44,28 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = GrowingTKLocalizedString(@"网络记录");
+    NSString *title = self.title ?: GrowingTKLocalizedString(@"网络记录");
+    __weak typeof(self) weakSelf = self;
+    GrowingTKNavigationTitleView *titleView = [[GrowingTKNavigationTitleView alloc] initWithFrame:CGRectMake(0, 0, 180, 44)
+                                                                                            title:title
+                                                                                       components:@[@"删除全部"]
+    singleTapAction:^{
+        __strong typeof(weakSelf) self = weakSelf;
+        [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+    } longPressAction:^(NSUInteger index) {
+        __strong typeof(weakSelf) self = weakSelf;
+        [GrowingTKNetFlowPlugin.plugin clearAllRequests];
+        
+        self.allRequests = [NSMutableArray array];
+        self.noMoreData = NO;
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            [self fetchMoreData:^(NSMutableArray *datasource, BOOL noMoreData) {
+                [self reloadData:datasource noMoreData:noMoreData delay:0];
+            }];
+        });
+    }];
+    self.navigationItem.titleView = titleView;
+    self.titleView = titleView;
 
     [self.view addSubview:self.tableView];
     [NSLayoutConstraint activateConstraints:@[
@@ -152,6 +175,13 @@
 }
 #endif
 
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    if (scrollView != self.tableView) {
+        return;
+    }
+    [self.titleView reset];
+}
+
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     if (scrollView != self.tableView) {
         return;
@@ -216,6 +246,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self.titleView reset];
+    
     GrowingTKNetFlowDetailViewController *controller = [[GrowingTKNetFlowDetailViewController alloc] init];
     NSDictionary *dic = (NSDictionary *)self.datasource[indexPath.section];
     GrowingTKRequestPersistence *request = ((NSArray *)dic[dic.allKeys.firstObject])[indexPath.row];

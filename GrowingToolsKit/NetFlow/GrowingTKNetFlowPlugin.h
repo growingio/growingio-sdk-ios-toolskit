@@ -43,6 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) NSUInteger requestFailedCount;
 
 - (void)insertRequest:(GrowingTKRequestPersistence *)request;
+- (BOOL)clearAllRequests;
 - (NSArray<GrowingTKRequestPersistence *> *)getRequestsWithRequestTimeEarlyThan:(double)requestTime
                                                                        pageSize:(NSUInteger)pageSize;
 

@@ -21,6 +21,7 @@
 #import "GrowingTKEventsListHeaderView.h"
 #import "GrowingTKEventsListTableViewCell.h"
 #import "GrowingTKEventDetailViewController.h"
+#import "GrowingTKNavigationTitleView.h"
 #import "GrowingTKDefine.h"
 #import "UIView+GrowingTK.h"
 #import "UIColor+GrowingTK.h"
@@ -33,6 +34,7 @@
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSMutableArray *datasource;
+@property (nonatomic, strong) GrowingTKNavigationTitleView *titleView;
 @property (nonatomic, strong) GrowingTKEventsListHeaderView *tableHeaderView;
 
 @end
@@ -43,7 +45,22 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = self.title ?: GrowingTKLocalizedString(@"事件库");
+    NSString *title = self.title ?: GrowingTKLocalizedString(@"事件库");
+    __weak typeof(self) weakSelf = self;
+    GrowingTKNavigationTitleView *titleView = [[GrowingTKNavigationTitleView alloc] initWithFrame:CGRectMake(0, 0, 180, 44)
+                                                                                            title:title
+                                                                                       components:@[@"删除全部"]
+    singleTapAction:^{
+        __strong typeof(weakSelf) self = weakSelf;
+        [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+    } longPressAction:^(NSUInteger index) {
+        __strong typeof(weakSelf) self = weakSelf;
+        [GrowingTKEventsListPlugin.plugin.db clearAllEvents];
+        self.datasource = [self refreshData];
+        [self.tableView reloadData];
+    }];
+    self.navigationItem.titleView = titleView;
+    self.titleView = titleView;
 
     [self.view addSubview:self.tableView];
     [NSLayoutConstraint activateConstraints:@[
@@ -68,6 +85,7 @@
 - (void)viewWillTransitionToSize:(CGSize)size
        withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    [self.titleView reset];
     [self.tableHeaderView reset];
 }
 
@@ -150,6 +168,7 @@
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     [self.view endEditing:YES];
+    [self.titleView reset];
     [self.tableHeaderView reset];
 }
 
@@ -201,6 +220,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self.titleView reset];
     [self.tableHeaderView reset];
     
     GrowingTKEventDetailViewController *controller = [[GrowingTKEventDetailViewController alloc] init];

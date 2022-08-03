@@ -119,6 +119,13 @@
     self.totalUploadFlow += request.uploadFlow.doubleValue;
 }
 
+- (BOOL)clearAllRequests {
+    self.requestCount = 0;
+    self.totalUploadFlow = 0.0f;
+    self.requestFailedCount = 0;
+    return [self.db clearAllRequests];
+}
+
 - (NSArray<GrowingTKRequestPersistence *> *)getRequestsWithRequestTimeEarlyThan:(double)requestTime
                                                                        pageSize:(NSUInteger)pageSize {
     return [self.db getRequestsWithRequestTimeEarlyThan:requestTime pageSize:pageSize];

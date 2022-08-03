@@ -7,18 +7,11 @@
 //
 
 #import "GIOActionSheetViewController.h"
-#if SDK3rd
-#import <GrowingAlert.h>
-#endif
 
 // Corresponds to the row in the action sheet section.
 typedef NS_ENUM(NSInteger, GIOActionSheetsViewControllerTableRow) {
     GIOAlertsViewControllerActionSheetRowOkayCancel = 0,
-    GIOAlertsViewControllerActionSheetRowOther,
-    GrwingAlertOneMenuRow,
-    GrwingAlertTwoMenuRow,
-    GrwingAlertThreeMenuRow,
-    GrwingAlertTwoTextMenuRow,
+    GIOAlertsViewControllerActionSheetRowOther
 };
 
 @interface GIOActionSheetViewController ()<UIActionSheetDelegate>
@@ -65,68 +58,6 @@ typedef NS_ENUM(NSInteger, GIOActionSheetsViewControllerTableRow) {
     [actionSheet showInView:self.view];
 }
 
-- (void)showGrowingAlertMenuOne {
-    
-    GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
-                                                       title:@"提示"
-                                                     message:@"电脑端连接超时，请刷新电脑页面，再次尝试扫码圈选。"];
-    [alert addOkWithTitle:@"知道了"
-                  handler:^(UIAlertAction * _Nonnull action, NSArray<UITextField *> * _Nonnull textFields) {
-        NSLog(@"aciton = %@, textFields = %@", action, textFields);
-    }];
-    
-    [alert showAlertAnimated:YES];
-    
-}
-
-- (void)showGrowingAlertMenuTwo {
-    
-    GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
-                                                       title:@"提示"
-                                                     message:@"电脑端连接超时，请刷新电脑页面，再次尝试扫码圈选。"];
-    [alert addOkWithTitle:@"知道了"
-                  handler:^(UIAlertAction * _Nonnull action, NSArray<UITextField *> * _Nonnull textFields) {
-        NSLog(@"aciton = %@, textFields = %@", action, textFields);
-    }];
-    
-    [alert addCancelWithTitle:@"取消"
-                  handler:^(UIAlertAction * _Nonnull action, NSArray<UITextField *> * _Nonnull textFields) {
-        NSLog(@"aciton = %@, textFields = %@", action, textFields);
-    }];
-    
-    [alert showAlertAnimated:YES];
-}
-
-- (void)showGrowingAlertMenuThree {
-    
-    GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
-                                                       title:@"提示"
-                                                     message:@"电脑端连接超时，请刷新电脑页面，再次尝试扫码圈选。"];
-    [alert addActionWithTitle:@"One" style:UIAlertActionStyleDefault handler:nil];
-    [alert addActionWithTitle:@"Two" style:UIAlertActionStyleDefault handler:nil];
-    [alert addActionWithTitle:@"Three" style:UIAlertActionStyleDefault handler:nil];
-
-    [alert showAlertAnimated:YES];
-
-}
-
-- (void)showGrowingAlertMenuTwoText {
-    
-    GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
-                                                       title:@"提示"
-                                                     message:@"电脑端连接超时，请刷新电脑页面，再次尝试扫码圈选。"];
-    [alert addActionWithTitle:@"One" style:UIAlertActionStyleDefault handler:nil];
-    [alert addActionWithTitle:@"Two" style:UIAlertActionStyleDefault handler:nil];
-    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.placeholder = @"account-name";
-    }];
-    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.placeholder = @"account-passwrokd";
-    }];
-    [alert showAlertAnimated:YES];
-
-}
-
 #pragma mark - UIActionSheetDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (actionSheet.destructiveButtonIndex == buttonIndex) {
@@ -150,18 +81,6 @@ typedef NS_ENUM(NSInteger, GIOActionSheetsViewControllerTableRow) {
             break;
         case GIOAlertsViewControllerActionSheetRowOther:
             [self showOtherActionSheet];
-            break;
-        case GrwingAlertOneMenuRow:
-            [self showGrowingAlertMenuOne];
-            break;
-        case GrwingAlertTwoMenuRow:
-            [self showGrowingAlertMenuTwo];
-            break;
-        case GrwingAlertThreeMenuRow:
-            [self showGrowingAlertMenuThree];
-            break;
-        case GrwingAlertTwoTextMenuRow:
-            [self showGrowingAlertMenuTwoText];
             break;
         default:
             break;

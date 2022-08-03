@@ -98,7 +98,7 @@
     return self;
 }
 
-#pragma mark - Private Method
+#pragma mark - Public Method
 
 - (void)reset {
     if (self.chooseView && self.chooseView.superview) {
