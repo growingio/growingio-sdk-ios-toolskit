@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingTKRealtimePlugin.h"
-#import "GrowingTKRealtimeView.h"
+#import "GrowingTKRealtimeWindow.h"
 #import "GrowingTKSDKUtil.h"
 #import "GrowingTKUtil.h"
 #import "GrowingTKBaseViewController.h"
@@ -30,7 +30,7 @@ NSString *const GrowingTKRealtimeNotification = @"GrowingTKRealtimeNotification"
 
 @interface GrowingTKRealtimePlugin ()
 
-@property (nonatomic, strong) GrowingTKRealtimeView *realtimeView;
+@property (nonatomic, strong) GrowingTKRealtimeWindow *realtimeWindow;
 
 @end
 
@@ -140,7 +140,7 @@ NSString *const GrowingTKRealtimeNotification = @"GrowingTKRealtimeNotification"
 - (void)pluginDidLoad {
     GrowingTKSDKUtil *sdk = GrowingTKSDKUtil.sharedInstance;
     if (sdk.isInitialized) {
-        [self showRealtimeView];
+        [self showRealtimeWindow];
     } else {
         GrowingTKBaseViewController *controller = (GrowingTKBaseViewController *)GrowingTKUtil.topViewControllerForHomeWindow;
         [controller showToast:GrowingTKLocalizedString(@"未初始化SDK，请参考帮助文档进行SDK初始化配置")];
@@ -149,25 +149,25 @@ NSString *const GrowingTKRealtimeNotification = @"GrowingTKRealtimeNotification"
 
 #pragma mark - Realtime View
 
-- (void)showRealtimeView {
-    [self.realtimeView show];
+- (void)showRealtimeWindow {
+    [self.realtimeWindow show];
     [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKHomeShouldHideNotification object:nil];
 }
 
-- (void)hideRealtimeView {
-    [self.realtimeView hide];
+- (void)hideRealtimeWindow {
+    [self.realtimeWindow hide];
 }
 
-- (GrowingTKRealtimeView *)realtimeView {
-    if (!_realtimeView) {
-        _realtimeView = [[GrowingTKRealtimeView alloc] initWithFrame:UIScreen.mainScreen.bounds];
+- (GrowingTKRealtimeWindow *)realtimeWindow {
+    if (!_realtimeWindow) {
+        _realtimeWindow = [[GrowingTKRealtimeWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(hideRealtimeView)
+                                                 selector:@selector(hideRealtimeWindow)
                                                      name:GrowingTKHomeWillShowNotification
                                                    object:nil];
     }
-    return _realtimeView;
+    return _realtimeWindow;
 }
 
 #pragma mark - Event Track
@@ -182,7 +182,7 @@ static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSS
 
     if (event) {
         NSString *eventType = [event valueForKey:@"eventType"];
-        NSString *gesid = @"";
+        NSNumber *gesid = nil;
         NSString *detail = @"";
         
         NSString *rawJsonString = [event valueForKey:@"rawJsonString"];
@@ -236,7 +236,11 @@ static void growingtk_sdk2ndEventTrack(NSInvocation *invocation, id obj, NSStrin
             return;
         }
         
-        NSString *gesid = eventDic[@"gesid"];
+        NSNumber *gesid = eventDic[@"gesid"];
+        if (!gesid) {
+            // 不支持的事件，如 dbclck/lngclck 等等
+            return;
+        }
         NSString *detail = @"";
         if ([eventType isEqualToString:@"page"]) {
             detail = eventDic[@"p"];

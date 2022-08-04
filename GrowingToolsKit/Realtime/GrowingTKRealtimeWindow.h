@@ -1,5 +1,5 @@
 //
-//  GrowingTKRealtimeView.h
+//  GrowingTKRealtimeWindow.h
 //  GrowingToolsKit
 //
 //  Created by YoloMao on 2022/8/3.
@@ -21,7 +21,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingTKRealtimeView : UIWindow
+@interface GrowingTKRealtimeWindow : UIWindow
 
 - (void)show;
 

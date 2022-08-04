@@ -1,5 +1,5 @@
 //
-//  GrowingTKRealtimeView.m
+//  GrowingTKRealtimeWindow.m
 //  GrowingToolsKit
 //
 //  Created by YoloMao on 2022/8/3.
@@ -17,10 +17,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTKRealtimeView.h"
+#import "GrowingTKRealtimeWindow.h"
 #import "GrowingTKRealtimeViewController.h"
 
-@implementation GrowingTKRealtimeView
+@implementation GrowingTKRealtimeWindow
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];

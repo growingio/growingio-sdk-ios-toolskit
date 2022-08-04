@@ -70,7 +70,7 @@ static CGFloat const kEventsViewMargin = 24.0f;
     self.eventsViewLeadingConstraint = [self.eventsView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor
                                                                                  constant:eventsViewMargin];
 
-    CGFloat eventsViewHeight = GrowingTKSizeFrom750(300);
+    CGFloat eventsViewHeight = GrowingTKSizeFrom750(320);
     [NSLayoutConstraint activateConstraints:@[
         self.eventsViewBottomConstraint,
         self.eventsViewLeadingConstraint,
