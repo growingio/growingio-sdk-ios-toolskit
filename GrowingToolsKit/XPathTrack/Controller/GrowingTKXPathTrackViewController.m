@@ -237,7 +237,7 @@ static CGFloat const kInfoViewMargin = 24.0f;
             [self resetCircleViewFrame];
             self.circleView.alpha = 1.0f;
             [self updateMask:nil];
-        }
+        } break;
 
         default:
             break;

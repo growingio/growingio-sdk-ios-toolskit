@@ -36,7 +36,7 @@ FOUNDATION_EXTERN NSString *const GrowingTKRealtimeNotification;
 + (instancetype)plugin;
 - (void)pluginDidLoad;
 
-- (void)hideRealtimeView;
+- (void)hideRealtimeWindow;
 
 @end
 

@@ -24,6 +24,8 @@
 #import "UIView+GrowingTK.h"
 
 static CGFloat const kEventsViewMargin = 24.0f;
+static CGFloat const kEventsViewHeight = 320.0f;
+static CGFloat const kFullEventDetailMinWidth = 300.0f;
 
 @interface GrowingTKRealtimeViewController ()
 
@@ -31,9 +33,14 @@ static CGFloat const kEventsViewMargin = 24.0f;
 @property (nonatomic, strong) UIView *eventsView;
 @property (nonatomic, strong) UIButton *closeBtn;
 @property (nonatomic, strong) UITextView *eventsTextView;
+@property (nonatomic, strong) UIImageView *dragView;
+
+@property (nonatomic, assign, getter=isShowFullEventDetail) BOOL showFullEventDetail; // 是否显示详细的事件
 
 @property (nonatomic, strong) NSLayoutConstraint *eventsViewBottomConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *eventsViewLeadingConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *eventsViewHeightConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *eventsViewWidthConstraint;
 @property (nonatomic, assign) BOOL resetEventsViewConstraintsAfterKeyBoardHide;
 
 @end
@@ -63,19 +70,21 @@ static CGFloat const kEventsViewMargin = 24.0f;
     [self.view addSubview:self.eventsView];
     [self.eventsView addSubview:self.eventsTextView];
     [self.eventsView addSubview:self.closeBtn];
+    [self.eventsView addSubview:self.dragView];
 
     CGFloat eventsViewMargin = GrowingTKSizeFrom750(kEventsViewMargin);
+    CGFloat eventsViewHeight = GrowingTKSizeFrom750(kEventsViewHeight);
     self.eventsViewBottomConstraint = [self.eventsView.bottomAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.bottomAnchor
                                                                             constant:-eventsViewMargin];
     self.eventsViewLeadingConstraint = [self.eventsView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor
                                                                                  constant:eventsViewMargin];
-
-    CGFloat eventsViewHeight = GrowingTKSizeFrom750(320);
+    self.eventsViewWidthConstraint = [self.eventsView.widthAnchor constraintEqualToAnchor:self.view.widthAnchor constant:-eventsViewMargin * 2];
+    self.eventsViewHeightConstraint = [self.eventsView.heightAnchor constraintEqualToConstant:eventsViewHeight];
     [NSLayoutConstraint activateConstraints:@[
         self.eventsViewBottomConstraint,
         self.eventsViewLeadingConstraint,
-        [self.eventsView.widthAnchor constraintEqualToAnchor:self.view.widthAnchor constant:-eventsViewMargin * 2],
-        [self.eventsView.heightAnchor constraintEqualToConstant:eventsViewHeight],
+        self.eventsViewWidthConstraint,
+        self.eventsViewHeightConstraint
     ]];
 
     CGFloat closeBtnMargin = GrowingTKSizeFrom750(12);
@@ -94,17 +103,42 @@ static CGFloat const kEventsViewMargin = 24.0f;
         [self.eventsTextView.leadingAnchor constraintEqualToAnchor:self.eventsView.leadingAnchor constant:eventsTextViewMargin],
         [self.eventsTextView.trailingAnchor constraintEqualToAnchor:self.eventsView.trailingAnchor constant:-eventsTextViewMargin]
     ]];
+    
+    CGFloat dragViewSideLength = GrowingTKSizeFrom750(60);
+    [NSLayoutConstraint activateConstraints:@[
+        [self.dragView.bottomAnchor constraintEqualToAnchor:self.eventsView.bottomAnchor],
+        [self.dragView.trailingAnchor constraintEqualToAnchor:self.eventsView.trailingAnchor],
+        [self.dragView.heightAnchor constraintEqualToConstant:dragViewSideLength],
+        [self.dragView.widthAnchor constraintEqualToConstant:dragViewSideLength]
+    ]];
 }
 
 - (void)reset {
     dispatch_async(dispatch_get_main_queue(), ^{
         CGFloat eventsViewMargin = GrowingTKSizeFrom750(kEventsViewMargin);
+        CGFloat eventsViewHeight = GrowingTKSizeFrom750(kEventsViewHeight);
         self.eventsViewBottomConstraint.constant = -eventsViewMargin;
         self.eventsViewLeadingConstraint.constant = eventsViewMargin;
+        self.eventsViewWidthConstraint.constant = -eventsViewMargin * 2;
+        self.eventsViewHeightConstraint.constant = eventsViewHeight;
+        self.showFullEventDetail = YES;
+        [self resetRealtimeEvents];
     });
 }
 
-- (void)resetEventsTextViewText:(NSString *)text {
+- (void)resetRealtimeEvents {
+    if (self.isShowFullEventDetail) {
+        [self showRealtimeEventsWithText:[self.realtimeEventsArray componentsJoinedByString:@"\n"]];
+    } else {
+        NSMutableArray *eventsArray = [NSMutableArray array];
+        [self.realtimeEventsArray enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [eventsArray addObject:[obj substringToIndex:[obj rangeOfString:@"]"].location + 1]];
+        }];
+        [self showRealtimeEventsWithText:[eventsArray componentsJoinedByString:@"\n"]];
+    }
+}
+
+- (void)showRealtimeEventsWithText:(NSString *)text {
     NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
     style.lineSpacing = GrowingTKSizeFrom750(8);
     style.lineBreakMode = NSLineBreakByCharWrapping;
@@ -128,8 +162,34 @@ static CGFloat const kEventsViewMargin = 24.0f;
     }
 }
 
+- (void)dragViewPan:(UIPanGestureRecognizer *)sender {
+    UIView *panView = sender.view;
+    switch (sender.state) {
+        case UIGestureRecognizerStateBegan: {
+            self.eventsView.alpha = 0.5f;
+        } break;
+        case UIGestureRecognizerStateChanged: {
+            CGPoint offsetPoint = [sender translationInView:panView];
+            [sender setTranslation:CGPointZero inView:panView];
+            self.eventsViewWidthConstraint.constant += offsetPoint.x;
+            self.eventsViewHeightConstraint.constant += offsetPoint.y;
+            self.eventsViewBottomConstraint.constant += offsetPoint.y;
+            [self.eventsView setNeedsUpdateConstraints];
+        } break;
+        case UIGestureRecognizerStateEnded:
+        case UIGestureRecognizerStateCancelled: {
+            self.eventsView.alpha = 1.0f;
+            CGFloat fullEventDetailMinWidth = GrowingTKSizeFrom750(kFullEventDetailMinWidth);
+            self.showFullEventDetail = (self.eventsView.growingtk_width > fullEventDetailMinWidth);
+            [self resetRealtimeEvents];
+        } break;
+        default:
+            break;
+    }
+}
+
 - (void)closeButtonAction:(UIButton *)sender {
-    [GrowingTKRealtimePlugin.plugin hideRealtimeView];
+    [GrowingTKRealtimePlugin.plugin hideRealtimeWindow];
 }
 
 #pragma mark - Notification
@@ -146,7 +206,7 @@ static CGFloat const kEventsViewMargin = 24.0f;
         if (self.realtimeEventsArray.count > 50) {
             [self.realtimeEventsArray removeObjectsInRange:NSMakeRange(49, self.realtimeEventsArray.count - 50)];
         }
-        [self resetEventsTextViewText:[self.realtimeEventsArray componentsJoinedByString:@"\n"]];
+        [self resetRealtimeEvents];
     });
 }
 
@@ -225,6 +285,19 @@ static CGFloat const kEventsViewMargin = 24.0f;
         _eventsTextView.translatesAutoresizingMaskIntoConstraints = NO;
     }
     return _eventsTextView;
+}
+
+- (UIImageView *)dragView {
+    if (!_dragView) {
+        _dragView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        _dragView.image = [UIImage growingtk_imageNamed:@"growingtk_zoom"];
+        _dragView.userInteractionEnabled = YES;
+        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self
+                                                                              action:@selector(dragViewPan:)];
+        [_dragView addGestureRecognizer:pan];
+        _dragView.translatesAutoresizingMaskIntoConstraints = NO;
+    }
+    return _dragView;
 }
 
 - (NSMutableArray<NSString *> *)realtimeEventsArray {
