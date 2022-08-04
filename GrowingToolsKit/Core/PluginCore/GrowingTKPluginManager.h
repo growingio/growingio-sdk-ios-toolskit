@@ -36,6 +36,8 @@ typedef NS_ENUM(NSUInteger, GrowingTKDefaultPluginType) {
     GrowingTKDefaultPluginType_LogPlugin,
     // Hybrid测试
     GrowingTKDefaultPluginType_HybridPlugin,
+    // 实时事件
+    GrowingTKDefaultPluginType_RealtimePlugin,
 };
 
 @interface GrowingTKPluginManager : NSObject

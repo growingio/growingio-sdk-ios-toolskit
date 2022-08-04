@@ -55,6 +55,7 @@ NSString *GrowingTKDefaultModuleName(void) {
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_NetFlowPlugin];
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_LogPlugin];
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_HybridPlugin];
+    [self addPluginWithPluginType:GrowingTKDefaultPluginType_RealtimePlugin];
 }
 
 - (void)addPluginWithTitle:(NSString *)title
@@ -135,6 +136,7 @@ NSString *GrowingTKDefaultModuleName(void) {
         @(GrowingTKDefaultPluginType_NetFlowPlugin): @"GrowingTKNetFlowPlugin",
         @(GrowingTKDefaultPluginType_LogPlugin): @"GrowingTKLogPlugin",
         @(GrowingTKDefaultPluginType_HybridPlugin): @"GrowingTKHybridPlugin",
+        @(GrowingTKDefaultPluginType_RealtimePlugin): @"GrowingTKRealtimePlugin",
     }[@(pluginType)];
 
     Class class = NSClassFromString(classString);

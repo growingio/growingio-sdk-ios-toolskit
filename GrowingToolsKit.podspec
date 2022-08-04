@@ -28,6 +28,7 @@ TODO: Add long description of the pod here.
     ss.dependency 'GrowingToolsKit/EventsList'
     ss.dependency 'GrowingToolsKit/XPathTrack'
     ss.dependency 'GrowingToolsKit/NetFlow'
+    ss.dependency 'GrowingToolsKit/Realtime'
   end
   
   s.subspec 'SDK30202' do |ss|
@@ -76,6 +77,11 @@ TODO: Add long description of the pod here.
   
   s.subspec 'NetFlow' do |ss|
     ss.source_files = 'GrowingToolsKit/NetFlow/**/*{.h,.m,.c,.cpp,.mm}'
+    ss.dependency 'GrowingToolsKit/Core'
+  end
+
+  s.subspec 'Realtime' do |ss|
+    ss.source_files = 'GrowingToolsKit/Realtime/**/*{.h,.m,.c,.cpp,.mm}'
     ss.dependency 'GrowingToolsKit/Core'
   end
 end

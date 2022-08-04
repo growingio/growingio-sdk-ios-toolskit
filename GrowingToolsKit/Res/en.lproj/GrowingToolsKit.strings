@@ -13,6 +13,7 @@
     "事件库" = "EventsList";
     "XPath跟踪" = "XPathTrack";
     "网络记录" = "NetFlow";
+    "实时事件" = "Realtime";
     
     // #Common
     "未集成SDK，请参考帮助文档进行集成" = "SDK is not integrated. Please refer to the help document for integration";

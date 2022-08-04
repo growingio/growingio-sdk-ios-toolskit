@@ -54,12 +54,16 @@
 #if SDK3rd
         [[GrowingSDK sharedInstance] trackCustomEvent:eventName
                    withAttributes:atts];
+#elif SDK2nd
+        [Growing track:eventName withNumber:nil andVariable:atts];
 #endif
         NSLog(@"Track事件，eventName:%@, attributes:%@", eventName, atts);
 
     } else {
 #if SDK3rd
         [[GrowingSDK sharedInstance] trackCustomEvent:eventName];
+#elif SDK2nd
+        [Growing track:eventName];
 #endif
         NSLog(@"Track事件，eventName:%@", eventName);
     }
