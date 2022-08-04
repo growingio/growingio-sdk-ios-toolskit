@@ -29,5 +29,9 @@
 + (void)startWithPosition:(CGPoint)position autoDock:(BOOL)autoDock {
     [GrowingRealToolsKit startWithPosition:position autoDock:autoDock];
 }
+    
++ (NSString *)version {
+    return [GrowingRealToolsKit version];
+}
 
 @end

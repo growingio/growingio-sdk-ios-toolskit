@@ -32,6 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param autoDock 是否自动停靠，默认为YES
 + (void)startWithPosition:(CGPoint)position autoDock:(BOOL)autoDock;
 
+/// 当前SDK版本
++ (NSString *)version;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -21,9 +21,9 @@
 #import "GrowingTKDefine.h"
 #import "GrowingTKPluginManager.h"
 #import "GrowingTKEntryWindow.h"
+#import "NSBundle+GrowingTK.h"
 
 NSString *const GrowingToolsKitName = @"GrowingToolsKit";
-NSString *const GrowingToolsKitVersion = @"1.0.6";
 
 NSString *const GrowingTKHomeWillShowNotification = @"GrowingTKHomeWillShowNotification";
 NSString *const GrowingTKHomeShouldHideNotification = @"GrowingTKHomeShouldHideNotification";
@@ -73,6 +73,13 @@ static GrowingRealToolsKit *instance = nil;
 
 - (void)initEntry:(CGPoint)position autoDock:(BOOL)autoDock {
     [GrowingTKEntryWindow startWithPoint:position autoDock:autoDock];
+}
+
++ (NSString *)version {
+    // 兼容静态库方式集成
+    NSBundle *imageBundle = [NSBundle growingtk_resourcesBundle:NSClassFromString(GrowingToolsKitName)
+                                                     bundleName:GrowingToolsKitName];
+    return imageBundle.infoDictionary[@"CFBundleShortVersionString"];
 }
 
 @end

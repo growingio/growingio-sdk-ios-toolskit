@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingTKPluginsListViewController.h"
+#import "GrowingRealToolsKit.h"
 #import "UIViewController+GrowingTK.h"
 #import "UIColor+GrowingTK.h"
 
@@ -98,7 +99,7 @@ UICollectionViewDelegateFlowLayout>
                                                       forIndexPath:indexPath];
         if (indexPath.section == (self.dataSource.count - 1)) {
             NSString *str = GrowingTKLocalizedString(@"当前版本");
-            NSString *last = [NSString stringWithFormat:@"%@：V%@", str, GrowingToolsKitVersion];
+            NSString *last = [NSString stringWithFormat:@"%@：V%@", str, [GrowingRealToolsKit version]];
             foot.title.text = last;
             foot.title.textColor = UIColor.growingtk_black_3;
             foot.title.textAlignment = NSTextAlignmentCenter;
