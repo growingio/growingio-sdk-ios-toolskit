@@ -40,7 +40,7 @@
 
 #import "GrowingTKFMDatabase.h"
 #import "GrowingTKFMDatabaseAdditions.h"
-#import "TargetConditionals.h"
+#import <TargetConditionals.h>
 
 @interface GrowingTKFMDatabase (PrivateStuff)
 - (GrowingTKFMResultSet *)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray*)arrayArgs orDictionary:(NSDictionary *)dictionaryArgs orVAList:(va_list)args;
