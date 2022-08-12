@@ -90,6 +90,12 @@
     });
 }
 
+- (void)viewWillTransitionToSize:(CGSize)size
+       withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    [self.titleView reset];
+}
+
 #pragma mark - Private Method
 
 - (void)reloadData:(NSMutableArray *)datasource noMoreData:(BOOL)noMoreData delay:(NSTimeInterval)delay {
@@ -175,13 +181,6 @@
 }
 #endif
 
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    if (scrollView != self.tableView) {
-        return;
-    }
-    [self.titleView reset];
-}
-
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     if (scrollView != self.tableView) {
         return;
@@ -245,9 +244,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self.titleView reset];
-    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];    
     GrowingTKNetFlowDetailViewController *controller = [[GrowingTKNetFlowDetailViewController alloc] init];
     NSDictionary *dic = (NSDictionary *)self.datasource[indexPath.section];
     GrowingTKRequestPersistence *request = ((NSArray *)dic[dic.allKeys.firstObject])[indexPath.row];

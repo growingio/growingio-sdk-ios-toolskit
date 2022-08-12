@@ -87,11 +87,6 @@ typedef void (^GrowingTKNavigationTitleViewLongPressBlock)(NSUInteger index);
 #pragma mark - Action
 
 - (void)singleTapAction {
-    if (self.chooseView.superview) {
-        [self reset];
-        return;
-    }
-    
     if (self.singleTapBlock) {
         self.singleTapBlock();
     }
@@ -99,11 +94,6 @@ typedef void (^GrowingTKNavigationTitleViewLongPressBlock)(NSUInteger index);
 
 - (void)longPressAction:(UILongPressGestureRecognizer *)sender {
     if (sender.state != UIGestureRecognizerStateBegan) {
-        return;
-    }
-    
-    if (self.chooseView.superview) {
-        [self reset];
         return;
     }
     

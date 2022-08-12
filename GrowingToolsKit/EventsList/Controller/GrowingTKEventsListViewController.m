@@ -164,14 +164,6 @@
     [self.navigationController pushViewController:controller animated:YES];
 }
 
-#pragma mark - UIScrollViewDelegate
-
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    [self.view endEditing:YES];
-    [self.titleView reset];
-    [self.tableHeaderView reset];
-}
-
 #pragma mark - UITableView DataSource & Delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -220,9 +212,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self.titleView reset];
-    [self.tableHeaderView reset];
-    
     GrowingTKEventDetailViewController *controller = [[GrowingTKEventDetailViewController alloc] init];
     NSDictionary *dic = (NSDictionary *)self.datasource[indexPath.section];
     GrowingTKEventPersistence *event = ((NSArray *)dic[dic.allKeys.firstObject])[indexPath.row];

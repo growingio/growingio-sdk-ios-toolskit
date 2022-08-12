@@ -85,4 +85,13 @@
     }
 }
 
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    UIView *view = [super hitTest:point withEvent:event];
+    if (!(view == self || view.superview == self)) {
+        // 自动隐藏
+        [self removeFromSuperview];
+    }
+    return view;
+}
+
 @end
