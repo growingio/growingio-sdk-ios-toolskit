@@ -21,7 +21,7 @@ TODO: Add long description of the pod here.
   s.ios.deployment_target = '9.0'
   s.ios.frameworks   = 'UIKit', 'WebKit'
   s.source_files     = 'GrowingToolsKit/GrowingToolsKit{.h,.m}'
-  s.public_header_files = 'GrowingToolsKit/Public/*.h'
+  s.public_header_files = 'GrowingToolsKit/GrowingToolsKit.h'
   s.default_subspec  = 'Default'
   s.subspec 'Default' do |default|
     default.dependency 'GrowingToolsKit/Core'
@@ -34,7 +34,7 @@ TODO: Add long description of the pod here.
   
   s.subspec 'SDK30202' do |sdk30202|
     sdk30202.source_files = 'GrowingToolsKit/GrowingToolsKit{.h,.m}'
-    sdk30202.public_header_files = 'GrowingToolsKit/Public/*.h'
+    sdk30202.public_header_files = 'GrowingToolsKit/GrowingToolsKit.h'
     sdk30202.dependency 'GrowingToolsKit/Default'
     sdk30202.pod_target_xcconfig = {
       'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_SDK30202=1',
@@ -45,7 +45,7 @@ TODO: Add long description of the pod here.
   
   s.subspec 'SDK2nd' do |sdk2nd|
     sdk2nd.source_files = 'GrowingToolsKit/GrowingToolsKit{.h,.m}'
-    sdk2nd.public_header_files = 'GrowingToolsKit/Public/*.h'
+    sdk2nd.public_header_files = 'GrowingToolsKit/GrowingToolsKit.h'
     sdk2nd.dependency 'GrowingToolsKit/Default'
     sdk2nd.pod_target_xcconfig = {
       'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_SDK2nd=1',
