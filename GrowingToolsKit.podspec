@@ -21,67 +21,76 @@ TODO: Add long description of the pod here.
   s.ios.deployment_target = '9.0'
   s.ios.frameworks   = 'UIKit', 'WebKit'
   s.source_files     = 'GrowingToolsKit/GrowingToolsKit{.h,.m}'
+  s.public_header_files = 'GrowingToolsKit/Public/*.h'
   s.default_subspec  = 'Default'
-  s.subspec 'Default' do |ss|
-    ss.dependency 'GrowingToolsKit/Core'
-    ss.dependency 'GrowingToolsKit/SDKInfo'
-    ss.dependency 'GrowingToolsKit/EventsList'
-    ss.dependency 'GrowingToolsKit/XPathTrack'
-    ss.dependency 'GrowingToolsKit/NetFlow'
-    ss.dependency 'GrowingToolsKit/Realtime'
+  s.subspec 'Default' do |default|
+    default.dependency 'GrowingToolsKit/Core'
+    default.dependency 'GrowingToolsKit/SDKInfo'
+    default.dependency 'GrowingToolsKit/EventsList'
+    default.dependency 'GrowingToolsKit/XPathTrack'
+    default.dependency 'GrowingToolsKit/NetFlow'
+    default.dependency 'GrowingToolsKit/Realtime'
   end
   
-  s.subspec 'SDK30202' do |ss|
-    ss.source_files = 'GrowingToolsKit/GrowingToolsKit{.h,.m}'
-    ss.dependency 'GrowingToolsKit/Default'
-    ss.pod_target_xcconfig = {
+  s.subspec 'SDK30202' do |sdk30202|
+    sdk30202.source_files = 'GrowingToolsKit/GrowingToolsKit{.h,.m}'
+    sdk30202.public_header_files = 'GrowingToolsKit/Public/*.h'
+    sdk30202.dependency 'GrowingToolsKit/Default'
+    sdk30202.pod_target_xcconfig = {
       'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_SDK30202=1',
       'OTHER_LDFLAGS' => '-Wl,-U,_GrowingTrackerVersionName -Wl,-U,_GrowingTrackerVersionCode'
     }
-    ss.xcconfig = { 'ENABLE_BITCODE' => 'NO'}
+    sdk30202.xcconfig = { 'ENABLE_BITCODE' => 'NO'}
   end
   
-  s.subspec 'SDK2nd' do |ss|
-    ss.source_files = 'GrowingToolsKit/GrowingToolsKit{.h,.m}'
-    ss.dependency 'GrowingToolsKit/Default'
-    ss.pod_target_xcconfig = {
+  s.subspec 'SDK2nd' do |sdk2nd|
+    sdk2nd.source_files = 'GrowingToolsKit/GrowingToolsKit{.h,.m}'
+    sdk2nd.public_header_files = 'GrowingToolsKit/Public/*.h'
+    sdk2nd.dependency 'GrowingToolsKit/Default'
+    sdk2nd.pod_target_xcconfig = {
       'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_SDK2nd=1',
       'OTHER_LDFLAGS' => '-Wl,-U,_g_GDPRFlag -Wl,-U,_g_readClipBoardEnable -Wl,-U,_g_asaEnabled'
     }
-    ss.xcconfig = { 'ENABLE_BITCODE' => 'NO'}
+    sdk2nd.xcconfig = { 'ENABLE_BITCODE' => 'NO'}
   end
 
-  s.subspec 'Core' do |ss|
-    ss.source_files = 'GrowingToolsKit/Core/**/*{.h,.m,.c,.cpp,.mm}'
-    ss.dependency 'GrowingToolsKit/Res'
+  s.subspec 'Core' do |core|
+    core.source_files = 'GrowingToolsKit/Core/**/*{.h,.m,.c,.cpp,.mm}'
+    core.public_header_files = 'GrowingToolsKit/Core/Public/*.h'
+    core.dependency 'GrowingToolsKit/Res'
   end
   
-  s.subspec 'Res' do |ss|
-    ss.resource_bundles = {'GrowingToolsKit' => ['GrowingToolsKit/Res/**/*']}
+  s.subspec 'Res' do |res|
+    res.resource_bundles = {'GrowingToolsKit' => ['GrowingToolsKit/Res/**/*']}
   end
   
-  s.subspec 'SDKInfo' do |ss|
-    ss.source_files = 'GrowingToolsKit/SDKInfo/**/*{.h,.m,.c,.cpp,.mm}'
-    ss.dependency 'GrowingToolsKit/Core'
+  s.subspec 'SDKInfo' do |sdkInfo|
+    sdkInfo.source_files = 'GrowingToolsKit/SDKInfo/**/*{.h,.m,.c,.cpp,.mm}'
+    sdkInfo.public_header_files = 'GrowingToolsKit/SDKInfo/Public/*.h'
+    sdkInfo.dependency 'GrowingToolsKit/Core'
   end
   
-  s.subspec 'EventsList' do |ss|
-    ss.source_files = 'GrowingToolsKit/EventsList/**/*{.h,.m,.c,.cpp,.mm}'
-    ss.dependency 'GrowingToolsKit/Core'
+  s.subspec 'EventsList' do |eventsList|
+    eventsList.source_files = 'GrowingToolsKit/EventsList/**/*{.h,.m,.c,.cpp,.mm}'
+    eventsList.public_header_files = 'GrowingToolsKit/EventsList/Public/*.h'
+    eventsList.dependency 'GrowingToolsKit/Core'
   end
   
-  s.subspec 'XPathTrack' do |ss|
-    ss.source_files = 'GrowingToolsKit/XPathTrack/**/*{.h,.m,.c,.cpp,.mm}'
-    ss.dependency 'GrowingToolsKit/Core'
+  s.subspec 'XPathTrack' do |xpathTrack|
+    xpathTrack.source_files = 'GrowingToolsKit/XPathTrack/**/*{.h,.m,.c,.cpp,.mm}'
+    xpathTrack.public_header_files = 'GrowingToolsKit/XPathTrack/Public/*.h'
+    xpathTrack.dependency 'GrowingToolsKit/Core'
   end
   
-  s.subspec 'NetFlow' do |ss|
-    ss.source_files = 'GrowingToolsKit/NetFlow/**/*{.h,.m,.c,.cpp,.mm}'
-    ss.dependency 'GrowingToolsKit/Core'
+  s.subspec 'NetFlow' do |netflow|
+    netflow.source_files = 'GrowingToolsKit/NetFlow/**/*{.h,.m,.c,.cpp,.mm}'
+    netflow.public_header_files = 'GrowingToolsKit/NetFlow/Public/*.h'
+    netflow.dependency 'GrowingToolsKit/Core'
   end
 
-  s.subspec 'Realtime' do |ss|
-    ss.source_files = 'GrowingToolsKit/Realtime/**/*{.h,.m,.c,.cpp,.mm}'
-    ss.dependency 'GrowingToolsKit/Core'
+  s.subspec 'Realtime' do |realtime|
+    realtime.source_files = 'GrowingToolsKit/Realtime/**/*{.h,.m,.c,.cpp,.mm}'
+    realtime.public_header_files = 'GrowingToolsKit/Realtime/Public/*.h'
+    realtime.dependency 'GrowingToolsKit/Core'
   end
 end
