@@ -70,6 +70,11 @@
         instance->_totalUploadFlow = 0.0f;
         instance->_requestFailedCount = 0;
         [NSURLProtocol registerClass:GrowingTKURLProtocol.class];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:instance
+                                                 selector:@selector(clearAllRequests)
+                                                     name:GrowingTKClearAllRequestsNotification
+                                                   object:nil];
     });
     return instance;
 }

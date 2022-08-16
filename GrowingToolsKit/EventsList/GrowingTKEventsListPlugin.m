@@ -43,6 +43,11 @@
         [_db cleanExpiredEventIfNeeded];
 
         [self hookEvents];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:_db
+                                                 selector:@selector(clearAllEvents)
+                                                     name:GrowingTKClearAllEventNotification
+                                                   object:nil];
     }
     return self;
 }

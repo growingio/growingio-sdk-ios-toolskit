@@ -14,6 +14,8 @@
     "XPath跟踪" = "XPathTrack";
     "网络记录" = "NetFlow";
     "实时事件" = "Realtime";
+    "通用设置" = "GeneralSettings";
+    "设置" = "Settings";
     
     // #Common
     "未集成SDK，请参考帮助文档进行集成" = "SDK is not integrated. Please refer to the help document for integration";
@@ -30,6 +32,9 @@
     "秒" = "s";
     "毫秒" = "ms";
     "无" = "NULL";
+    "提示" = "Prompt";
+    "确定" = "Confirm";
+    "取消" = "Cancel";
     
     // #Check Self
     "点击检查埋点 SDK 是否集成成功" = "Click to check whether the SDK is successfully integrated";
@@ -125,4 +130,11 @@
     "请求大小" = "Request Size";
     "返回码" = "Status Code";
     "返回信息" = "Status";
+    
+    // #设置
+    "数据" = "LocalData";
+    "清空事件" = "ClearAllEvents";
+    "清空事件库中的所有事件数据" = "Clear all event data in database";
+    "清空网络" = "ClearAllRequests";
+    "清空网络记录下的所有请求数据" = "Clear all request data in database";
 }

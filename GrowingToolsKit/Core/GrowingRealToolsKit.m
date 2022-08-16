@@ -28,6 +28,9 @@ NSString *const GrowingToolsKitName = @"GrowingToolsKit";
 NSString *const GrowingTKHomeWillShowNotification = @"GrowingTKHomeWillShowNotification";
 NSString *const GrowingTKHomeShouldHideNotification = @"GrowingTKHomeShouldHideNotification";
 
+NSString *const GrowingTKClearAllEventNotification = @"GrowingTKClearAllEventNotification";
+NSString *const GrowingTKClearAllRequestsNotification = @"GrowingTKClearAllRequestsNotification";
+
 @interface GrowingRealToolsKit ()
 
 @end

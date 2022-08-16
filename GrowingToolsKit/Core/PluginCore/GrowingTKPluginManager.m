@@ -56,6 +56,9 @@ NSString *GrowingTKDefaultModuleName(void) {
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_LogPlugin];
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_HybridPlugin];
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_RealtimePlugin];
+    
+    // *************** 设置 ***************
+    [self addPluginWithPluginType:GrowingTKDefaultPluginType_GeneralSettingsPlugin];
 }
 
 - (void)addPluginWithTitle:(NSString *)title
@@ -137,6 +140,7 @@ NSString *GrowingTKDefaultModuleName(void) {
         @(GrowingTKDefaultPluginType_LogPlugin): @"GrowingTKLogPlugin",
         @(GrowingTKDefaultPluginType_HybridPlugin): @"GrowingTKHybridPlugin",
         @(GrowingTKDefaultPluginType_RealtimePlugin): @"GrowingTKRealtimePlugin",
+        @(GrowingTKDefaultPluginType_GeneralSettingsPlugin): @"GrowingTKSettingsPlugin",
     }[@(pluginType)];
 
     Class class = NSClassFromString(classString);

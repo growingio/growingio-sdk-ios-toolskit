@@ -30,6 +30,7 @@ TODO: Add long description of the pod here.
     default.dependency 'GrowingToolsKit/XPathTrack'
     default.dependency 'GrowingToolsKit/NetFlow'
     default.dependency 'GrowingToolsKit/Realtime'
+    default.dependency 'GrowingToolsKit/Settings'
   end
   
   s.subspec 'SDK30202' do |sdk30202|
@@ -92,5 +93,11 @@ TODO: Add long description of the pod here.
     realtime.source_files = 'GrowingToolsKit/Realtime/**/*{.h,.m,.c,.cpp,.mm}'
     realtime.public_header_files = 'GrowingToolsKit/Realtime/Public/*.h'
     realtime.dependency 'GrowingToolsKit/Core'
+  end
+
+  s.subspec 'Settings' do |settings|
+    settings.source_files = 'GrowingToolsKit/Settings/**/*{.h,.m,.c,.cpp,.mm}'
+    settings.public_header_files = 'GrowingToolsKit/Settings/Public/*.h'
+    settings.dependency 'GrowingToolsKit/Core'
   end
 end
