@@ -35,6 +35,7 @@
     "提示" = "Prompt";
     "确定" = "Confirm";
     "取消" = "Cancel";
+    "删除全部" = "Clear All";
     
     // #Check Self
     "点击检查埋点 SDK 是否集成成功" = "Click to check whether the SDK is successfully integrated";
@@ -130,6 +131,10 @@
     "请求大小" = "Request Size";
     "返回码" = "Status Code";
     "返回信息" = "Status";
+    
+    // #实时事件
+    "实时事件监控中" = "monitoring...";
+    "实时事件检测开始" = "Real-time event detection starts";
     
     // #设置
     "数据" = "LocalData";

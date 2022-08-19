@@ -1,8 +1,8 @@
 //
-//  GrowingTKRealtimeWindow.h
+//  GrowingTKRealtimeBubble.h
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2022/8/3.
+//  Created by YoloMao on 2022/8/18.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,13 +17,19 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingTKRealtimeWindow : UIWindow
+@class GrowingTKRealtimeEvent;
 
-- (void)toggle;
+@protocol GrowingTKRealtimeBubble <NSObject>
+
+@property (nonatomic, strong, readonly) GrowingTKRealtimeEvent *event;
+
+@optional
+- (void)configWithEvent:(GrowingTKRealtimeEvent *)event;
+- (void)configWithEvents:(NSArray<GrowingTKRealtimeEvent *> *)events;
 
 @end
 

@@ -19,14 +19,13 @@
 
 #import "GrowingTKRealtimePlugin.h"
 #import "GrowingTKRealtimeWindow.h"
+#import "GrowingTKRealtimeEvent.h"
 #import "GrowingTKSDKUtil.h"
 #import "GrowingTKUtil.h"
 #import "GrowingTKBaseViewController.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import "NSObject+GrowingTKSwizzle.h"
-
-NSString *const GrowingTKRealtimeNotification = @"GrowingTKRealtimeNotification";
 
 @interface GrowingTKRealtimePlugin ()
 
@@ -140,7 +139,7 @@ NSString *const GrowingTKRealtimeNotification = @"GrowingTKRealtimeNotification"
 - (void)pluginDidLoad {
     GrowingTKSDKUtil *sdk = GrowingTKSDKUtil.sharedInstance;
     if (sdk.isInitialized) {
-        [self showRealtimeWindow];
+        [self toggleRealtimeWindow];
     } else {
         GrowingTKBaseViewController *controller = (GrowingTKBaseViewController *)GrowingTKUtil.topViewControllerForHomeWindow;
         [controller showToast:GrowingTKLocalizedString(@"未初始化SDK，请参考帮助文档进行SDK初始化配置")];
@@ -149,23 +148,21 @@ NSString *const GrowingTKRealtimeNotification = @"GrowingTKRealtimeNotification"
 
 #pragma mark - Realtime View
 
-- (void)showRealtimeWindow {
-    [self.realtimeWindow show];
-    [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKHomeShouldHideNotification object:nil];
-}
-
-- (void)hideRealtimeWindow {
-    [self.realtimeWindow hide];
+- (void)toggleRealtimeWindow {
+    [self.realtimeWindow toggle];
+    
+    NSString *name = self.realtimeWindow.isHidden ? GrowingTKLocalizedString(@"实时事件") : GrowingTKLocalizedString(@"实时事件监控中");
+    [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKRealtimeStatusNotification
+                                                        object:nil
+                                                      userInfo:@{@"key" : self.key,
+                                                                 @"name" : name,
+                                                                 @"isSelected" : @(!self.realtimeWindow.isHidden)
+                                                               }];
 }
 
 - (GrowingTKRealtimeWindow *)realtimeWindow {
     if (!_realtimeWindow) {
         _realtimeWindow = [[GrowingTKRealtimeWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(hideRealtimeWindow)
-                                                     name:GrowingTKHomeWillShowNotification
-                                                   object:nil];
     }
     return _realtimeWindow;
 }
@@ -183,6 +180,7 @@ static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSS
     if (event) {
         NSString *eventType = [event valueForKey:@"eventType"];
         NSNumber *gesid = nil;
+        NSNumber *timestamp = nil;
         NSString *detail = @"";
         
         NSString *rawJsonString = [event valueForKey:@"rawJsonString"];
@@ -190,6 +188,7 @@ static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSS
         NSDictionary *eventDic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
         if (eventDic && eventDic.count > 0) {
             gesid = eventDic[@"globalSequenceId"];
+            timestamp = eventDic[@"timestamp"];
             
             if ([eventType isEqualToString:@"PAGE"]) {
                 detail = eventDic[@"path"];
@@ -207,11 +206,14 @@ static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSS
             }
         }
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKRealtimeNotification
+        GrowingTKRealtimeEvent *eventEntity = [[GrowingTKRealtimeEvent alloc] init];
+        eventEntity.eventType = eventType;
+        eventEntity.gesid = gesid;
+        eventEntity.detail = detail;
+        eventEntity.timestamp = timestamp;
+        [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKRealtimeEventNotification
                                                             object:nil
-                                                          userInfo:@{@"eventType": eventType,
-                                                                     @"gesid" : gesid,
-                                                                     @"detail" : detail}];
+                                                          userInfo:@{@"event": eventEntity}];
     }
 }
 
@@ -237,6 +239,7 @@ static void growingtk_sdk2ndEventTrack(NSInvocation *invocation, id obj, NSStrin
         }
         
         NSNumber *gesid = eventDic[@"gesid"];
+        NSNumber *timestamp = eventDic[@"tm"];
         if (!gesid) {
             // 不支持的事件，如 dbclck/lngclck 等等
             return;
@@ -256,11 +259,14 @@ static void growingtk_sdk2ndEventTrack(NSInvocation *invocation, id obj, NSStrin
             detail = [detail componentsSeparatedByString:@"/"].lastObject;
         }
 
-        [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKRealtimeNotification
+        GrowingTKRealtimeEvent *eventEntity = [[GrowingTKRealtimeEvent alloc] init];
+        eventEntity.eventType = eventType;
+        eventEntity.gesid = gesid;
+        eventEntity.detail = detail;
+        eventEntity.timestamp = timestamp;
+        [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKRealtimeEventNotification
                                                             object:nil
-                                                          userInfo:@{@"eventType" : eventType,
-                                                                     @"gesid" : gesid,
-                                                                     @"detail" : detail}];
+                                                          userInfo:@{@"event": eventEntity}];
     }
 }
 

@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingTKPluginsListCollectionViewCell : UICollectionViewCell
 
-- (void)update:(NSString *)image name:(NSString *)name;
+- (void)update:(NSString *)image name:(NSString *)name isSelected:(BOOL)isSelected;
 
 @end
 

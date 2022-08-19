@@ -1,8 +1,8 @@
 //
-//  GrowingTKRealtimeWindow.h
+//  GrowingTKRealtimeEvent.h
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2022/8/3.
+//  Created by YoloMao on 2022/8/16.
 //  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,13 +17,16 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingTKRealtimeWindow : UIWindow
+@interface GrowingTKRealtimeEvent : NSObject
 
-- (void)toggle;
+@property (nonatomic, copy) NSString *eventType;
+@property (nonatomic, copy) NSNumber *gesid;
+@property (nonatomic, copy) NSString *detail;
+@property (nonatomic, copy) NSNumber *timestamp;
 
 @end
 
