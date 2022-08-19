@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingTKRealtimeViewController : GrowingTKBaseViewController
 
-- (void)reset;
+- (void)start;
 
 @end
 

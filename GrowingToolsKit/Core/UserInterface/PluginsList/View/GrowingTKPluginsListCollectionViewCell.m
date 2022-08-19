@@ -81,9 +81,10 @@
     return self;
 }
 
-- (void)update:(NSString *)image name:(NSString *)name {
+- (void)update:(NSString *)image name:(NSString *)name isSelected:(BOOL)isSelected {
     self.iconImage.image = [UIImage growingtk_imageNamed:image];
     self.name.text = name;
+    self.icon.backgroundColor = isSelected ? UIColor.growingtk_tertiaryBackgroundColor : UIColor.growingtk_secondaryBackgroundColor;
 }
 
 @end

@@ -40,13 +40,14 @@
     return self;
 }
 
-- (void)show {
-    self.hidden = NO;
-    [((GrowingTKRealtimeViewController *)self.rootViewController) reset];
-}
-
-- (void)hide {
-    self.hidden = YES;
+- (void)toggle {
+    if (self.isHidden) {
+        self.hidden = NO;
+        [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKHomeShouldHideNotification object:nil];
+        [((GrowingTKRealtimeViewController *)self.rootViewController) start];
+    } else {
+        self.hidden = YES;
+    }
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {

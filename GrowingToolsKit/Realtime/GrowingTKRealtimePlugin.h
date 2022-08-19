@@ -21,8 +21,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-FOUNDATION_EXTERN NSString *const GrowingTKRealtimeNotification;
-
 @interface GrowingTKRealtimePlugin : NSObject <GrowingTKPluginProtocol>
 
 #pragma mark - GrowingTKPluginProtocol
@@ -35,8 +33,6 @@ FOUNDATION_EXTERN NSString *const GrowingTKRealtimeNotification;
 
 + (instancetype)plugin;
 - (void)pluginDidLoad;
-
-- (void)hideRealtimeWindow;
 
 @end
 

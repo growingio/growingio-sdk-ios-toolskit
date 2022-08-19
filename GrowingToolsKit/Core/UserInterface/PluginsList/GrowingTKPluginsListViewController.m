@@ -53,11 +53,49 @@ UICollectionViewDelegateFlowLayout>
 
     self.dataSource = [GrowingTKPluginManager sharedInstance].dataArray.mutableCopy;
     [self.view addSubview:self.collectionView];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(realtimeStatusNotification:)
+                                                 name:GrowingTKRealtimeStatusNotification
+                                               object:nil];
 }
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     self.collectionView.frame = self.growingtk_fullscreen;
+}
+
+#pragma mark - Notification
+
+- (void)realtimeStatusNotification:(NSNotification *)not {
+    NSString *key = not.userInfo[@"key"];
+    NSString *name = not.userInfo[@"name"];
+    NSNumber *isSelected = not.userInfo[@"isSelected"];
+    NSMutableArray *dataSourceM = [NSMutableArray arrayWithArray:self.dataSource];
+    for (int i = 0; i < dataSourceM.count; i++) {
+        NSMutableDictionary *sectionM = ((NSDictionary *)dataSourceM[i]).mutableCopy;
+        NSMutableArray *pluginArrayM = ((NSArray *)sectionM[@"pluginArray"]).mutableCopy;
+        
+        BOOL haveFound = NO;
+        for (int j = 0; j < pluginArrayM.count; j++) {
+            NSMutableDictionary *item = ((NSDictionary *)pluginArrayM[j]).mutableCopy;
+            if ([item[@"key"] isEqualToString:key]) {
+                item[@"name"] = name;
+                item[@"isSelected"] = isSelected;
+                pluginArrayM[j] = item.copy;
+                haveFound = YES;
+                break;
+            }
+        }
+        
+        if (haveFound) {
+            sectionM[@"pluginArray"] = pluginArrayM.copy;
+            dataSourceM[i] = sectionM.copy;
+            break;
+        }
+    }
+    self.dataSource = dataSourceM.copy;
+    [self.collectionView reloadData];
 }
 
 #pragma mark - UICollectionView DataSource & Delegate
@@ -76,7 +114,7 @@ UICollectionViewDelegateFlowLayout>
                                                                                       forIndexPath:indexPath];
     NSArray *pluginArray = self.dataSource[indexPath.section][@"pluginArray"];
     NSDictionary *item = pluginArray[indexPath.item];
-    [cell update:item[@"icon"] name:item[@"name"]];
+    [cell update:item[@"icon"] name:item[@"name"] isSelected:((NSNumber *)item[@"isSelected"]).boolValue];
     return cell;
 }
 

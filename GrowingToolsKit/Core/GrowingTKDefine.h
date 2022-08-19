@@ -31,6 +31,9 @@ FOUNDATION_EXTERN NSString *const GrowingTKHomeShouldHideNotification;
 FOUNDATION_EXTERN NSString *const GrowingTKClearAllEventNotification;
 FOUNDATION_EXTERN NSString *const GrowingTKClearAllRequestsNotification;
 
+FOUNDATION_EXTERN NSString *const GrowingTKRealtimeEventNotification;
+FOUNDATION_EXTERN NSString *const GrowingTKRealtimeStatusNotification;
+
 typedef NS_ENUM(NSUInteger, GrowingTKModule) {
     GrowingTKModulePlugins,
     GrowingTKModuleCheckSelf

@@ -48,7 +48,7 @@
     __weak typeof(self) weakSelf = self;
     GrowingTKNavigationTitleView *titleView = [[GrowingTKNavigationTitleView alloc] initWithFrame:CGRectMake(0, 0, 180, 44)
                                                                                             title:title
-                                                                                       components:@[@"删除全部"]
+                                                                                       components:@[GrowingTKLocalizedString(@"删除全部")]
     singleTapAction:^{
         __strong typeof(weakSelf) self = weakSelf;
         [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
