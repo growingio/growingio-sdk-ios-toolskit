@@ -184,6 +184,16 @@ static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSS
         NSString *detail = @"";
         
         NSString *rawJsonString = [event valueForKey:@"rawJsonString"];
+        if (rawJsonString.length == 0) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+            SEL toJsonObject = NSSelectorFromString(@"toJSONObject");
+            if ([event respondsToSelector:toJsonObject]) {
+                id jsonObject = [event performSelector:toJsonObject];
+                rawJsonString = [GrowingTKUtil convertJSONFromJSONObject:jsonObject];
+            }
+#pragma clang diagnostic pop
+        }
         NSData *jsonData = [rawJsonString dataUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *eventDic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
         if (eventDic && eventDic.count > 0) {
