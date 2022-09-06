@@ -33,6 +33,9 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
 @property (nonatomic, strong) UIView *whiteBackgroundView;
 @property (nonatomic, strong) UIView *leftBackgroundView;
 
+@property (nonatomic, strong) NSLayoutConstraint *eventTypeLabelTopConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *eventTypeLabelCenterYConstraint;
+
 @end
 
 @implementation GrowingTKRealtimeSingleBubble
@@ -84,7 +87,10 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
         self.gesidLabel.adjustsFontSizeToFitWidth = YES;
         self.gesidLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.leftBackgroundView addSubview:self.gesidLabel];
-
+        
+        self.eventTypeLabelTopConstraint = [self.eventTypeLabel.topAnchor constraintEqualToAnchor:self.whiteBackgroundView.topAnchor constant:GrowingTKSizeFrom750(4)];
+        self.eventTypeLabelCenterYConstraint = [self.eventTypeLabel.centerYAnchor constraintEqualToAnchor:self.whiteBackgroundView.centerYAnchor];
+        
         [NSLayoutConstraint activateConstraints:@[
             [self.whiteBackgroundView.topAnchor constraintEqualToAnchor:self.topAnchor],
             [self.whiteBackgroundView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
@@ -92,8 +98,8 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
 
             [self.eventTypeLabel.leadingAnchor constraintEqualToAnchor:self.whiteBackgroundView.leadingAnchor constant:GrowingTKSizeFrom750(10)],
             [self.eventTypeLabel.trailingAnchor constraintEqualToAnchor:self.whiteBackgroundView.trailingAnchor constant:-GrowingTKSizeFrom750(10)],
-            [self.eventTypeLabel.topAnchor constraintEqualToAnchor:self.whiteBackgroundView.topAnchor constant:GrowingTKSizeFrom750(4)],
             [self.eventTypeLabel.heightAnchor constraintEqualToConstant:GrowingTKSizeFrom750(26)],
+            self.eventTypeLabelTopConstraint,
             
             [self.detailLabel.leadingAnchor constraintEqualToAnchor:self.whiteBackgroundView.leadingAnchor constant:GrowingTKSizeFrom750(10)],
             [self.detailLabel.trailingAnchor constraintEqualToAnchor:self.whiteBackgroundView.trailingAnchor constant:-GrowingTKSizeFrom750(10)],
@@ -127,6 +133,9 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
     self.gesidLabel.text = [NSString stringWithFormat:@"%@", event.gesid];
     self.eventTypeLabel.text = [NSString stringWithFormat:@"%@", event.eventType];
     self.detailLabel.text = [NSString stringWithFormat:@"%@", event.detail];
+    
+    self.eventTypeLabelTopConstraint.active = self.detailLabel.text.length != 0;
+    self.eventTypeLabelCenterYConstraint.active = self.detailLabel.text.length == 0;
 }
 
 #pragma mark - Action
@@ -134,7 +143,7 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
 - (void)tapAction {
     [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKShowEventsListNotification
                                                         object:nil
-                                                      userInfo:@{@"window" : self.window}];
+                                                      userInfo:@{@"window" : self.window, @"gesids" : @[self.event.gesid.copy]}];
 }
 
 @end

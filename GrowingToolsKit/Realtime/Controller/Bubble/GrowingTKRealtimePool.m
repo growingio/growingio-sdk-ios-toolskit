@@ -21,7 +21,7 @@
 #import "GrowingTKRealtimeEvent.h"
 #import "GrowingTKDefine.h"
 
-static long long const kPopupInterval = 200LL;
+static long long const kPopupInterval = 500LL;
 
 @interface GrowingTKRealtimePool ()
 

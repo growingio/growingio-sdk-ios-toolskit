@@ -27,6 +27,7 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
 @interface GrowingTKRealtimeMutiBubble ()
 
 @property (nonatomic, strong, readwrite) GrowingTKRealtimeEvent *event;
+@property (nonatomic, strong) NSArray<GrowingTKRealtimeEvent *> *events;
 @property (nonatomic, strong) UILabel *eventTypeLabel;
 @property (nonatomic, strong) UILabel *gesidLabel;
 @property (nonatomic, strong) UIView *whiteBackgroundView;
@@ -110,6 +111,7 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
 
 - (void)configWithEvents:(NSArray<GrowingTKRealtimeEvent *> *)events {
     self.event = events.lastObject;
+    self.events = events.copy;
     
     GrowingTKRealtimeEvent *first = events.firstObject;
     GrowingTKRealtimeEvent *last = events.lastObject;
@@ -129,9 +131,13 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
 #pragma mark - Action
 
 - (void)tapAction {
+    NSMutableArray *gesids = [NSMutableArray array];
+    for (GrowingTKRealtimeEvent *event in self.events) {
+        [gesids addObject:event.gesid];
+    }
     [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKShowEventsListNotification
                                                         object:nil
-                                                      userInfo:@{@"window" : self.window}];
+                                                      userInfo:@{@"window" : self.window, @"gesids" : gesids.copy}];
 }
 
 @end

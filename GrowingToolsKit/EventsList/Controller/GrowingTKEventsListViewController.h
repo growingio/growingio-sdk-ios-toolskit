@@ -23,7 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingTKEventsListViewController : GrowingTKBaseViewController
 
-@property (nonatomic, copy) NSArray <NSString *>*eventTypes;
+@property (nonatomic, copy) NSArray<NSString *> *eventTypes;
+@property (nonatomic, copy) NSArray<NSNumber *> *gesids;
 
 @end
 

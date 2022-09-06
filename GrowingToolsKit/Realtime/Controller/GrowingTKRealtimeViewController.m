@@ -86,8 +86,14 @@ static CGFloat const kEventsViewWidth = 370.0f;
     if (!panView.hidden) {
         CGPoint offsetPoint = [sender translationInView:panView];
         [sender setTranslation:CGPointZero inView:panView];
-        self.eventsViewBottomConstraint.constant += offsetPoint.y;
-        [self.eventsView setNeedsUpdateConstraints];
+        CGFloat constant = self.eventsViewBottomConstraint.constant;
+        constant += offsetPoint.y;
+        CGFloat min = -self.view.growingtk_safeAreaLayoutGuide.layoutFrame.size.height + GrowingTKSizeFrom750(100);
+        CGFloat max = -GrowingTKSizeFrom750(kEventsViewMargin);
+        if (constant < max && constant > min) {
+            self.eventsViewBottomConstraint.constant = constant;
+            [self.eventsView setNeedsUpdateConstraints];
+        }
     }
 }
 
