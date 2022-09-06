@@ -19,6 +19,14 @@
 
 #import "GrowingTKRealtimeWindow.h"
 #import "GrowingTKRealtimeViewController.h"
+#import "GrowingTKNavigationController.h"
+
+@interface GrowingTKRealtimeWindow ()
+
+@property (nonatomic, weak) UINavigationController *nav;
+@property (nonatomic, weak) GrowingTKRealtimeViewController *curViewController;
+
+@end
 
 @implementation GrowingTKRealtimeWindow
 
@@ -35,7 +43,12 @@
         }
         self.backgroundColor = UIColor.clearColor;
         self.windowLevel = UIWindowLevelAlert;
-        self.rootViewController = [[GrowingTKRealtimeViewController alloc] init];
+        GrowingTKRealtimeViewController *controller = [[GrowingTKRealtimeViewController alloc] init];
+        GrowingTKNavigationController *nav =
+            [[GrowingTKNavigationController alloc] initWithRootViewController:controller];
+        self.nav = nav;
+        self.curViewController = controller;
+        self.rootViewController = nav;
     }
     return self;
 }
@@ -44,7 +57,7 @@
     if (self.isHidden) {
         self.hidden = NO;
         [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKHomeShouldHideNotification object:nil];
-        [((GrowingTKRealtimeViewController *)self.rootViewController) start];
+        [self.curViewController start];
     } else {
         self.hidden = YES;
     }
@@ -52,7 +65,9 @@
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
     UIView *view = [super hitTest:point withEvent:event];
-    return (view == self || view == self.rootViewController.view) ? nil : view;
+    return (view == self
+            || view == self.rootViewController.view
+            || view == self.curViewController.view) ? nil : view;
 }
 
 @end

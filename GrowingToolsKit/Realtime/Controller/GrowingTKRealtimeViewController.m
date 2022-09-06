@@ -49,6 +49,11 @@ static CGFloat const kEventsViewWidth = 370.0f;
                                                  name:UIKeyboardWillHideNotification object:nil];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
+}
+
 #pragma mark - Public Method
 
 - (void)start {

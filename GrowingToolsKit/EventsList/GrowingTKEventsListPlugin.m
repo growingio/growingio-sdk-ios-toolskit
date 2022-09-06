@@ -48,6 +48,11 @@
                                                  selector:@selector(clearAllEvents)
                                                      name:GrowingTKClearAllEventNotification
                                                    object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(showEventsList:)
+                                                     name:GrowingTKShowEventsListNotification
+                                                   object:nil];
     }
     return self;
 }
@@ -153,6 +158,15 @@
         GrowingTKBaseViewController *controller = (GrowingTKBaseViewController *)GrowingTKUtil.topViewControllerForHomeWindow;
         [controller showToast:GrowingTKLocalizedString(@"未集成SDK，请参考帮助文档进行集成")];
     }
+}
+
+#pragma mark - Notification
+
+- (void)showEventsList:(NSNotification *)not {
+    GrowingTKEventsListViewController *controller = [[GrowingTKEventsListViewController alloc] init];
+    UIWindow *window = [not.userInfo[@"window"] isKindOfClass:[UIWindow class]] ? not.userInfo[@"window"]
+                                                                                : [GrowingTKHomeWindow sharedInstance];
+    [(UINavigationController *)window.rootViewController pushViewController:controller animated:YES];
 }
 
 #pragma mark - Event Track

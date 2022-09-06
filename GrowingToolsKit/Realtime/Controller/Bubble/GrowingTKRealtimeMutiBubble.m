@@ -99,6 +99,9 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
             [self.gesidLabel.topAnchor constraintEqualToAnchor:self.leftBackgroundView.topAnchor],
             [self.gesidLabel.bottomAnchor constraintEqualToAnchor:self.leftBackgroundView.bottomAnchor]
         ]];
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction)];
+        [self addGestureRecognizer:tap];
     }
     return self;
 }
@@ -121,6 +124,14 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
         [eventTypes appendString:e.eventType];
     }
     self.eventTypeLabel.text = eventTypes;
+}
+
+#pragma mark - Action
+
+- (void)tapAction {
+    [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKShowEventsListNotification
+                                                        object:nil
+                                                      userInfo:@{@"window" : self.window}];
 }
 
 @end

@@ -113,6 +113,9 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
             [self.gesidLabel.topAnchor constraintEqualToAnchor:self.leftBackgroundView.topAnchor],
             [self.gesidLabel.bottomAnchor constraintEqualToAnchor:self.leftBackgroundView.bottomAnchor]
         ]];
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction)];
+        [self addGestureRecognizer:tap];
     }
     return self;
 }
@@ -124,6 +127,14 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
     self.gesidLabel.text = [NSString stringWithFormat:@"%@", event.gesid];
     self.eventTypeLabel.text = [NSString stringWithFormat:@"%@", event.eventType];
     self.detailLabel.text = [NSString stringWithFormat:@"%@", event.detail];
+}
+
+#pragma mark - Action
+
+- (void)tapAction {
+    [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKShowEventsListNotification
+                                                        object:nil
+                                                      userInfo:@{@"window" : self.window}];
 }
 
 @end
