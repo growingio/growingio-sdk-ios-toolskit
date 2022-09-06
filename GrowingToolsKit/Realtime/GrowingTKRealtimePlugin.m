@@ -182,6 +182,7 @@ static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSS
         NSNumber *gesid = nil;
         NSNumber *timestamp = nil;
         NSString *detail = @"";
+        BOOL isCustomEvent = NO;
         
         NSString *rawJsonString = [event valueForKey:@"rawJsonString"];
         if (rawJsonString.length == 0) {
@@ -205,6 +206,12 @@ static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSS
                 detail = [detail componentsSeparatedByString:@"/"].lastObject;
             } else if ([eventType isEqualToString:@"CUSTOM"]) {
                 detail = eventDic[@"eventName"];
+                if (eventDic[@"attributes"]) {
+                    NSString *eventDuration = eventDic[@"attributes"][@"eventDuration"];
+                    if (eventDuration) {
+                        detail = [NSString stringWithFormat:@"%@(%@)", detail, eventDuration];
+                    }
+                }
             } else if ([eventType isEqualToString:@"VISIT"]) {
                 detail = eventDic[@"sessionId"];
             } else if ([eventType isEqualToString:@"VIEW_CLICK"]) {
@@ -214,6 +221,14 @@ static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSS
                 detail = eventDic[@"xpath"];
                 detail = [detail componentsSeparatedByString:@"/"].lastObject;
             }
+            
+            if ([eventType isEqualToString:@"CUSTOM"]
+                || [eventType isEqualToString:@"PAGE_ATTRIBUTES"]
+                || [eventType isEqualToString:@"CONVERSION_VARIABLES"]
+                || [eventType isEqualToString:@"LOGIN_USER_ATTRIBUTES"]
+                || [eventType isEqualToString:@"VISITOR_ATTRIBUTES"]) {
+                isCustomEvent = YES;
+            }
         }
         
         GrowingTKRealtimeEvent *eventEntity = [[GrowingTKRealtimeEvent alloc] init];
@@ -221,6 +236,7 @@ static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSS
         eventEntity.gesid = gesid;
         eventEntity.detail = detail;
         eventEntity.timestamp = timestamp;
+        eventEntity.isCustomEvent = isCustomEvent;
         [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKRealtimeEventNotification
                                                             object:nil
                                                           userInfo:@{@"event": eventEntity}];
@@ -268,12 +284,20 @@ static void growingtk_sdk2ndEventTrack(NSInvocation *invocation, id obj, NSStrin
             detail = eventDic[@"x"];
             detail = [detail componentsSeparatedByString:@"/"].lastObject;
         }
+        
+        BOOL isCustomEvent = NO;
+        if ([eventType isEqualToString:@"cstm"]
+            || [eventType isEqualToString:@"activate"]
+            || [eventType isEqualToString:@"reengage"]) {
+            isCustomEvent = YES;
+        }
 
         GrowingTKRealtimeEvent *eventEntity = [[GrowingTKRealtimeEvent alloc] init];
         eventEntity.eventType = eventType;
         eventEntity.gesid = gesid;
         eventEntity.detail = detail;
         eventEntity.timestamp = timestamp;
+        eventEntity.isCustomEvent = isCustomEvent;
         [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKRealtimeEventNotification
                                                             object:nil
                                                           userInfo:@{@"event": eventEntity}];

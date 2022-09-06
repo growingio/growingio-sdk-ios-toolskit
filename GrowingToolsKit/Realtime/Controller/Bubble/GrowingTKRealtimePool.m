@@ -81,6 +81,15 @@ static long long const kPopupInterval = 200LL;
 
 - (void)throwIntoPool:(GrowingTKRealtimeEvent *)event {
     dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.popup && self.lastBubbles.count > 0) {
+            GrowingTKRealtimeEvent *last = self.lastBubbles.lastObject;
+            if (last.isCustomEvent != event.isCustomEvent // 无埋点与埋点分离
+                || [last.gesid isEqualToNumber:@0]) { // 实时埋点开始提示
+                self.popup(self.lastBubbles.copy);
+                [self.lastBubbles removeAllObjects];
+            }
+        }
+        
         [self.lastBubbles addObject:event];
     });
 }

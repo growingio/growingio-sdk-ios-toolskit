@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSNumber *gesid;
 @property (nonatomic, copy) NSString *detail;
 @property (nonatomic, copy) NSNumber *timestamp;
+@property (nonatomic, assign) BOOL isCustomEvent;
 
 @end
 
