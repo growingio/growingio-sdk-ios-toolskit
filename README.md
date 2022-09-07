@@ -10,7 +10,7 @@ GrowingToolsKit 旨在帮助用户提高集成 GrowingIO SDK 效率，在使用 
 
 - [集成文档](https://growingio.github.io/growingio-sdk-docs/docs/giokit/ios/integrate)
 
-- [功能介绍](https://growingio.github.io/growingio-sdk-docs/docs/giokit/ios/feature)
+- [功能介绍](https://growingio.github.io/growingio-sdk-docs/docs/giokit/ios)
 
 
 
