@@ -188,7 +188,7 @@
             goto end;
         }
         id block = ^(id obj) {
-            return growingtk_helper_allWindowsWithoutGrowingWindow(invocation);
+            return growingtk_helper_allWindowsWithoutGrowingWindow(invocation, obj);
         };
         invocation = [class growingtk_swizzleMethod:selector withBlock:block error:nil];
     }
@@ -224,11 +224,12 @@ static id growingtk_sdk3rdInit(NSString *module,
     return ret;
 }
 
-static NSArray<UIWindow *> *growingtk_helper_allWindowsWithoutGrowingWindow(NSInvocation *invocation) {
+static NSArray<UIWindow *> *growingtk_helper_allWindowsWithoutGrowingWindow(NSInvocation *invocation, id obj) {
     if (!invocation) {
         return nil;
     }
-    [invocation invoke];
+    [invocation retainArguments];
+    [invocation invokeWithTarget:obj];
     NSArray<UIWindow *> *ret = nil;
     [invocation getReturnValue:&ret];
     NSMutableArray *windows = [[NSMutableArray alloc] initWithArray:ret];
