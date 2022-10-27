@@ -110,7 +110,7 @@
     sdk3AvoidKVCCrash : {
         Class class = NSClassFromString(@"GrowingTrackConfiguration");
         if (!class) {
-            goto sdk3AutotrackerInitialization;
+            goto end;
         }
         Method originMethod = class_getInstanceMethod(class, NSSelectorFromString(@"valueForUndefinedKey:"));
         IMP swizzledImplementation = (IMP)growingtk_valueForUndefinedKey;
@@ -175,6 +175,23 @@
     }
         // *************** SDK 2.0 ***************
     }
+    sdk3GrowingHelperGetAllWindows : {
+        // 适配圈选
+        Class class = NSClassFromString(@"UIApplication");
+        if (!class) {
+            goto end;
+        }
+
+        __block NSInvocation *invocation = nil;
+        SEL selector = NSSelectorFromString(@"growingHelper_allWindowsWithoutGrowingWindow");
+        if (![class instancesRespondToSelector:selector]) {
+            goto end;
+        }
+        id block = ^(id obj) {
+            return growingtk_helper_allWindowsWithoutGrowingWindow(invocation);
+        };
+        invocation = [class growingtk_swizzleMethod:selector withBlock:block error:nil];
+    }
 end:;
 #endif
 }
@@ -205,6 +222,24 @@ static id growingtk_sdk3rdInit(NSString *module,
     id ret = nil;
     [invocation getReturnValue:&ret];
     return ret;
+}
+
+static NSArray<UIWindow *> *growingtk_helper_allWindowsWithoutGrowingWindow(NSInvocation *invocation) {
+    if (!invocation) {
+        return nil;
+    }
+    [invocation invoke];
+    NSArray<UIWindow *> *ret = nil;
+    [invocation getReturnValue:&ret];
+    NSMutableArray *windows = [[NSMutableArray alloc] initWithArray:ret];
+    for (NSInteger i = windows.count - 1; i >= 0; i--) {
+        UIWindow *win = windows[i];
+
+        if ([NSStringFromClass([win class]) hasPrefix:@"GrowingTK"]) {
+            [windows removeObjectAtIndex:i];
+        }
+    }
+    return windows;
 }
 
 static void growingtk_sdk2ndInit(NSInvocation *invocation, NSString *accountId, CGFloat sampling) {
