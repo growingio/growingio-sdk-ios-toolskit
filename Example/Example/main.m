@@ -11,6 +11,10 @@
 
 int main(int argc, char * argv[])
 {
+#if defined(SDKAPM)
+    [GrowingAPM setupMonitors:GrowingAPMMonitorsCrash | GrowingAPMMonitorsUserInterface
+             appDelegateClass:[AppDelegate class]];
+#endif
     @autoreleasepool {
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
     }

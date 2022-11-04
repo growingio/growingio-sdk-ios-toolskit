@@ -5,31 +5,54 @@
 //
 
 #import <Availability.h>
-#import <Foundation/Foundation.h>
 
 #ifndef __IPHONE_5_0
 #warning "This project uses features only available in iOS SDK 5.0 and later."
 #endif
 
-#define SDK3rd 1
-#define SDK2nd 0
 #define DELAY_INITIALIZED 0
-#define Autotracker 1
-#define SDKCDP 1
 
-#if SDK3rd && Autotracker
+#if __has_include("GrowingAutotracker.h")
+// SDK 3.x 无埋点
 #import "GrowingAutotracker.h"
+#define SDK3rd
+#define AUTOTRACKER
 #define GrowingSDK GrowingAutotracker
 #define GrowingSDKConfiguration GrowingAutotrackConfiguration
-#elif SDK3rd
+#elif __has_include("GrowingTracker.h")
+// SDK 3.x 埋点
 #import "GrowingTracker.h"
+#define SDK3rd
 #define GrowingSDK GrowingTracker
 #define GrowingSDKConfiguration GrowingTrackConfiguration
-#elif SDK2nd
+#elif __has_include("Growing.h")
+// SDK 2.x
 #import "Growing.h"
+#define SDK2nd
+#if __has_include(<GrowingAutoTrackKit/GrowingAutoTrackKit.h>)
+// SDK 2.x 无埋点
+#define AUTOTRACKER
+#endif
+#endif
+
+#if __has_include("GrowingTrackConfiguration+CdpTracker.h")
+// CDP SDK
+#define SDKCDP
+#endif
+
+#if __has_include("GrowingAdvertising.h")
+// Advert Module
+#import "GrowingAdvertising.h"
+#define SDKADVERT
+#endif
+
+#if __has_include("GrowingAPMModule.h")
+// APM Module
+#import "GrowingAPMModule.h"
+#define SDKAPM
 #endif
 
 #ifdef __OBJC__
-    @import UIKit;
-    @import Foundation;
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 #endif
