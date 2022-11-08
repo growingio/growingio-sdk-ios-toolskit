@@ -17,14 +17,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#ifdef DEBUG
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingTKAPMUtil : NSObject
 
-- (void)growingtk_APMInit;
-
 @end
 
 NS_ASSUME_NONNULL_END
+#endif

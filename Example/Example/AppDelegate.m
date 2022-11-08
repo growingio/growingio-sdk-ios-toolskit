@@ -21,10 +21,12 @@
 #if DELAY_INITIALIZED
 #if defined(SDKAPM)
     [GrowingAPM didFinishLaunching];
-    [GrowingToolsKit start]; //延迟初始化 +[GrowingAPM didFinishLaunching] 需要在 +[GrowingToolsKit start] 之前
 #endif
-#else
+#endif
+    
     [GrowingToolsKit start];
+    
+#if !DELAY_INITIALIZED
 #if defined(SDK3rd)
     [self SDK3rdStart];
 #endif
