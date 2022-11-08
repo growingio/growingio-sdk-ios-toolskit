@@ -12,6 +12,13 @@
 int main(int argc, char * argv[])
 {
 #if defined(SDKAPM)
+#if defined(SDK2nd)
+    // SDK 2.0 GrowingAspectModeSubClass 与 GrowingAPM SDK 不兼容
+    [Growing setAspectMode:GrowingAspectModeDynamicSwizzling];
+#endif
+#endif
+    
+#if defined(SDKAPMMODULE)
     [GrowingAPM setupMonitors];
 #endif
     @autoreleasepool {

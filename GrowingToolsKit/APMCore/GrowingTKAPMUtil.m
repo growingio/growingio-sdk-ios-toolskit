@@ -17,6 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#ifdef DEBUG
 #import "GrowingTKAPMUtil.h"
 #import "GrowingTKDefine.h"
 #import "GrowingTKSDKUtil.h"
@@ -25,6 +26,10 @@
 #import "GrowingAPM+Private.h"
 
 /*
+ GrowingAPM setupMonitors 分为 2 种：
+ 1. GrowingAnalytics SDK (3.0) 集成 APM Module：假定用户会在 main 函数中调用 +[GrowingAPM setupMonitors]；如果用户没调用，则会收集不到数据
+ 2. SDK 2.0 / SDK 3.0 未集成 APM Module：在 C++ Init 时机调用 +[GrowingAPM setupMonitors]，减少用户集成步骤
+ 
  GrowingAPM 初始化分为 3 种：
  1. GrowingAnalytics SDK (3.0) 集成 APM Module：不论是否初始化成功，都对其中的 -[GrowingAPMModule growingModInit:] 方法进行 hook
  2. GrowingAnalytics SDK (3.0) 未集成 APM Module：在 +[GrowingToolsKit start] setupDefaultPlugins 之后，初始化 GrowingAPM
@@ -45,7 +50,6 @@
 #pragma mark - Swizzle
 
 + (void)load {
-#ifdef DEBUG
     if (GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration) {
         // *************** SDK 3.0 ***************
         Class class = NSClassFromString(@"GrowingAPMModule");
@@ -71,7 +75,20 @@
                                                      name:GrowingTKSetupDefaultPluginsNotification
                                                    object:nil];
     }
-#endif
+}
+
+__used __attribute__((constructor(62500))) static void setupMonitors(void) {
+    if (GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration) {
+        // *************** SDK 3.0 ***************
+        Class class = NSClassFromString(@"GrowingAPMModule");
+        if (!class) {
+            // 没有集成 APM Module
+            [GrowingAPM setupMonitors];
+        }
+    } else if (GrowingTKSDKUtil.sharedInstance.isSDK2ndGeneration) {
+        // *************** SDK 2.0 ***************
+        [GrowingAPM setupMonitors];
+    }
 }
 
 static void growingtk_growingAPMModInit(NSInvocation *invocation, id apmModule, id context) {
@@ -129,3 +146,4 @@ static void growingtk_growingAPMModInit(NSInvocation *invocation, id apmModule, 
 }
 
 @end
+#endif
