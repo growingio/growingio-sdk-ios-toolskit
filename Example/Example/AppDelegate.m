@@ -18,9 +18,13 @@
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+#if DELAY_INITIALIZED
+#if defined(SDKAPM)
+    [GrowingAPM didFinishLaunching];
+    [GrowingToolsKit start]; //延迟初始化 +[GrowingAPM didFinishLaunching] 需要在 +[GrowingToolsKit start] 之前
+#endif
+#else
     [GrowingToolsKit start];
-    
-#if !DELAY_INITIALIZED
 #if defined(SDK3rd)
     [self SDK3rdStart];
 #endif
@@ -56,11 +60,11 @@
     configuration.dataSourceId = @"1234567890";
 #endif
     
-#if defined(SDKADVERT)
+#if defined(SDKADVERTMODULE)
     configuration.ASAEnabled = YES;
 #endif
     
-#if defined(SDKAPM)
+#if defined(SDKAPMMODULE)
     GrowingAPMConfig *config = GrowingAPMConfig.config;
     config.monitors = GrowingAPMMonitorsCrash | GrowingAPMMonitorsUserInterface;
     configuration.APMConfig = config;

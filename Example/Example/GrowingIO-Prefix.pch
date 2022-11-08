@@ -43,13 +43,18 @@
 #if __has_include("GrowingAdvertising.h")
 // Advert Module
 #import "GrowingAdvertising.h"
-#define SDKADVERT
+#define SDKADVERTMODULE
 #endif
 
+#if __has_include("GrowingAPM+Private.h")
+// APM SDK
+#import "GrowingAPM+Private.h"
+#define SDKAPM
 #if __has_include("GrowingAPMModule.h")
 // APM Module
 #import "GrowingAPMModule.h"
-#define SDKAPM
+#define SDKAPMMODULE
+#endif
 #endif
 
 #ifdef __OBJC__

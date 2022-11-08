@@ -1,18 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-
-<plist version="1.0">
-
-<dict>
-
-<key>FILEHEADER</key>
-
-<string>
-//  ___FILENAME___
+//
+//  GrowingTKCrashLogsDetailViewController.h
 //  GrowingToolsKit
 //
-//  Created by ___FULLUSERNAME___ on ___DATE___.
+//  Created by YoloMao on 2022/11/7.
 //  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,8 +16,17 @@
 //  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
-</string>
 
-</dict>
+#import "GrowingTKBaseViewController.h"
 
-</plist>
+NS_ASSUME_NONNULL_BEGIN
+
+@class GrowingTKCrashLogsPersistence;
+
+@interface GrowingTKCrashLogsDetailViewController : GrowingTKBaseViewController
+
+@property (nonatomic, strong) GrowingTKCrashLogsPersistence *crashLog;
+
+@end
+
+NS_ASSUME_NONNULL_END

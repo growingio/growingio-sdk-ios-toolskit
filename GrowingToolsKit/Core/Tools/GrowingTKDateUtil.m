@@ -43,6 +43,7 @@
         format = @"yyyy-MM-dd HH:mm:ss";
     }
     self.defaultFormatter.dateFormat = format;
+    self.defaultFormatter.timeZone = [NSTimeZone localTimeZone];
     return [self.defaultFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:timestamp / 1000LL]];
 }
 

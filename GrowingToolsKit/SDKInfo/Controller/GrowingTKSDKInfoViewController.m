@@ -99,7 +99,7 @@
     ]];
 
     if (sdk.isInitialized) {
-        [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"项目 ID"), @"value": sdk.projectId}];
+        [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"Project ID"), @"value": sdk.projectId}];
         if (sdk.isSDK2ndGeneration) {
             [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"采样率"), @"value": [NSString stringWithFormat:@"%.3f%%", sdk.sampling * 100]}];
             [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"采集模式"), @"value": sdk.sdk2ndAspectMode}];

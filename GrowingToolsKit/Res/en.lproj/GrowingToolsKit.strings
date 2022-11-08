@@ -46,7 +46,7 @@
     "正在获取URL Scheme配置" = "Getting URL Scheme";
     "是否适配URL Scheme" = "Adapt to URL Scheme or not";
     "是否适配Deep Link" = "Adapt to Deep Link or not";
-    "正在获取项目 ID" = "Getting 项目 ID";
+    "正在获取项目 ID" = "Getting Project ID";
     "正在获取采样率" = "Getting Sampling";
     "正在获取DataSource ID" = "Getting Datasource ID";
     "正在获取ServerHost" = "Getting ServerHost";
@@ -136,10 +136,16 @@
     "实时事件监控中" = "monitoring...";
     "实时事件检测开始" = "Real-time event detection starts";
     
+    // #性能
+    "性能" = "Performance";
+    "错误报告" = "CrashLogs";
+    
     // #设置
     "数据" = "LocalData";
     "清空事件" = "ClearAllEvents";
     "清空事件库中的所有事件数据" = "Clear all event data in database";
     "清空网络" = "ClearAllRequests";
     "清空网络记录下的所有请求数据" = "Clear all request data in database";
+    "清空性能数据" = "ClearAllPerformanceData";
+    "清空性能监控下产生的所有历史数据" = "Clear all performance data in database";
 }

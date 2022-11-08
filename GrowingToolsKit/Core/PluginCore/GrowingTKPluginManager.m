@@ -57,6 +57,10 @@ NSString *GrowingTKDefaultModuleName(void) {
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_HybridPlugin];
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_RealtimePlugin];
     
+    // *************** 性能 ***************
+    [self addPluginWithPluginType:GrowingTKDefaultPluginType_CrashMonitorPlugin];
+    [self addPluginWithPluginType:GrowingTKDefaultPluginType_UIMonitorPlugin];
+    
     // *************** 设置 ***************
     [self addPluginWithPluginType:GrowingTKDefaultPluginType_GeneralSettingsPlugin];
 }
@@ -140,6 +144,8 @@ NSString *GrowingTKDefaultModuleName(void) {
         @(GrowingTKDefaultPluginType_LogPlugin): @"GrowingTKLogPlugin",
         @(GrowingTKDefaultPluginType_HybridPlugin): @"GrowingTKHybridPlugin",
         @(GrowingTKDefaultPluginType_RealtimePlugin): @"GrowingTKRealtimePlugin",
+        @(GrowingTKDefaultPluginType_CrashMonitorPlugin): @"GrowingTKCrashMonitorPlugin",
+        @(GrowingTKDefaultPluginType_UIMonitorPlugin): @"GrowingTKUIMonitorPlugin",
         @(GrowingTKDefaultPluginType_GeneralSettingsPlugin): @"GrowingTKSettingsPlugin",
     }[@(pluginType)];
 

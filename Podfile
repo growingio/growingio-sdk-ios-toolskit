@@ -13,6 +13,7 @@ target 'Example' do
   pod 'GrowingAnalytics-cdp/Autotracker'
 #  pod 'GrowingAnalytics/Advert'
 #  pod 'GrowingAnalytics/APM'
+#  pod 'GrowingAPM'
 #  pod 'GrowingAnalytics/Protobuf'
 #  pod 'GrowingAnalytics/Hybrid'
 #  pod 'GrowingAnalytics/DISABLE_IDFA' #禁用idfa

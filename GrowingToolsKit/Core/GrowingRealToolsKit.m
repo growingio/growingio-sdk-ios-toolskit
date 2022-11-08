@@ -25,6 +25,8 @@
 
 NSString *const GrowingToolsKitName = @"GrowingToolsKit";
 
+NSString *const GrowingTKSetupDefaultPluginsNotification = @"GrowingTKSetupDefaultPluginsNotification";
+
 NSString *const GrowingTKHomeWillShowNotification = @"GrowingTKHomeWillShowNotification";
 NSString *const GrowingTKHomeShouldHideNotification = @"GrowingTKHomeShouldHideNotification";
 
@@ -32,6 +34,7 @@ NSString *const GrowingTKShowEventsListNotification = @"GrowingTKShowEventsListN
 
 NSString *const GrowingTKClearAllEventNotification = @"GrowingTKClearAllEventNotification";
 NSString *const GrowingTKClearAllRequestsNotification = @"GrowingTKClearAllRequestsNotification";
+NSString *const GrowingTKClearAllCrashLogsNotification = @"GrowingTKClearAllCrashLogsNotification";
 
 NSString *const GrowingTKRealtimeEventNotification = @"GrowingTKRealtimeEventNotification";
 NSString *const GrowingTKRealtimeStatusNotification = @"GrowingTKRealtimeStatusNotification";
@@ -75,6 +78,7 @@ static GrowingRealToolsKit *instance = nil;
     }
 
     [[GrowingTKPluginManager sharedInstance] setupDefaultPlugins];
+    [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKSetupDefaultPluginsNotification object:nil];
     [[self sharedInstance] initEntry:position autoDock:autoDock];
 #endif
 }

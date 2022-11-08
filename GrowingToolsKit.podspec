@@ -31,6 +31,8 @@ TODO: Add long description of the pod here.
     default.dependency 'GrowingToolsKit/NetFlow'
     default.dependency 'GrowingToolsKit/Realtime'
     default.dependency 'GrowingToolsKit/Settings'
+    default.dependency 'GrowingToolsKit/CrashMonitor'
+    default.dependency 'GrowingToolsKit/UIMonitor'
   end
   
   s.subspec 'SDK30202' do |sdk30202|
@@ -93,6 +95,26 @@ TODO: Add long description of the pod here.
     realtime.source_files = 'GrowingToolsKit/Realtime/**/*{.h,.m,.c,.cpp,.mm}'
     realtime.public_header_files = 'GrowingToolsKit/Realtime/Public/*.h'
     realtime.dependency 'GrowingToolsKit/Core'
+  end
+
+  s.subspec 'APMCore' do |apm|
+    apm.source_files = 'GrowingToolsKit/APMCore/**/*{.h,.m,.c,.cpp,.mm}'
+    apm.dependency 'GrowingToolsKit/Core'
+    apm.dependency 'GrowingAPM/Core'
+  end
+
+  s.subspec 'CrashMonitor' do |monitor|
+    monitor.source_files = 'GrowingToolsKit/CrashMonitor/**/*{.h,.m,.c,.cpp,.mm}'
+    monitor.public_header_files = 'GrowingToolsKit/CrashMonitor/Public/*.h'
+    monitor.dependency 'GrowingToolsKit/APMCore'
+    monitor.dependency 'GrowingAPM/CrashMonitor'
+  end
+
+  s.subspec 'UIMonitor' do |monitor|
+    monitor.source_files = 'GrowingToolsKit/UIMonitor/**/*{.h,.m,.c,.cpp,.mm}'
+    monitor.public_header_files = 'GrowingToolsKit/UIMonitor/Public/*.h'
+    monitor.dependency 'GrowingToolsKit/APMCore'
+    monitor.dependency 'GrowingAPM/UIMonitor'
   end
 
   s.subspec 'Settings' do |settings|

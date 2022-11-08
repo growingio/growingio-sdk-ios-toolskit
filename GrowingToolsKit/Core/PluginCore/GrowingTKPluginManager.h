@@ -39,6 +39,12 @@ typedef NS_ENUM(NSUInteger, GrowingTKDefaultPluginType) {
     // 实时事件
     GrowingTKDefaultPluginType_RealtimePlugin,
     
+    // *************** 性能 ***************
+    // 错误报告
+    GrowingTKDefaultPluginType_CrashMonitorPlugin,
+    // 启动耗时
+    GrowingTKDefaultPluginType_UIMonitorPlugin,
+    
     // *************** 设置 ***************
     // 通用设置
     GrowingTKDefaultPluginType_GeneralSettingsPlugin,
