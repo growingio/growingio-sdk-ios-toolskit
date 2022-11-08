@@ -1,18 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-
-<plist version="1.0">
-
-<dict>
-
-<key>FILEHEADER</key>
-
-<string>
-//  ___FILENAME___
+//
+//  GrowingTKDatabase+CrashLogs.h
 //  GrowingToolsKit
 //
-//  Created by ___FULLUSERNAME___ on ___DATE___.
+//  Created by YoloMao on 2022/11/7.
 //  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,8 +16,31 @@
 //  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
-</string>
 
-</dict>
+#import "GrowingTKDatabase.h"
 
-</plist>
+NS_ASSUME_NONNULL_BEGIN
+
+@class GrowingTKCrashLogsPersistence;
+
+@interface GrowingTKDatabase (CrashLogs)
+
+- (void)createCrashLogsTable;
+
+- (NSInteger)countOfCrashLogs;
+
+- (NSArray<GrowingTKCrashLogsPersistence *> *)getAllCrashLogs;
+
+- (BOOL)insertCrashLog:(GrowingTKCrashLogsPersistence *)crashLog;
+
+- (BOOL)insertCrashLogs:(NSArray<GrowingTKCrashLogsPersistence *> *)crashLogs;
+
+- (BOOL)deleteCrashLog:(NSString *)key;
+
+- (BOOL)deleteCrashLogs:(NSArray<NSString *> *)keys;
+
+- (BOOL)clearAllCrashLogs;
+
+@end
+
+NS_ASSUME_NONNULL_END
