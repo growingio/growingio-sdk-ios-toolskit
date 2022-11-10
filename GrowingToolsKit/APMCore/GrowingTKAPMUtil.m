@@ -17,7 +17,6 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#ifdef DEBUG
 #import "GrowingTKAPMUtil.h"
 #import "GrowingTKDefine.h"
 #import "GrowingTKSDKUtil.h"
@@ -37,6 +36,8 @@
  */
 
 @implementation GrowingTKAPMUtil
+
+#ifdef DEBUG
 
 + (instancetype)sharedInstance {
     static id instance;
@@ -78,6 +79,9 @@
 }
 
 __used __attribute__((constructor(62500))) static void setupMonitors(void) {
+    if (!GrowingTKAPMUtil.isOpenCrashMonitor && !GrowingTKAPMUtil.isOpenLaunchTime) {
+        return;
+    }
     if (GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration) {
         // *************** SDK 3.0 ***************
         Class class = NSClassFromString(@"GrowingAPMModule");
@@ -104,13 +108,23 @@ static void growingtk_growingAPMModInit(NSInvocation *invocation, id apmModule, 
     [invocation invokeWithTarget:apmModule];
 }
 
++ (BOOL)isOpenCrashMonitor {
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    return ((NSNumber *)[ud objectForKey:GrowingTKLocalStorageKeyOpenCrashMonitor]).boolValue;
+}
+
++ (BOOL)isOpenLaunchTime {
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    return ((NSNumber *)[ud objectForKey:GrowingTKLocalStorageKeyOpenLaunchTime]).boolValue;
+}
+
 - (void)growingtk_APMInit {
     GrowingAPMConfig *config = [GrowingAPMConfig config];
     config.monitors = GrowingAPMMonitorsCrash | GrowingAPMMonitorsUserInterface;
     [GrowingAPM startWithConfig:config];
     
     GrowingAPM *apm = GrowingAPM.sharedInstance;
-    {
+    if (GrowingTKAPMUtil.isOpenCrashMonitor) {
         id plugin = nil;
         Class class = NSClassFromString(@"GrowingTKCrashMonitorPlugin");
         SEL sharedInstance = NSSelectorFromString(@"plugin");
@@ -127,7 +141,7 @@ static void growingtk_growingAPMModInit(NSInvocation *invocation, id apmModule, 
         }
     }
     
-    {
+    if (GrowingTKAPMUtil.isOpenLaunchTime) {
         id plugin = nil;
         Class class = NSClassFromString(@"GrowingTKLaunchTimePlugin");
         SEL sharedInstance = NSSelectorFromString(@"plugin");
@@ -145,5 +159,7 @@ static void growingtk_growingAPMModInit(NSInvocation *invocation, id apmModule, 
     }
 }
 
-@end
 #endif
+
+@end
+

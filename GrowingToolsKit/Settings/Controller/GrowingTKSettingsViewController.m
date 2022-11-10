@@ -66,20 +66,42 @@
     NSDictionary *dic = (NSDictionary *)self.datasource[indexPath.section];
     NSArray *elements = dic[dic.allKeys.firstObject];
     NSDictionary *element = (NSDictionary *)elements[indexPath.row];
-    [cell configWithTitle:element[@"title"] detail:element[@"detail"] image:element[@"image"]];
+    
+    if (indexPath.section == 0) {
+        __weak typeof(self) weakSelf = self;
+        [cell configWithTitle:element[@"title"] image:element[@"image"] localStorageKey:element[@"localStorageKey"] block:^{
+            __strong typeof(weakSelf) self = weakSelf;
+            UIAlertController *controller = [UIAlertController alertControllerWithTitle:GrowingTKLocalizedString(@"提示")
+                                                                                message:GrowingTKLocalizedString(@"重启生效")
+                                                                         preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:GrowingTKLocalizedString(@"确定")
+                                                                    style:UIAlertActionStyleDefault
+                                                                  handler:^(UIAlertAction * _Nonnull action) {
+                exit(0);
+            }];
+            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:GrowingTKLocalizedString(@"取消")
+                                                                   style:UIAlertActionStyleCancel
+                                                                 handler:nil];
+            [controller addAction:cancelAction];
+            [controller addAction:confirmAction];
+            [self presentViewController:controller animated:YES completion:nil];
+        }];
+    } else {
+        [cell configWithTitle:element[@"title"] detail:element[@"detail"] image:element[@"image"]];
+    }
     return cell;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, GrowingTKScreenWidth, GrowingTKSizeFrom750(100))];
 
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(GrowingTKSizeFrom750(134),
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(GrowingTKSizeFrom750(120),
                                                                GrowingTKSizeFrom750(26),
                                                                GrowingTKScreenWidth - GrowingTKSizeFrom750(64),
                                                                GrowingTKSizeFrom750(48))];
     label.text = ((NSDictionary *)self.datasource[section]).allKeys.firstObject;
     label.font = [UIFont systemFontOfSize:GrowingTKSizeFrom750(30) weight:UIFontWeightMedium];
-    label.textColor = UIColor.systemGreenColor;
+    label.textColor = UIColor.growingtk_secondaryBackgroundColor;
     [view addSubview:label];
 
     return view;
@@ -99,6 +121,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    if (indexPath.section != 1) {
+        return;
+    }
     
     NSDictionary *dic = (NSDictionary *)self.datasource[indexPath.section];
     NSArray *elements = dic[dic.allKeys.firstObject];
@@ -142,21 +168,38 @@
     if (!_datasource) {
         _datasource = @[
         @{
+            GrowingTKLocalizedString(@"性能监控") : @[
+                @{
+                    @"title" : GrowingTKLocalizedString(@"崩溃监控"),
+                    @"image" : [UIImage growingtk_imageNamed:@"growingtk_crashMonitor_black"],
+                    @"localStorageKey" : GrowingTKLocalStorageKeyOpenCrashMonitor
+                },
+                @{
+                    @"title" : GrowingTKLocalizedString(@"启动耗时"),
+                    @"image" : [UIImage growingtk_imageNamed:@"growingtk_launchTime_black"],
+                    @"localStorageKey" : GrowingTKLocalStorageKeyOpenLaunchTime
+                }
+            ]
+        },
+        @{
             GrowingTKLocalizedString(@"数据") : @[
-                @{@"title" : GrowingTKLocalizedString(@"清空事件"),
-                  @"detail" : GrowingTKLocalizedString(@"清空事件库中的所有事件数据"),
-                  @"image" : [UIImage growingtk_imageNamed:@"growingtk_eventsList_black"],
-                  @"notification" : GrowingTKClearAllEventNotification
+                @{
+                    @"title" : GrowingTKLocalizedString(@"清空事件"),
+                    @"detail" : GrowingTKLocalizedString(@"清空事件库中的所有事件数据"),
+                    @"image" : [UIImage growingtk_imageNamed:@"growingtk_eventsList_black"],
+                    @"notification" : GrowingTKClearAllEventNotification
                 },
-                @{@"title" : GrowingTKLocalizedString(@"清空网络"),
-                  @"detail" : GrowingTKLocalizedString(@"清空网络记录下的所有请求数据"),
-                  @"image" : [UIImage growingtk_imageNamed:@"growingtk_netFlow_black"],
-                  @"notification" : GrowingTKClearAllRequestsNotification
+                @{
+                    @"title" : GrowingTKLocalizedString(@"清空网络"),
+                    @"detail" : GrowingTKLocalizedString(@"清空网络记录下的所有请求数据"),
+                    @"image" : [UIImage growingtk_imageNamed:@"growingtk_netFlow_black"],
+                    @"notification" : GrowingTKClearAllRequestsNotification
                 },
-                @{@"title" : GrowingTKLocalizedString(@"清空性能数据"),
-                  @"detail" : GrowingTKLocalizedString(@"清空性能监控下产生的所有历史数据"),
-                  @"image" : [UIImage growingtk_imageNamed:@"growingtk_performance_black"],
-                  @"notification" : GrowingTKClearAllPerformanceDataNotification
+                @{
+                    @"title" : GrowingTKLocalizedString(@"清空性能数据"),
+                    @"detail" : GrowingTKLocalizedString(@"清空性能监控下产生的所有历史数据"),
+                    @"image" : [UIImage growingtk_imageNamed:@"growingtk_performance_black"],
+                    @"notification" : GrowingTKClearAllPerformanceDataNotification
                 }
             ]
         }];

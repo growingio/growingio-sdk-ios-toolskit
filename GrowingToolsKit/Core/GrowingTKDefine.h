@@ -38,6 +38,9 @@ FOUNDATION_EXTERN NSString *const GrowingTKClearAllPerformanceDataNotification;
 FOUNDATION_EXTERN NSString *const GrowingTKRealtimeEventNotification;
 FOUNDATION_EXTERN NSString *const GrowingTKRealtimeStatusNotification;
 
+FOUNDATION_EXTERN NSString *const GrowingTKLocalStorageKeyOpenCrashMonitor;
+FOUNDATION_EXTERN NSString *const GrowingTKLocalStorageKeyOpenLaunchTime;
+
 typedef NS_ENUM(NSUInteger, GrowingTKModule) {
     GrowingTKModulePlugins,
     GrowingTKModuleCheckSelf

@@ -60,7 +60,7 @@
 
 - (NSString *)day {
     if (!_day) {
-        _day = [GrowingTKDateUtil.sharedInstance timeStringFromTimestamp:self.timestamp format:@"yyyyMMdd"];
+        _day = [GrowingTKDateUtil.sharedInstance timeStringFromTimestamp:self.timestamp format:@"MM-dd"];
     }
     return _day;
 }

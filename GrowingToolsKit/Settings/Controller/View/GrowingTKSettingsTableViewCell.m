@@ -26,6 +26,12 @@
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *detailLabel;
 @property (nonatomic, strong) UIImageView *leftImageView;
+@property (nonatomic, strong) UISwitch *openSwitch;
+@property (nonatomic, copy) NSString *localStorageKey;
+@property (nonatomic, copy) void(^block)(void);
+
+@property (nonatomic, strong) NSLayoutConstraint *titleLabelTopConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *titleLabelCenterYConstraint;
 
 @end
 
@@ -57,6 +63,16 @@
         self.leftImageView = [[UIImageView alloc] init];
         self.leftImageView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.leftImageView];
+        
+        self.openSwitch = [[UISwitch alloc] init];
+        self.openSwitch.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.openSwitch addTarget:self action:@selector(switchValueChanged:) forControlEvents:UIControlEventValueChanged];
+        [self.contentView addSubview:self.openSwitch];
+        
+        self.titleLabelTopConstraint = [self.titleLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor
+                                                                                 constant:GrowingTKSizeFrom750(20)];
+        
+        self.titleLabelCenterYConstraint = [self.titleLabel.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor];
 
         [NSLayoutConstraint activateConstraints:@[
             [self.leftImageView.widthAnchor constraintEqualToConstant:GrowingTKSizeFrom750(65)],
@@ -65,21 +81,54 @@
             [self.leftImageView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:GrowingTKSizeFrom750(32)],
             
             [self.titleLabel.leadingAnchor constraintEqualToAnchor:self.leftImageView.trailingAnchor constant:GrowingTKSizeFrom750(32)],
-            [self.titleLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:GrowingTKSizeFrom750(20)],
+            self.titleLabelTopConstraint,
             [self.titleLabel.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-GrowingTKSizeFrom750(20)],
             
             [self.detailLabel.leadingAnchor constraintEqualToAnchor:self.titleLabel.leadingAnchor],
             [self.detailLabel.topAnchor constraintEqualToAnchor:self.titleLabel.bottomAnchor constant:GrowingTKSizeFrom750(10)],
             [self.detailLabel.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant:-GrowingTKSizeFrom750(20)],
-            [self.detailLabel.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-GrowingTKSizeFrom750(20)]
+            [self.detailLabel.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-GrowingTKSizeFrom750(20)],
+            
+            [self.openSwitch.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-GrowingTKSizeFrom750(20)],
+            [self.openSwitch.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor]
         ]];
     }
     return self;
 }
 
+#pragma mark - Action
+
+- (void)switchValueChanged:(UISwitch *)sender {
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    [ud setObject:@(sender.isOn) forKey:self.localStorageKey];
+    
+    if (self.block) {
+        self.block();
+    }
+}
+
 #pragma mark - Public Method
 
+- (void)configWithTitle:(NSString *)title image:(UIImage *)image localStorageKey:(NSString *)key block:(void(^)(void))block {
+    self.titleLabelTopConstraint.active = NO;
+    self.titleLabelCenterYConstraint.active = YES;
+    self.openSwitch.hidden = NO;
+    self.detailLabel.hidden = YES;
+    
+    self.titleLabel.text = title;
+    self.leftImageView.image = image;
+    self.localStorageKey = key;
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    self.openSwitch.on = ((NSNumber *)[ud objectForKey:key]).boolValue;
+    self.block = block;
+}
+
 - (void)configWithTitle:(NSString *)title detail:(NSString *)detail image:(UIImage *)image {
+    self.titleLabelCenterYConstraint.active = NO;
+    self.titleLabelTopConstraint.active = YES;
+    self.openSwitch.hidden = YES;
+    self.detailLabel.hidden = NO;
+    
     self.titleLabel.text = title;
     self.detailLabel.text = detail;
     self.leftImageView.image = image;
