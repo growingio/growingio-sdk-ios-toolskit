@@ -211,7 +211,7 @@ static CGFloat const CheckButtonHeight = 130.0f;
         [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
                      @"check": @(0),
                      @"checkMessage": GrowingTKLocalizedString(@"正在获取项目 ID"),
-                     @"title": GrowingTKLocalizedString(@"项目 ID"),
+                     @"title": GrowingTKLocalizedString(@"Project ID"),
                      @"value": sdk.projectId
                  }]];
         
@@ -262,6 +262,15 @@ static CGFloat const CheckButtonHeight = 130.0f;
                      @"value": dataCollectionEnabled,
                      @"bad": @(!(sdk.dataCollectionEnabled))
                  }]];
+        
+        if (sdk.isSDK3rdGeneration) {
+            [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
+                         @"check": @(0),
+                         @"checkMessage": GrowingTKLocalizedString(@"检测集成模块"),
+                         @"title": GrowingTKLocalizedString(@"集成模块"),
+                         @"value": [sdk.SDK3Modules componentsJoinedByString:@", "]
+                     }]];
+        }
     }
 
     self.datasource = nil;

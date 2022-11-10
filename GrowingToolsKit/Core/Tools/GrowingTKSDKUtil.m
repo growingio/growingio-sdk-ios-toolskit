@@ -300,6 +300,26 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
     return NO;
 }
 
+- (NSArray *)SDK3Modules {
+    if (self.isSDK3rdGeneration) {
+        NSMutableArray *modules = [NSMutableArray array];
+        if (NSClassFromString(@"GrowingAdvertising")) {
+            [modules addObject:@"Advert"];
+        }
+        if (NSClassFromString(@"GrowingAPMModule")) {
+            [modules addObject:@"APM"];
+        }
+        if (NSClassFromString(@"GrowingHybridModule")) {
+            [modules addObject:@"Hybrid"];
+        }
+        if (NSClassFromString(@"GrowingProtobufModule")) {
+            [modules addObject:@"Protobuf"];
+        }
+        return modules.copy;
+    }
+    return @[];
+}
+
 - (NSString *)nameDescription {
     return [NSString stringWithFormat:@"%@%@", self.name, self.subName];
 }

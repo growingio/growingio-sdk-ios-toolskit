@@ -72,6 +72,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isSDK3rdGeneration;
 - (BOOL)isSDK2ndGeneration;
 - (BOOL)isSDKAutoTrack;
+- (NSArray *)SDK3Modules;
 - (NSString *)nameDescription;
 - (NSString *)initializationDescription;
 - (NSString *)excludeEventDescription;
