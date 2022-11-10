@@ -78,6 +78,7 @@
         self.timeLabel.textColor = UIColor.growingtk_black_1;
         self.timeLabel.font = [UIFont systemFontOfSize:GrowingTKSizeFrom750(28)];
         self.timeLabel.textAlignment = NSTextAlignmentCenter;
+        self.timeLabel.numberOfLines = 2;
         self.timeLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.timeLabel];
 
@@ -126,7 +127,7 @@
 - (void)showLaunchTime:(GrowingTKLaunchTimePersistence *)record {
     self.nameLabel.text = record.page;
     self.durationLabel.text = [NSString stringWithFormat:@"%.fms", record.duration];
-    self.timeLabel.text = record.time;
+    self.timeLabel.text = [NSString stringWithFormat:@"%@\n%@", record.time, record.day];
     
     switch (record.type) {
         case GrowingTKLaunchTimeTypeAppLaunch:

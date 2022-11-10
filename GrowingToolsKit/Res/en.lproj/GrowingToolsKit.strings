@@ -36,6 +36,8 @@
     "确定" = "Confirm";
     "取消" = "Cancel";
     "删除全部" = "Clear All";
+    "重启生效" = "Relaunch to work";
+    "请前往设置开启该功能" = "Please open this feature in GeneralSettings";
     
     // #Check Self
     "点击检查埋点 SDK 是否集成成功" = "Click to check whether the SDK is successfully integrated";
@@ -153,4 +155,6 @@
     "清空网络记录下的所有请求数据" = "Clear all request data in database";
     "清空性能数据" = "ClearAllPerformanceData";
     "清空性能监控下产生的所有历史数据" = "Clear all performance data in database";
+    "性能监控" = "Performance Monitor";
+    "崩溃监控" = "CrashMonitor";
 }

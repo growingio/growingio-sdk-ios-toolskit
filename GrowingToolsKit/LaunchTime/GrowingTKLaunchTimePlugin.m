@@ -21,6 +21,7 @@
 #import "GrowingTKLaunchTimeViewController.h"
 #import "GrowingTKDatabase+LaunchTime.h"
 #import "GrowingTKLaunchTimePersistence.h"
+#import "GrowingTKAPMUtil.h"
 
 #import "GrowingTKSDKUtil.h"
 #import "GrowingTKUtil.h"
@@ -70,7 +71,7 @@
 }
 
 - (NSString *)icon {
-    return @"growingtk_uiMonitor";
+    return @"growingtk_launchTime";
 }
 
 - (NSString *)pluginName {
@@ -86,13 +87,12 @@
 }
 
 - (void)pluginDidLoad {
-    GrowingTKSDKUtil *sdk = GrowingTKSDKUtil.sharedInstance;
-    if (sdk.isIntegrated) {
+    if (GrowingTKAPMUtil.isOpenLaunchTime) {
         GrowingTKLaunchTimeViewController *controller = [[GrowingTKLaunchTimeViewController alloc] init];
         [GrowingTKHomeWindow openPlugin:controller];
     } else {
         GrowingTKBaseViewController *controller = (GrowingTKBaseViewController *)GrowingTKUtil.topViewControllerForHomeWindow;
-        [controller showToast:GrowingTKLocalizedString(@"未集成SDK，请参考帮助文档进行集成")];
+        [controller showToast:GrowingTKLocalizedString(@"请前往设置开启该功能")];
     }
 }
 

@@ -21,6 +21,7 @@
 #import "GrowingTKCrashLogsViewController.h"
 #import "GrowingTKDatabase+CrashLogs.h"
 #import "GrowingTKCrashLogsPersistence.h"
+#import "GrowingTKAPMUtil.h"
 
 #import "GrowingAPM+Private.h"
 
@@ -84,13 +85,12 @@
 }
 
 - (void)pluginDidLoad {
-    GrowingTKSDKUtil *sdk = GrowingTKSDKUtil.sharedInstance;
-    if (sdk.isIntegrated) {
+    if (GrowingTKAPMUtil.isOpenCrashMonitor) {
         GrowingTKCrashLogsViewController *controller = [[GrowingTKCrashLogsViewController alloc] init];
         [GrowingTKHomeWindow openPlugin:controller];
     } else {
         GrowingTKBaseViewController *controller = (GrowingTKBaseViewController *)GrowingTKUtil.topViewControllerForHomeWindow;
-        [controller showToast:GrowingTKLocalizedString(@"未集成SDK，请参考帮助文档进行集成")];
+        [controller showToast:GrowingTKLocalizedString(@"请前往设置开启该功能")];
     }
 }
 

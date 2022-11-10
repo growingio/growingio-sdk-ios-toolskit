@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingTKSettingsTableViewCell : UITableViewCell
 
+- (void)configWithTitle:(NSString *)title image:(UIImage *)image localStorageKey:(NSString *)key block:(void(^)(void))block;
 - (void)configWithTitle:(NSString *)title detail:(NSString *)detail image:(UIImage *)image;
 
 @end
