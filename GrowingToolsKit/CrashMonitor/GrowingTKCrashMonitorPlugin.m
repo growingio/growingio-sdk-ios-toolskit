@@ -46,7 +46,7 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:_db
                                                  selector:@selector(clearAllCrashLogs)
-                                                     name:GrowingTKClearAllCrashLogsNotification
+                                                     name:GrowingTKClearAllPerformanceDataNotification
                                                    object:nil];
     }
     return self;

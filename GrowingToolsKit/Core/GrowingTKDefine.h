@@ -33,7 +33,7 @@ FOUNDATION_EXTERN NSString *const GrowingTKShowEventsListNotification;
 
 FOUNDATION_EXTERN NSString *const GrowingTKClearAllEventNotification;
 FOUNDATION_EXTERN NSString *const GrowingTKClearAllRequestsNotification;
-FOUNDATION_EXTERN NSString *const GrowingTKClearAllCrashLogsNotification;
+FOUNDATION_EXTERN NSString *const GrowingTKClearAllPerformanceDataNotification;
 
 FOUNDATION_EXTERN NSString *const GrowingTKRealtimeEventNotification;
 FOUNDATION_EXTERN NSString *const GrowingTKRealtimeStatusNotification;

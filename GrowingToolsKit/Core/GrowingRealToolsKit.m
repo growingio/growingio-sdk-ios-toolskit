@@ -34,7 +34,7 @@ NSString *const GrowingTKShowEventsListNotification = @"GrowingTKShowEventsListN
 
 NSString *const GrowingTKClearAllEventNotification = @"GrowingTKClearAllEventNotification";
 NSString *const GrowingTKClearAllRequestsNotification = @"GrowingTKClearAllRequestsNotification";
-NSString *const GrowingTKClearAllCrashLogsNotification = @"GrowingTKClearAllCrashLogsNotification";
+NSString *const GrowingTKClearAllPerformanceDataNotification = @"GrowingTKClearAllPerformanceDataNotification";
 
 NSString *const GrowingTKRealtimeEventNotification = @"GrowingTKRealtimeEventNotification";
 NSString *const GrowingTKRealtimeStatusNotification = @"GrowingTKRealtimeStatusNotification";

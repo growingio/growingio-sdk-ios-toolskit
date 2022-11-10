@@ -139,7 +139,12 @@
     // #性能
     "性能" = "Performance";
     "错误报告" = "CrashLogs";
-    
+    "启动耗时" = "LaunchTime";
+    "应用启动" = "App Launch";
+    "应用恢复" = "App Restart";
+    "应用运行中" = "Current App Cycle";
+    "应用周期" = "App Cycle";
+
     // #设置
     "数据" = "LocalData";
     "清空事件" = "ClearAllEvents";

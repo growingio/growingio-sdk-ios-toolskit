@@ -129,7 +129,7 @@ static void growingtk_growingAPMModInit(NSInvocation *invocation, id apmModule, 
     
     {
         id plugin = nil;
-        Class class = NSClassFromString(@"GrowingTKUIMonitorPlugin");
+        Class class = NSClassFromString(@"GrowingTKLaunchTimePlugin");
         SEL sharedInstance = NSSelectorFromString(@"plugin");
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Warc-performSelector-leaks"

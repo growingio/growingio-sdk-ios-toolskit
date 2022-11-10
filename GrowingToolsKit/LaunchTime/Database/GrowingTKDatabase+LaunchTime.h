@@ -1,8 +1,8 @@
 //
-//  GrowingTKUIMonitorPlugin.h
+//  GrowingTKDatabase+LaunchTime.h
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2022/11/8.
+//  Created by YoloMao on 2022/11/9.
 //  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,28 +17,23 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTKPluginProtocol.h"
+#import "GrowingTKDatabase.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class GrowingTKDatabase;
+@class GrowingTKLaunchTimePersistence;
 
-@interface GrowingTKUIMonitorPlugin : NSObject <GrowingTKPluginProtocol>
+@interface GrowingTKDatabase (LaunchTime)
 
-#pragma mark - GrowingTKPluginProtocol
+- (void)createLaunchTimeTable;
 
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSString *icon;
-@property (nonatomic, strong) NSString *pluginName;
-@property (nonatomic, strong) NSString *atModule;
-@property (nonatomic, strong) NSString *key;
+- (NSInteger)countOfLaunchTime;
 
-+ (instancetype)plugin;
-- (void)pluginDidLoad;
+- (NSArray<GrowingTKLaunchTimePersistence *> *)getAllLaunchTime;
 
-#pragma mark - Event Track
+- (BOOL)insertLaunchTime:(GrowingTKLaunchTimePersistence *)record;
 
-@property (nonatomic, strong) GrowingTKDatabase *db;
+- (BOOL)clearAllLaunchTime;
 
 @end
 

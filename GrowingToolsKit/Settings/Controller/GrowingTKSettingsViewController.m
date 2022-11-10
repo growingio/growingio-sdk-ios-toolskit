@@ -156,7 +156,7 @@
                 @{@"title" : GrowingTKLocalizedString(@"清空性能数据"),
                   @"detail" : GrowingTKLocalizedString(@"清空性能监控下产生的所有历史数据"),
                   @"image" : [UIImage growingtk_imageNamed:@"growingtk_performance_black"],
-                  @"notification" : GrowingTKClearAllCrashLogsNotification
+                  @"notification" : GrowingTKClearAllPerformanceDataNotification
                 }
             ]
         }];
