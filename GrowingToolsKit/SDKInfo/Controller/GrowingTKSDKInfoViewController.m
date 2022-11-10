@@ -133,9 +133,12 @@
         
         NSString *encryptEnabled = GrowingTKLocalizedString(sdk.encryptEnabled ? @"YES" : @"NO");
         [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"数据加密"), @"value": encryptEnabled}];
+        
+        if (sdk.isSDK3rdGeneration) {
+            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"集成模块"), @"value": [sdk.SDK3Modules componentsJoinedByString:@", "]}];
+        }
 
-        NSString *cellularDataLimit =
-            [NSString stringWithFormat:@"%luMB", (unsigned long)sdk.cellularDataLimit];
+        NSString *cellularDataLimit = [NSString stringWithFormat:@"%luMB", (unsigned long)sdk.cellularDataLimit];
         [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"每日流量限制"), @"value": cellularDataLimit}];
 
         NSString *uploadSize = sdk.cellularNetworkUploadEventSize;
