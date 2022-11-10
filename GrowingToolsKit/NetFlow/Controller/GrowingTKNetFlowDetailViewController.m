@@ -65,15 +65,13 @@
         [self.closeButton.widthAnchor constraintEqualToConstant:closeButtonSideLength],
         [self.closeButton.heightAnchor constraintEqualToConstant:closeButtonSideLength],
         [self.requestTableView.topAnchor constraintEqualToAnchor:self.segmentedControl.bottomAnchor constant:10.0f],
-        [self.requestTableView.bottomAnchor
-            constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.bottomAnchor],
+        [self.requestTableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
         [self.requestTableView.leadingAnchor
             constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.leadingAnchor],
         [self.requestTableView.trailingAnchor
             constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.trailingAnchor],
         [self.responseTableView.topAnchor constraintEqualToAnchor:self.segmentedControl.bottomAnchor constant:10.0f],
-        [self.responseTableView.bottomAnchor
-            constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.bottomAnchor],
+        [self.responseTableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
         [self.responseTableView.leadingAnchor
             constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.leadingAnchor],
         [self.responseTableView.trailingAnchor

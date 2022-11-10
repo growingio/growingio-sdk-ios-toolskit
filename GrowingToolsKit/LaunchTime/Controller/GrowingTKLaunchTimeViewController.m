@@ -1,8 +1,8 @@
 //
-//  GrowingTKCrashLogsViewController.m
+//  GrowingTKLaunchTimeViewController.m
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2022/11/7.
+//  Created by YoloMao on 2022/11/9.
 //  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,19 +17,18 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTKCrashLogsViewController.h"
-#import "GrowingTKCrashLogsTableViewCell.h"
+#import "GrowingTKLaunchTimeViewController.h"
+#import "GrowingTKLaunchTimeTableViewCell.h"
 #import "GrowingTKNavigationTitleView.h"
-#import "GrowingTKCrashLogsDetailViewController.h"
 #import "GrowingTKDefine.h"
 #import "UIView+GrowingTK.h"
 #import "UIColor+GrowingTK.h"
-#import "GrowingTKCrashMonitorPlugin.h"
-#import "GrowingTKDatabase+CrashLogs.h"
-#import "GrowingTKCrashLogsPersistence.h"
-#import "GrowingTKDateUtil.h"
+#import "GrowingTKLaunchTimePlugin.h"
+#import "GrowingTKDatabase+LaunchTime.h"
+#import "GrowingTKLaunchTimePersistence.h"
+#import "GrowingTKUtil.h"
 
-@interface GrowingTKCrashLogsViewController () <UITableViewDelegate, UITableViewDataSource>
+@interface GrowingTKLaunchTimeViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSMutableArray *datasource;
@@ -37,13 +36,13 @@
 
 @end
 
-@implementation GrowingTKCrashLogsViewController
+@implementation GrowingTKLaunchTimeViewController
 
 #pragma mark - Life Cycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSString *title = self.title ?: GrowingTKLocalizedString(@"错误报告");
+    NSString *title = self.title ?: GrowingTKLocalizedString(@"启动耗时");
     __weak typeof(self) weakSelf = self;
     GrowingTKNavigationTitleView *titleView = [[GrowingTKNavigationTitleView alloc] initWithFrame:CGRectMake(0, 0, 180, 44)
                                                                                             title:title
@@ -53,7 +52,7 @@
         [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
     } longPressAction:^(NSUInteger index) {
         __strong typeof(weakSelf) self = weakSelf;
-        [GrowingTKCrashMonitorPlugin.plugin.db clearAllCrashLogs];
+        [GrowingTKLaunchTimePlugin.plugin.db clearAllLaunchTime];
         self.datasource = [self refreshData];
         [self.tableView reloadData];
     }];
@@ -70,6 +69,14 @@
 
     self.datasource = [self refreshData];
     [self.tableView reloadData];
+    
+    if (@available(iOS 10.0, *)) {
+        UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+        refreshControl.attributedTitle =
+            [[NSAttributedString alloc] initWithString:GrowingTKLocalizedString(@"下拉刷新")];
+        [refreshControl addTarget:self action:@selector(refreshAction) forControlEvents:UIControlEventValueChanged];
+        self.tableView.refreshControl = refreshControl;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -87,38 +94,40 @@
 
 - (NSMutableArray *)refreshData {
     NSMutableArray *datasource = [NSMutableArray array];
-    NSArray *crashLogs = GrowingTKCrashMonitorPlugin.plugin.db.getAllCrashLogs.reverseObjectEnumerator.allObjects;
-    NSMutableArray *dayKeys = [NSMutableArray array];
-    NSMutableArray *dayEvents = [NSMutableArray array];
-    NSString *today = GrowingTKLocalizedString(@"今日");
-    NSString *yesterday = GrowingTKLocalizedString(@"昨日");
-
-    void (^block)(NSString *, GrowingTKCrashLogsPersistence *) = ^(NSString *key, GrowingTKCrashLogsPersistence *crashLog) {
-        if ([dayKeys containsObject:key]) {
-            NSMutableArray *array = dayEvents[[dayKeys indexOfObject:key]];
-            [array addObject:crashLog];
-        } else {
-            [dayKeys addObject:key];
-            [dayEvents addObject:@[crashLog].mutableCopy];
+    NSArray *records = GrowingTKLaunchTimePlugin.plugin.db.getAllLaunchTime.reverseObjectEnumerator.allObjects;
+    
+    NSMutableArray *appCycle = [NSMutableArray array];
+    for (GrowingTKLaunchTimePersistence *record in records) {
+        [appCycle addObject:record];
+        
+        if (record.type == GrowingTKLaunchTimeTypeAppLaunch) {
+            if (datasource.count == 0) {
+                [datasource addObject:@{GrowingTKLocalizedString(@"应用运行中") :appCycle.copy}];
+            } else {
+                [datasource addObject:@{GrowingTKLocalizedString(@"应用周期") :appCycle.copy}];
+            }
+            appCycle = [NSMutableArray array];
         }
-    };
-
-    for (GrowingTKCrashLogsPersistence *crashLog in crashLogs) {
-        if ([GrowingTKDateUtil.sharedInstance isToday:crashLog.timestamp]) {
-            block(today, crashLog);
-        } else if ([GrowingTKDateUtil.sharedInstance isYesterday:crashLog.timestamp]) {
-            block(yesterday, crashLog);
-        } else {
-            block(crashLog.day, crashLog);
-        }
-    }
-
-    for (int i = 0; i < dayKeys.count; i++) {
-        [datasource addObject:@{dayKeys[i]: dayEvents[i]}];
     }
 
     return datasource;
 }
+
+#pragma mark - Action
+
+#if defined(__IPHONE_10_0) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0)
+- (void)refreshAction {
+    NSMutableArray *datasource = [self refreshData];
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (@available(iOS 10.0, *)) {
+            [self.tableView.refreshControl endRefreshing];
+        }
+        self.datasource = datasource;
+        [self.tableView reloadData];
+    });
+}
+#endif
 
 #pragma mark - UITableView DataSource & Delegate
 
@@ -133,11 +142,11 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    GrowingTKCrashLogsTableViewCell *cell =
-        [tableView dequeueReusableCellWithIdentifier:@"GrowingTKCrashLogsTableViewCell" forIndexPath:indexPath];
+    GrowingTKLaunchTimeTableViewCell *cell =
+        [tableView dequeueReusableCellWithIdentifier:@"GrowingTKLaunchTimeTableViewCell" forIndexPath:indexPath];
     NSDictionary *dic = (NSDictionary *)self.datasource[indexPath.section];
-    GrowingTKCrashLogsPersistence *crashLog = ((NSArray *)dic[dic.allKeys.firstObject])[indexPath.row];
-    [cell showCrashLog:crashLog];
+    GrowingTKLaunchTimePersistence *record = ((NSArray *)dic[dic.allKeys.firstObject])[indexPath.row];
+    [cell showLaunchTime:record];
     return cell;
 }
 
@@ -168,10 +177,28 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    GrowingTKCrashLogsDetailViewController *controller = [[GrowingTKCrashLogsDetailViewController alloc] init];
+    
     NSDictionary *dic = (NSDictionary *)self.datasource[indexPath.section];
-    GrowingTKCrashLogsPersistence *crashLog = ((NSArray *)dic[dic.allKeys.firstObject])[indexPath.row];
-    controller.crashLog = crashLog;
+    GrowingTKLaunchTimePersistence *record = ((NSArray *)dic[dic.allKeys.firstObject])[indexPath.row];
+    if (record.attributes.length == 0) {
+        // 非冷启动，没有 attributes 参数
+        return;
+    }
+    NSData *jsonData = [record.attributes dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *attrs = [GrowingTKUtil convertDicFromData:jsonData];
+    
+    NSMutableString *message = [NSMutableString string];
+    [message appendFormat:@"isActivePrewarm: %@\n", attrs[@"isActivePrewarm"]];
+    [message appendFormat:@"exec_time: %@\n", attrs[@"exec"]];
+    [message appendFormat:@"runtime_load_time: %@\n", attrs[@"load"]];
+    [message appendFormat:@"cpp_init_time: %@\n", attrs[@"C++ Init"]];
+    [message appendFormat:@"main_func_time: %@\n", attrs[@"main"]];
+    [message appendFormat:@"didFinishLaunching_time: %@\n", attrs[@"didFinishLaunching"]];
+    [message appendFormat:@"first_vc_didAppear_time: %@\n", attrs[@"firstVCDidAppear"]];
+    [message appendFormat:@"total: %@\n", attrs[@"execTofirstVCDidAppear"]];
+
+    UIAlertController *controller = [UIAlertController alertControllerWithTitle:@"" message:message preferredStyle:UIAlertControllerStyleAlert];
+    [controller addAction:[UIAlertAction actionWithTitle:GrowingTKLocalizedString(@"确定") style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:controller animated:YES completion:nil];
 }
 
@@ -186,8 +213,8 @@
         _tableView.dataSource = self;
         _tableView.sectionFooterHeight = 0.01f;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        [_tableView registerClass:[GrowingTKCrashLogsTableViewCell class]
-           forCellReuseIdentifier:@"GrowingTKCrashLogsTableViewCell"];
+        [_tableView registerClass:[GrowingTKLaunchTimeTableViewCell class]
+           forCellReuseIdentifier:@"GrowingTKLaunchTimeTableViewCell"];
     }
     return _tableView;
 }

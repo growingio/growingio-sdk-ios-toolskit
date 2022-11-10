@@ -56,7 +56,7 @@
         [self.closeButton.widthAnchor constraintEqualToConstant:closeButtonSideLength],
         [self.closeButton.heightAnchor constraintEqualToConstant:closeButtonSideLength],
         [self.textView.topAnchor constraintEqualToAnchor:self.closeButton.bottomAnchor constant:margin],
-        [self.textView.bottomAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.bottomAnchor],
+        [self.textView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
         [self.textView.leadingAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.leadingAnchor
                                                     constant:margin],
         [self.textView.trailingAnchor constraintEqualToAnchor:self.view.growingtk_safeAreaLayoutGuide.trailingAnchor]
