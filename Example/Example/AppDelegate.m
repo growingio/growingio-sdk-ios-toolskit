@@ -131,11 +131,17 @@
 }
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+#if defined(SDK2nd)
+    [Growing handleUrl:url];
+#endif
     return YES;
 }
 
 // Universal Link
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> *_Nullable))restorationHandler {
+#if defined(SDK2nd)
+    [Growing handleUrl:userActivity.webpageURL];
+#endif
     restorationHandler(nil);
     return YES;
 }
