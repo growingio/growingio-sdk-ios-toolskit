@@ -222,6 +222,13 @@ static void growingtk_sdk2ndEventTrack(NSInvocation *invocation, id obj, NSStrin
             // 无法解析，不是事件
             return;
         }
+        if ([e.eventType isEqualToString:@"dbclck"]
+            || [e.eventType isEqualToString:@"lngclck"]
+            || [e.eventType isEqualToString:@"tchd"]) {
+            // 不支持的事件，如 dbclck/lngclck/tchd 等等
+            return;
+        }
+        
         [GrowingTKEventsListPlugin.plugin.db insertEvent:e];
     } else {
         [GrowingTKEventsListPlugin.plugin.db updateEventDidSend:key];

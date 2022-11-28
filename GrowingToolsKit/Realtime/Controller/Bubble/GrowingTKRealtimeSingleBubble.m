@@ -130,7 +130,7 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
 
 - (void)configWithEvent:(GrowingTKRealtimeEvent *)event {
     self.event = event;
-    self.gesidLabel.text = [NSString stringWithFormat:@"%@", event.gesid];
+    self.gesidLabel.text = [NSString stringWithFormat:@"%@", event.globalSequenceId];
     self.eventTypeLabel.text = [NSString stringWithFormat:@"%@", event.eventType];
     self.detailLabel.text = [NSString stringWithFormat:@"%@", event.detail];
     
@@ -143,7 +143,7 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
 - (void)tapAction {
     [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKShowEventsListNotification
                                                         object:nil
-                                                      userInfo:@{@"window" : self.window, @"gesids" : @[self.event.gesid.copy]}];
+                                                      userInfo:@{@"window" : self.window, @"gesids" : @[self.event.globalSequenceId.copy]}];
 }
 
 @end

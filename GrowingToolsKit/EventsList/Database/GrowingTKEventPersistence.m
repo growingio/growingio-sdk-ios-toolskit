@@ -75,7 +75,7 @@
 
 - (NSNumber *)globalSequenceId {
     if (!_globalSequenceId) {
-        _globalSequenceId = self.dictionary[@"globalSequenceId"] ?: (self.dictionary[@"gesid"] ?: @"-"/* 如tchd事件是没有gesid的*/);
+        _globalSequenceId = self.dictionary[@"globalSequenceId"] ?: self.dictionary[@"gesid"];
     }
     return _globalSequenceId;
 }

@@ -115,7 +115,7 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
     
     GrowingTKRealtimeEvent *first = events.firstObject;
     GrowingTKRealtimeEvent *last = events.lastObject;
-    self.gesidLabel.text = [NSString stringWithFormat:@"%@\n-\n%@", first.gesid, last.gesid];
+    self.gesidLabel.text = [NSString stringWithFormat:@"%@\n-\n%@", first.globalSequenceId, last.globalSequenceId];
     
     NSMutableString *eventTypes = [NSMutableString string];
     for (GrowingTKRealtimeEvent *e in events) {
@@ -133,7 +133,7 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
 - (void)tapAction {
     NSMutableArray *gesids = [NSMutableArray array];
     for (GrowingTKRealtimeEvent *event in self.events) {
-        [gesids addObject:event.gesid];
+        [gesids addObject:event.globalSequenceId];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKShowEventsListNotification
                                                         object:nil

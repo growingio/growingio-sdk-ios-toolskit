@@ -179,7 +179,7 @@ static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSS
 
     if (event) {
         NSString *eventType = [event valueForKey:@"eventType"];
-        NSNumber *gesid = nil;
+        NSNumber *globalSequenceId = nil;
         NSNumber *timestamp = nil;
         NSString *detail = @"";
         BOOL isCustomEvent = NO;
@@ -198,7 +198,7 @@ static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSS
         NSData *jsonData = [rawJsonString dataUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *eventDic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
         if (eventDic && eventDic.count > 0) {
-            gesid = eventDic[@"globalSequenceId"];
+            globalSequenceId = eventDic[@"globalSequenceId"];
             timestamp = eventDic[@"timestamp"];
             
             if ([eventType isEqualToString:@"PAGE"]) {
@@ -233,7 +233,7 @@ static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSS
         
         GrowingTKRealtimeEvent *eventEntity = [[GrowingTKRealtimeEvent alloc] init];
         eventEntity.eventType = eventType;
-        eventEntity.gesid = gesid;
+        eventEntity.globalSequenceId = globalSequenceId;
         eventEntity.detail = detail;
         eventEntity.timestamp = timestamp;
         eventEntity.isCustomEvent = isCustomEvent;
@@ -263,13 +263,15 @@ static void growingtk_sdk2ndEventTrack(NSInvocation *invocation, id obj, NSStrin
             // 无法解析，不是事件
             return;
         }
+        if ([eventType isEqualToString:@"dbclck"]
+            || [eventType isEqualToString:@"lngclck"]
+            || [eventType isEqualToString:@"tchd"]) {
+            // 不支持的事件，如 dbclck/lngclck/tchd 等等
+            return;
+        }
         
         NSNumber *gesid = eventDic[@"gesid"];
         NSNumber *timestamp = eventDic[@"tm"];
-        if (!gesid) {
-            // 不支持的事件，如 dbclck/lngclck 等等
-            return;
-        }
         NSString *detail = @"";
         if ([eventType isEqualToString:@"page"]) {
             detail = eventDic[@"p"];
@@ -294,7 +296,7 @@ static void growingtk_sdk2ndEventTrack(NSInvocation *invocation, id obj, NSStrin
 
         GrowingTKRealtimeEvent *eventEntity = [[GrowingTKRealtimeEvent alloc] init];
         eventEntity.eventType = eventType;
-        eventEntity.gesid = gesid;
+        eventEntity.globalSequenceId = gesid;
         eventEntity.detail = detail;
         eventEntity.timestamp = timestamp;
         eventEntity.isCustomEvent = isCustomEvent;
