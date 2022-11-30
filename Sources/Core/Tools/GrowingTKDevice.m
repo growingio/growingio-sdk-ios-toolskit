@@ -23,6 +23,7 @@
 //[DeviceKit](https://github.com/devicekit/DeviceKit/blob/master/Source/Device.generated.swift)
 
 #import "GrowingTKDevice.h"
+#import <UIKit/UIKit.h>
 #import <sys/utsname.h>
 
 #import <ifaddrs.h>

@@ -20,8 +20,8 @@ TODO: Add long description of the pod here.
   s.source           = { :git => 'https://github.com/growingio/growingio-sdk-ios-toolskit.git', :tag => s.version.to_s }
   s.ios.deployment_target = '9.0'
   s.ios.frameworks   = 'UIKit', 'WebKit'
-  s.source_files     = 'GrowingToolsKit/GrowingToolsKit{.h,.m}'
-  s.public_header_files = 'GrowingToolsKit/GrowingToolsKit.h'
+  s.source_files     = 'Sources/GrowingToolsKit/GrowingToolsKit{.h,.m}'
+  s.public_header_files = 'Sources/GrowingToolsKit/GrowingToolsKit.h'
   s.default_subspec  = 'Default'
   s.subspec 'Default' do |default|
     default.dependency 'GrowingToolsKit/Core'
@@ -36,8 +36,8 @@ TODO: Add long description of the pod here.
   end
   
   s.subspec 'SDK30202' do |sdk30202|
-    sdk30202.source_files = 'GrowingToolsKit/GrowingToolsKit{.h,.m}'
-    sdk30202.public_header_files = 'GrowingToolsKit/GrowingToolsKit.h'
+    sdk30202.source_files = 'Sources/GrowingToolsKit/GrowingToolsKit{.h,.m}'
+    sdk30202.public_header_files = 'Sources/GrowingToolsKit/GrowingToolsKit.h'
     sdk30202.dependency 'GrowingToolsKit/Default'
     sdk30202.pod_target_xcconfig = {
       'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_SDK30202=1',
@@ -47,8 +47,8 @@ TODO: Add long description of the pod here.
   end
   
   s.subspec 'SDK2nd' do |sdk2nd|
-    sdk2nd.source_files = 'GrowingToolsKit/GrowingToolsKit{.h,.m}'
-    sdk2nd.public_header_files = 'GrowingToolsKit/GrowingToolsKit.h'
+    sdk2nd.source_files = 'Sources/GrowingToolsKit/GrowingToolsKit{.h,.m}'
+    sdk2nd.public_header_files = 'Sources/GrowingToolsKit/GrowingToolsKit.h'
     sdk2nd.dependency 'GrowingToolsKit/Default'
     sdk2nd.pod_target_xcconfig = {
       'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_SDK2nd=1',
@@ -58,68 +58,64 @@ TODO: Add long description of the pod here.
   end
 
   s.subspec 'Core' do |core|
-    core.source_files = 'GrowingToolsKit/Core/**/*{.h,.m,.c,.cpp,.mm}'
-    core.public_header_files = 'GrowingToolsKit/Core/Public/*.h'
-    core.dependency 'GrowingToolsKit/Res'
-  end
-  
-  s.subspec 'Res' do |res|
-    res.resource_bundles = {'GrowingToolsKit' => ['GrowingToolsKit/Res/**/*']}
+    core.source_files = 'Sources/Core/**/*{.h,.m,.c,.cpp,.mm}'
+    core.public_header_files = 'Sources/Core/Public/*.h'
+    core.resource_bundles = {'GrowingToolsKit' => ['Sources/Core/Resources/**/*']}
   end
   
   s.subspec 'SDKInfo' do |sdkInfo|
-    sdkInfo.source_files = 'GrowingToolsKit/SDKInfo/**/*{.h,.m,.c,.cpp,.mm}'
-    sdkInfo.public_header_files = 'GrowingToolsKit/SDKInfo/Public/*.h'
+    sdkInfo.source_files = 'Sources/SDKInfo/**/*{.h,.m,.c,.cpp,.mm}'
+    sdkInfo.public_header_files = 'Sources/SDKInfo/Public/*.h'
     sdkInfo.dependency 'GrowingToolsKit/Core'
   end
   
   s.subspec 'EventsList' do |eventsList|
-    eventsList.source_files = 'GrowingToolsKit/EventsList/**/*{.h,.m,.c,.cpp,.mm}'
-    eventsList.public_header_files = 'GrowingToolsKit/EventsList/Public/*.h'
+    eventsList.source_files = 'Sources/EventsList/**/*{.h,.m,.c,.cpp,.mm}'
+    eventsList.public_header_files = 'Sources/EventsList/Public/*.h'
     eventsList.dependency 'GrowingToolsKit/Core'
   end
   
   s.subspec 'XPathTrack' do |xpathTrack|
-    xpathTrack.source_files = 'GrowingToolsKit/XPathTrack/**/*{.h,.m,.c,.cpp,.mm}'
-    xpathTrack.public_header_files = 'GrowingToolsKit/XPathTrack/Public/*.h'
+    xpathTrack.source_files = 'Sources/XPathTrack/**/*{.h,.m,.c,.cpp,.mm}'
+    xpathTrack.public_header_files = 'Sources/XPathTrack/Public/*.h'
     xpathTrack.dependency 'GrowingToolsKit/Core'
   end
   
   s.subspec 'NetFlow' do |netflow|
-    netflow.source_files = 'GrowingToolsKit/NetFlow/**/*{.h,.m,.c,.cpp,.mm}'
-    netflow.public_header_files = 'GrowingToolsKit/NetFlow/Public/*.h'
+    netflow.source_files = 'Sources/NetFlow/**/*{.h,.m,.c,.cpp,.mm}'
+    netflow.public_header_files = 'Sources/NetFlow/Public/*.h'
     netflow.dependency 'GrowingToolsKit/Core'
   end
 
   s.subspec 'Realtime' do |realtime|
-    realtime.source_files = 'GrowingToolsKit/Realtime/**/*{.h,.m,.c,.cpp,.mm}'
-    realtime.public_header_files = 'GrowingToolsKit/Realtime/Public/*.h'
+    realtime.source_files = 'Sources/Realtime/**/*{.h,.m,.c,.cpp,.mm}'
+    realtime.public_header_files = 'Sources/Realtime/Public/*.h'
     realtime.dependency 'GrowingToolsKit/Core'
   end
 
   s.subspec 'APMCore' do |apm|
-    apm.source_files = 'GrowingToolsKit/APMCore/**/*{.h,.m,.c,.cpp,.mm}'
+    apm.source_files = 'Sources/APMCore/**/*{.h,.m,.c,.cpp,.mm}'
     apm.dependency 'GrowingToolsKit/Core'
     apm.dependency 'GrowingAPM/Core'
   end
 
   s.subspec 'CrashMonitor' do |monitor|
-    monitor.source_files = 'GrowingToolsKit/CrashMonitor/**/*{.h,.m,.c,.cpp,.mm}'
-    monitor.public_header_files = 'GrowingToolsKit/CrashMonitor/Public/*.h'
+    monitor.source_files = 'Sources/CrashMonitor/**/*{.h,.m,.c,.cpp,.mm}'
+    monitor.public_header_files = 'Sources/CrashMonitor/Public/*.h'
     monitor.dependency 'GrowingToolsKit/APMCore'
     monitor.dependency 'GrowingAPM/CrashMonitor'
   end
 
   s.subspec 'LaunchTime' do |monitor|
-    monitor.source_files = 'GrowingToolsKit/LaunchTime/**/*{.h,.m,.c,.cpp,.mm}'
-    monitor.public_header_files = 'GrowingToolsKit/LaunchTime/Public/*.h'
+    monitor.source_files = 'Sources/LaunchTime/**/*{.h,.m,.c,.cpp,.mm}'
+    monitor.public_header_files = 'Sources/LaunchTime/Public/*.h'
     monitor.dependency 'GrowingToolsKit/APMCore'
     monitor.dependency 'GrowingAPM/UIMonitor'
   end
 
   s.subspec 'Settings' do |settings|
-    settings.source_files = 'GrowingToolsKit/Settings/**/*{.h,.m,.c,.cpp,.mm}'
-    settings.public_header_files = 'GrowingToolsKit/Settings/Public/*.h'
+    settings.source_files = 'Sources/Settings/**/*{.h,.m,.c,.cpp,.mm}'
+    settings.public_header_files = 'Sources/Settings/Public/*.h'
     settings.dependency 'GrowingToolsKit/Core'
   end
 end

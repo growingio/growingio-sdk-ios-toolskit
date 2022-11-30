@@ -19,6 +19,9 @@ profile
 DerivedData
 .idea/
 
+# Swift Package Manager
+.swiftpm/
+Package.resolved
 
 Pods/
 Podfile.lock

@@ -26,6 +26,10 @@
 }
 
 + (NSBundle *)growingtk_resourcesBundle:(Class)aClass bundleName:(nullable NSString *)bundleName {
+#if SWIFT_PACKAGE
+    return SWIFTPM_MODULE_BUNDLE;
+#else
+    // 这里的额外步骤是为了兼容静态集成和动态集成
     NSBundle *bundle = [NSBundle growingtk_currentBundle:aClass];
     if (!bundleName) {
         bundleName = bundle.infoDictionary[@"CFBundleName"];
@@ -33,6 +37,7 @@
     NSString *path =
         [bundle.resourcePath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.bundle", bundleName]];
     return [NSBundle bundleWithPath:path];
+#endif
 }
 
 + (NSBundle *)growingtk_localizedBundleWithFileName:(NSString *)fileName resourcesBundle:(NSBundle *)bundle {
