@@ -75,6 +75,12 @@
                                                  selector:@selector(growingtk_APMInit)
                                                      name:GrowingTKSetupDefaultPluginsNotification
                                                    object:nil];
+    } else {
+        // 未集成 SDK
+        [[NSNotificationCenter defaultCenter] addObserver:[GrowingTKAPMUtil sharedInstance]
+                                                 selector:@selector(growingtk_APMInit)
+                                                     name:GrowingTKSetupDefaultPluginsNotification
+                                                   object:nil];
     }
 }
 
@@ -91,6 +97,9 @@ __used __attribute__((constructor(62500))) static void setupMonitors(void) {
         }
     } else if (GrowingTKSDKUtil.sharedInstance.isSDK2ndGeneration) {
         // *************** SDK 2.0 ***************
+        [GrowingAPM setupMonitors];
+    } else {
+        // 未集成 SDK
         [GrowingAPM setupMonitors];
     }
 }
