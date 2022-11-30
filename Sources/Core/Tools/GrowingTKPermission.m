@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingTKPermission.h"
+#import <UIKit/UIKit.h>
 #import <CoreLocation/CLLocationManager.h>
 #import <AVFoundation/AVFoundation.h>
 #import <Photos/Photos.h>

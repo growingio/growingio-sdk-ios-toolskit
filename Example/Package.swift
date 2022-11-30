@@ -1,9 +1,9 @@
 //
-//  GrowingTKNodeHelper.h
+//  Package.swift
 //  GrowingToolsKit
 //
-//  Created by YoloMao on 2021/9/22.
-//  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2022/11/28.
+//  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,14 +17,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
+// For not showing this folder in Swift package
 
-@interface GrowingTKNodeHelper : NSObject
+import PackageDescription
 
-+ (nullable UIView *)realHitView:(UIView *)view point:(CGPoint)hitPoint;
-
-@end
-
-NS_ASSUME_NONNULL_END
+let package = Package(
+    name: "",
+    products: [],
+    dependencies: [],
+    targets: []
+)
