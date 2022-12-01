@@ -725,7 +725,7 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
                                                              [UIApplication sharedApplication],
                                                              [NSURL URLWithString:@"growingio://test"],
                                                              @"",
-                                                             nil);
+                                                             @{});
             return kGrowingTKHandleURL;
         } else if ([delegate respondsToSelector:@selector(application:handleOpenURL:)]) {
             ((BOOL(*)(id, SEL, id, id))objc_msgSend)(delegate,
