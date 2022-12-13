@@ -912,6 +912,11 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 
 - (BOOL)encryptEnabled {
     if (self.isSDK3rdGeneration) {
+        BOOL encryptEnabled = ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"encryptEnabled"]).boolValue;
+        if (encryptEnabled) {
+            return encryptEnabled;
+        }
+        // 3.4.0 之前版本
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         Class cls = NSClassFromString(@"GrowingEventRequestHeaderAdapter");
