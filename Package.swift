@@ -205,6 +205,21 @@ let package = Package(
             ]
         ),
         .target(
+            name: "GrowingToolsKit_Plugin_H5GioKit",
+            dependencies: [
+                "GrowingToolsKit_Core",
+            ],
+            path: "Sources/H5GioKit",
+            publicHeadersPath: "Public",
+            cSettings: [
+                .headerSearchPath("."),
+                .headerSearchPath("../Core"),
+                .headerSearchPath("../Core/PluginCore"),
+                .headerSearchPath("../Core/UserInterface/Base/Controller"),
+                .headerSearchPath("../Core/Tools"),
+            ]
+        ),
+        .target(
             name: "GrowingToolsKit_APMCore",
             dependencies: [
                 "GrowingToolsKit_Core",

@@ -38,6 +38,8 @@ typedef NS_ENUM(NSUInteger, GrowingTKDefaultPluginType) {
     GrowingTKDefaultPluginType_HybridPlugin,
     // 实时事件
     GrowingTKDefaultPluginType_RealtimePlugin,
+    // Hybrid_GioKit
+    GrowingTKDefaultPluginType_H5GioKitPlugin,
     
     // *************** 性能 ***************
     // 错误报告
