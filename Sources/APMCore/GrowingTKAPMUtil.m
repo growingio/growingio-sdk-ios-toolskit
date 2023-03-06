@@ -128,6 +128,9 @@ static void growingtk_growingAPMModInit(NSInvocation *invocation, id apmModule, 
 }
 
 - (void)growingtk_APMInit {
+    if (!GrowingTKAPMUtil.isOpenCrashMonitor && !GrowingTKAPMUtil.isOpenLaunchTime) {
+        return;
+    }
     GrowingAPMConfig *config = [GrowingAPMConfig config];
     config.monitors = GrowingAPMMonitorsCrash | GrowingAPMMonitorsUserInterface;
     [GrowingAPM startWithConfig:config];
