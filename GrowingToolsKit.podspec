@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'GrowingToolsKit'
-  s.version          = '1.1.1'
+  s.version          = '1.1.2'
   s.summary          = 'GrowingToolsKit for iOS GrowingIO SDK'
   s.description      = <<-DESC
 TODO: Add long description of the pod here.
