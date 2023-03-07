@@ -29,7 +29,11 @@ let package = Package(
     products: [
         .library(
             name: "GrowingToolsKit",
-            targets: ["GrowingToolsKit"]
+            targets: ["GrowingToolsKit", "GrowingToolsKit_UseInDebugOnly"]
+        ),
+        .library(
+            name: "GrowingToolsKit_UseInRelease",
+            targets: ["GrowingToolsKit", "GrowingToolsKit_UseInRelease"]
         ),
     ],
     dependencies: [
@@ -69,6 +73,7 @@ let package = Package(
             name: "GrowingToolsKit_Core",
             dependencies: [],
             path: "Sources/Core",
+            exclude: ["UseInRelease"],
             resources: [
                 .process("Resources/gio_hybrid.min.js"),
             ],
@@ -289,5 +294,36 @@ let package = Package(
                 .headerSearchPath("../Core/Tools"),
             ]
         ),
+
+        // MARK: - GrowingToolsKit Use In Release
+
+        .target(
+            name: "GrowingToolsKit_UseInRelease",
+            dependencies: [
+                "GrowingToolsKit_Core",
+            ],
+            path: "Sources/Core/UseInRelease",
+            exclude: ["GrowingTKUseInDebugOnly.m"],
+            cSettings: [
+                .headerSearchPath(".."),
+                .headerSearchPath("../Categories/UIKit"),
+                .headerSearchPath("../Tools"),
+            ]
+        ),
+
+        .target(
+            name: "GrowingToolsKit_UseInDebugOnly",
+            dependencies: [
+                "GrowingToolsKit_Core",
+            ],
+            path: "Sources/Core/UseInRelease",
+            exclude: ["GrowingTKUseInRelease.m"],
+            cSettings: [
+                .headerSearchPath(".."),
+                .headerSearchPath("../Categories/UIKit"),
+                .headerSearchPath("../Tools"),
+            ]
+        ),
+
     ]
 )

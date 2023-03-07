@@ -20,8 +20,15 @@
 #ifndef GrowingTKDefine_h
 #define GrowingTKDefine_h
 
+#import <Foundation/Foundation.h>
 #import "GrowingTKDevice.h"
 #import "GrowingTKLocalization.h"
+
+@interface GrowingTKUseInRelease : NSObject
+
++ (BOOL)activeOrNot;
+
+@end
 
 FOUNDATION_EXTERN NSString *const GrowingToolsKitName;
 
@@ -46,7 +53,7 @@ typedef NS_ENUM(NSUInteger, GrowingTKModule) {
     GrowingTKModuleCheckSelf
 };
 
-#ifdef DEBUG
+#if defined(DEBUG)
 #define GTKLog(fmt, ...)         \
     NSLog((@"[文件名:%s]\n"   \
             "[函数名:%s]\n"   \

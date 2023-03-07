@@ -22,7 +22,18 @@ TODO: Add long description of the pod here.
   s.ios.frameworks   = 'UIKit', 'WebKit'
   s.source_files     = 'Sources/GrowingToolsKit/GrowingToolsKit{.h,.m}'
   s.public_header_files = 'Sources/GrowingToolsKit/GrowingToolsKit.h'
-  s.default_subspec  = 'Default'
+  s.default_subspec  = 'UseInDebugOnly'
+  s.subspec 'UseInDebugOnly' do |subspec|
+    subspec.source_files = 'Sources/Core/UseInRelease/GrowingTKUseInDebugOnly.m'
+    subspec.dependency 'GrowingToolsKit/Default'
+  end
+
+  s.subspec 'UseInRelease' do |subspec|
+    subspec.source_files = 'Sources/GrowingToolsKit/GrowingToolsKit{.h,.m}', 'Sources/Core/UseInRelease/GrowingTKUseInRelease.m'
+    subspec.public_header_files = 'Sources/GrowingToolsKit/GrowingToolsKit.h'
+    subspec.dependency 'GrowingToolsKit/Default'
+  end
+
   s.subspec 'Default' do |default|
     default.dependency 'GrowingToolsKit/Core'
     default.dependency 'GrowingToolsKit/SDKInfo'
@@ -34,9 +45,9 @@ TODO: Add long description of the pod here.
     default.dependency 'GrowingToolsKit/CrashMonitor'
     default.dependency 'GrowingToolsKit/LaunchTime'
   end
-  
+
   s.subspec 'SDK30202' do |sdk30202|
-    sdk30202.source_files = 'Sources/GrowingToolsKit/GrowingToolsKit{.h,.m}'
+    sdk30202.source_files = 'Sources/GrowingToolsKit/GrowingToolsKit{.h,.m}', 'Sources/Core/UseInRelease/GrowingTKUseInDebugOnly.m'
     sdk30202.public_header_files = 'Sources/GrowingToolsKit/GrowingToolsKit.h'
     sdk30202.dependency 'GrowingToolsKit/Default'
     sdk30202.pod_target_xcconfig = {
@@ -47,7 +58,7 @@ TODO: Add long description of the pod here.
   end
   
   s.subspec 'SDK2nd' do |sdk2nd|
-    sdk2nd.source_files = 'Sources/GrowingToolsKit/GrowingToolsKit{.h,.m}'
+    sdk2nd.source_files = 'Sources/GrowingToolsKit/GrowingToolsKit{.h,.m}', 'Sources/Core/UseInRelease/GrowingTKUseInDebugOnly.m'
     sdk2nd.public_header_files = 'Sources/GrowingToolsKit/GrowingToolsKit.h'
     sdk2nd.dependency 'GrowingToolsKit/Default'
     sdk2nd.pod_target_xcconfig = {
@@ -60,6 +71,7 @@ TODO: Add long description of the pod here.
   s.subspec 'Core' do |core|
     core.source_files = 'Sources/Core/**/*{.h,.m,.c,.cpp,.mm}'
     core.public_header_files = 'Sources/Core/Public/*.h'
+    core.exclude_files = 'Sources/Core/UseInRelease'
     core.resource_bundles = {'GrowingToolsKit' => ['Sources/Core/Resources/**/*']}
   end
   

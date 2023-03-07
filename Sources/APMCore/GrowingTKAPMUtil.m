@@ -37,8 +37,6 @@
 
 @implementation GrowingTKAPMUtil
 
-#ifdef DEBUG
-
 + (instancetype)sharedInstance {
     static id instance;
     static dispatch_once_t onceToken;
@@ -51,6 +49,10 @@
 #pragma mark - Swizzle
 
 + (void)load {
+    if (![GrowingTKUseInRelease activeOrNot]) {
+        return;
+    }
+    
     if (GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration) {
         // *************** SDK 3.0 ***************
         Class class = NSClassFromString(@"GrowingAPMModule");
@@ -85,6 +87,10 @@
 }
 
 __used __attribute__((constructor(62500))) static void setupMonitors(void) {
+    if (![GrowingTKUseInRelease activeOrNot]) {
+        return;
+    }
+    
     if (!GrowingTKAPMUtil.isOpenCrashMonitor && !GrowingTKAPMUtil.isOpenLaunchTime) {
         return;
     }
@@ -170,8 +176,6 @@ static void growingtk_growingAPMModInit(NSInvocation *invocation, id apmModule, 
         }
     }
 }
-
-#endif
 
 @end
 
