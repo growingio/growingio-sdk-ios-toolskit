@@ -19,10 +19,15 @@
 
 #import "GrowingTKDefine.h"
 
-@implementation GrowingTKUseInRelease
+@implementation GrowingTKUseInRelease (UseInRelease)
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
 
 + (BOOL)activeOrNot {
     return YES;
 }
+
+#pragma clang diagnostic pop
 
 @end

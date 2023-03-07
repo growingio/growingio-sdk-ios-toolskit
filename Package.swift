@@ -29,7 +29,7 @@ let package = Package(
     products: [
         .library(
             name: "GrowingToolsKit",
-            targets: ["GrowingToolsKit", "GrowingToolsKit_UseInDebugOnly"]
+            targets: ["GrowingToolsKit"]
         ),
         .library(
             name: "GrowingToolsKit_UseInRelease",
@@ -73,7 +73,7 @@ let package = Package(
             name: "GrowingToolsKit_Core",
             dependencies: [],
             path: "Sources/Core",
-            exclude: ["UseInRelease"],
+            exclude: ["UseInRelease/GrowingTKUseInRelease.m"],
             resources: [
                 .process("Resources/gio_hybrid.min.js"),
             ],
@@ -303,27 +303,12 @@ let package = Package(
                 "GrowingToolsKit_Core",
             ],
             path: "Sources/Core/UseInRelease",
-            exclude: ["GrowingTKUseInDebugOnly.m"],
+            sources: ["GrowingTKUseInRelease.m"],
             cSettings: [
                 .headerSearchPath(".."),
                 .headerSearchPath("../Categories/UIKit"),
                 .headerSearchPath("../Tools"),
             ]
         ),
-
-        .target(
-            name: "GrowingToolsKit_UseInDebugOnly",
-            dependencies: [
-                "GrowingToolsKit_Core",
-            ],
-            path: "Sources/Core/UseInRelease",
-            exclude: ["GrowingTKUseInRelease.m"],
-            cSettings: [
-                .headerSearchPath(".."),
-                .headerSearchPath("../Categories/UIKit"),
-                .headerSearchPath("../Tools"),
-            ]
-        ),
-
     ]
 )
