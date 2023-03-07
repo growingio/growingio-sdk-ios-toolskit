@@ -104,7 +104,9 @@
 #pragma mark - Swizzle
 
 + (void)load {
-#ifdef DEBUG
+    if (![GrowingTKUseInRelease activeOrNot]) {
+        return;
+    }
     if (GrowingTKSDKUtil.sharedInstance.isSDK3rdGeneration) {
         // *************** SDK 3.0 ***************
     sdk3AvoidKVCCrash : {
@@ -193,7 +195,6 @@
         invocation = [class growingtk_swizzleMethod:selector withBlock:block error:nil];
     }
 end:;
-#endif
 }
 
 static id growingtk_sdk3rdInit(NSString *module,

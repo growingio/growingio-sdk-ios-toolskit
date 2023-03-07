@@ -41,6 +41,7 @@
 //  limitations under the License.
 
 #import "NSObject+GrowingTKSwizzle.h"
+#import "GrowingTKDefine.h"
 
 #if TARGET_OS_IPHONE
     #import <objc/runtime.h>
@@ -61,9 +62,9 @@
 @implementation NSObject (GrowingTKSwizzle)
 
 + (BOOL)growingtk_swizzleMethod:(SEL)origSel_ withMethod:(SEL)altSel_ error:(NSError **)error_ {
-#ifndef DEBUG
-    return NO;
-#endif
+    if (![GrowingTKUseInRelease activeOrNot]) {
+        return NO;
+    }
     
     Method origMethod = class_getInstanceMethod(self, origSel_);
     if (!origMethod) {
@@ -99,17 +100,17 @@
 }
 
 + (BOOL)growingtk_swizzleClassMethod:(SEL)origSel_ withClassMethod:(SEL)altSel_ error:(NSError **)error_ {
-#ifndef DEBUG
-    return NO;
-#endif
+    if (![GrowingTKUseInRelease activeOrNot]) {
+        return NO;
+    }
     
     return [object_getClass((id)self) growingtk_swizzleMethod:origSel_ withMethod:altSel_ error:error_];
 }
 
 + (nullable NSInvocation *)growingtk_swizzleMethod:(SEL)origSel withBlock:(id)block error:(NSError **)error {
-#ifndef DEBUG
-    return nil;
-#endif
+    if (![GrowingTKUseInRelease activeOrNot]) {
+        return nil;
+    }
     
     IMP blockIMP = imp_implementationWithBlock(block);
     NSString *blockSelectorString = [NSString stringWithFormat:@"_growingtk_block_%@_%p", NSStringFromSelector(origSel), block];
@@ -128,9 +129,9 @@
 }
 
 + (nullable NSInvocation *)growingtk_swizzleClassMethod:(SEL)origSel withBlock:(id)block error:(NSError **)error {
-#ifndef DEBUG
-    return nil;
-#endif
+    if (![GrowingTKUseInRelease activeOrNot]) {
+        return nil;
+    }
     
     NSInvocation *invocation = [object_getClass((id)self) growingtk_swizzleMethod:origSel withBlock:block error:error];
     invocation.target = self;

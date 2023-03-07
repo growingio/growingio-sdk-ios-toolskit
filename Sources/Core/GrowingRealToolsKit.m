@@ -74,7 +74,10 @@ static GrowingRealToolsKit *instance = nil;
 }
 
 + (void)startWithPosition:(CGPoint)position autoDock:(BOOL)autoDock {
-#ifdef DEBUG
+    if (![GrowingTKUseInRelease activeOrNot]) {
+        return;
+    }
+    
     if (instance) {
         // has install
         return;
@@ -83,7 +86,6 @@ static GrowingRealToolsKit *instance = nil;
     [[GrowingTKPluginManager sharedInstance] setupDefaultPlugins];
     [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKSetupDefaultPluginsNotification object:nil];
     [[self sharedInstance] initEntry:position autoDock:autoDock];
-#endif
 }
 
 - (void)initEntry:(CGPoint)position autoDock:(BOOL)autoDock {

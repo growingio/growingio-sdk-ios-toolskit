@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import "UIViewController+GrowingTK.h"
+#import "GrowingTKDefine.h"
 #import "NSObject+GrowingTKSwizzle.h"
 #import "GrowingTKSDKUtil.h"
 #import "UIView+GrowingTK.h"
@@ -27,11 +28,12 @@
 #pragma mark Swizzle
 
 + (void)load {
-#ifdef DEBUG
+    if (![GrowingTKUseInRelease activeOrNot]) {
+        return;
+    }
     [self growingtk_swizzleMethod:@selector(viewWillAppear:)
                        withMethod:@selector(growingtk_viewWillAppear:)
                             error:nil];
-#endif
 }
 
 - (void)growingtk_viewWillAppear:(BOOL)animated {
