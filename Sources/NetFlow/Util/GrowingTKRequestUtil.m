@@ -96,27 +96,38 @@
 
 + (NSString *)convertProtobufDataToJSON:(NSData *)data {
     Class cls = NSClassFromString(@"GrowingPBEventV3List");
-    if (!cls) {
-        return @"";
-    }
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    SEL selector = NSSelectorFromString(@"parseFromData:error:");
-    if ([cls respondsToSelector:selector]) {
-        id list = [cls performSelector:selector withObject:data withObject:nil];
-        if (list) {
-            NSArray *array = [list valueForKey:@"valuesArray"];
-            if (array.count > 0) {
-                NSMutableArray *jsonArray = [NSMutableArray array];
-                for (id protobuf in array) {
-                    SEL toJsonObject = NSSelectorFromString(@"growingHelper_jsonObject");
-                    if ([protobuf respondsToSelector:toJsonObject]) {
-                        id jsonObject = [protobuf performSelector:toJsonObject];
-                        if (jsonObject) {
-                            [jsonArray addObject:jsonObject];
+    if (cls) {
+        SEL selector = NSSelectorFromString(@"parseFromData:error:");
+        if ([cls respondsToSelector:selector]) {
+            id list = [cls performSelector:selector withObject:data withObject:nil];
+            if (list) {
+                NSArray *array = [list valueForKey:@"valuesArray"];
+                if (array.count > 0) {
+                    NSMutableArray *jsonArray = [NSMutableArray array];
+                    for (id protobuf in array) {
+                        SEL toJsonObject = NSSelectorFromString(@"growingHelper_jsonObject");
+                        if ([protobuf respondsToSelector:toJsonObject]) {
+                            id jsonObject = [protobuf performSelector:toJsonObject];
+                            if (jsonObject) {
+                                [jsonArray addObject:jsonObject];
+                            }
                         }
                     }
+                    if ([NSJSONSerialization isValidJSONObject:jsonArray]) {
+                        return [GrowingTKUtil convertJSONFromJSONObject:jsonArray];
+                    }
                 }
+            }
+        }
+    } else {
+        // Protobuf Module in Swift Package Manager
+        cls = NSClassFromString(@"GrowingSwiftProtobuf");
+        if (cls) {
+            SEL selector = NSSelectorFromString(@"convertProtobufDataToJsonArray:");
+            if ([cls respondsToSelector:selector]) {
+                id jsonArray = [cls performSelector:selector withObject:data];
                 if ([NSJSONSerialization isValidJSONObject:jsonArray]) {
                     return [GrowingTKUtil convertJSONFromJSONObject:jsonArray];
                 }
