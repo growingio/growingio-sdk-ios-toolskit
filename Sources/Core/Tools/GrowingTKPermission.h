@@ -33,9 +33,11 @@ typedef NS_ENUM(NSUInteger, GrowingTKAuthorizationStatus) {
 
 @interface GrowingTKPermission : NSObject
 
+#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
 /// 网络权限
 + (void)startListenToNetworkPermissionDidUpdate:(void(^)(GrowingTKAuthorizationStatus status))didUpdateBlock;
 + (void)stopListenToNetworkPermission;
+#endif
 
 /// 地理位置权限
 + (GrowingTKAuthorizationStatus)locationPermission;

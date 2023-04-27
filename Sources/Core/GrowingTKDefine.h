@@ -75,9 +75,9 @@ typedef NS_ENUM(NSUInteger, GrowingTKModule) {
 // 根据750*1334分辨率计算size
 #define GrowingTKSizeFrom750(x)                                                              \
     (UIInterfaceOrientationIsLandscape(UIApplication.sharedApplication.statusBarOrientation) \
-         ? ((x)*GrowingTKScreenHeight / 750)                                                 \
-         : ((x)*GrowingTKScreenWidth / 750))
+         ? ((x)*GrowingTKScreenHeight / (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad ? 1964 : 750))                                                 \
+         : ((x)*GrowingTKScreenWidth / (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad ? 1964 : 750)))
 
-#define ENTRY_SIDELENGTH 50.0f
+#define ENTRY_SIDELENGTH GrowingTKSizeFrom750(100)
 
 #endif /* GrowingTKDefine_h */

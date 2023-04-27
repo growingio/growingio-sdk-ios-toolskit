@@ -22,9 +22,9 @@
 #import "UIImage+GrowingTK.h"
 #import "UIColor+GrowingTK.h"
 
-#define MODULE_BUTTON_CONTAINER_PADDING 7.0f
-#define MODULE_BUTTON_IMAGE_PADDING_PLUGINS 5.0f
-#define MODULE_BUTTON_IMAGE_PADDING_CHECKSELF 3.0f
+#define MODULE_BUTTON_CONTAINER_PADDING GrowingTKSizeFrom750(14)
+#define MODULE_BUTTON_IMAGE_PADDING_PLUGINS GrowingTKSizeFrom750(10)
+#define MODULE_BUTTON_IMAGE_PADDING_CHECKSELF GrowingTKSizeFrom750(6)
 
 #define MODULE_BUTTON_IMAGE_PLUGINS [UIImage growingtk_imageNamed:@"growingtk_plugins"]
 #define MODULE_BUTTON_IMAGE_CHECKSELF [UIImage growingtk_imageNamed:@"growingtk_logo"]

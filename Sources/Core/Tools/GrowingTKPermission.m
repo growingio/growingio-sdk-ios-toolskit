@@ -24,10 +24,13 @@
 #import <Photos/Photos.h>
 #import <Contacts/Contacts.h>
 #import <EventKit/EventKit.h>
+#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
 #import <CoreTelephony/CTCellularData.h>
+#endif
 
 @implementation GrowingTKPermission
 
+#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
 static CTCellularData *cellularData;
 
 + (void)startListenToNetworkPermissionDidUpdate:(void(^)(GrowingTKAuthorizationStatus status))didUpdateBlock {
@@ -64,6 +67,7 @@ static CTCellularData *cellularData;
     cellularData.cellularDataRestrictionDidUpdateNotifier = nil;
     cellularData = nil;
 }
+#endif
 
 + (GrowingTKAuthorizationStatus)locationPermission {
     GrowingTKAuthorizationStatus result = GrowingTKAuthorizationStatusNotDetermined;

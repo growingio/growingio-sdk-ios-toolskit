@@ -33,7 +33,9 @@
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, copy) NSArray *dataArray;
+#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
 @property (nonatomic, copy) NSString *networkPermission;
+#endif
 
 @end
 
@@ -49,7 +51,9 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
     [GrowingTKPermission stopListenToNetworkPermission];
+#endif
 }
 
 - (void)viewDidLayoutSubviews {
@@ -186,6 +190,7 @@
     NSString *bundleShortVersionString = [GrowingTKAppInfoUtil bundleShortVersionString];
     GrowingTKAuthorizationStatus locationPermission = [GrowingTKPermission locationPermission];
 
+#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
     self.networkPermission = GrowingTKLocalizedString(@"用户没有选择");
     __weak typeof(self) weakSelf = self;
     [GrowingTKPermission startListenToNetworkPermissionDidUpdate:^(GrowingTKAuthorizationStatus status) {
@@ -213,6 +218,7 @@
             [self.tableView reloadData];
         });
     }];
+#endif
 
     GrowingTKAuthorizationStatus pushPermission = [GrowingTKPermission pushPermission];
     GrowingTKAuthorizationStatus cameraPermission = [GrowingTKPermission cameraPermission];
@@ -248,7 +254,9 @@
             @"title": GrowingTKLocalizedString(@"权限信息"),
             @"array": @[
                 @{@"title": GrowingTKLocalizedString(@"地理位置权限"), @"value": @(locationPermission)},
+#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
                 @{@"title": GrowingTKLocalizedString(@"网络权限"), @"value": self.networkPermission}.mutableCopy,
+#endif
                 @{@"title": GrowingTKLocalizedString(@"推送权限"), @"value": @(pushPermission)},
                 @{@"title": GrowingTKLocalizedString(@"相机权限"), @"value": @(cameraPermission)},
                 @{@"title": GrowingTKLocalizedString(@"麦克风权限"), @"value": @(audioPermission)},
