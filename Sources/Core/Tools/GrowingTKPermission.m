@@ -69,34 +69,42 @@ static CTCellularData *cellularData;
 }
 #endif
 
-+ (GrowingTKAuthorizationStatus)locationPermission {
-    GrowingTKAuthorizationStatus result = GrowingTKAuthorizationStatusNotDetermined;
-    if ([CLLocationManager locationServicesEnabled]) {
-        CLAuthorizationStatus status = CLLocationManager.authorizationStatus;
-        switch (status) {
-            case kCLAuthorizationStatusNotDetermined:
-                result = GrowingTKAuthorizationStatusNotDetermined;
-                break;
-            case kCLAuthorizationStatusRestricted:
-                result = GrowingTKAuthorizationStatusRestricted;
-                break;
-            case kCLAuthorizationStatusDenied:
-                result = GrowingTKAuthorizationStatusDenied;
-                break;
-            case kCLAuthorizationStatusAuthorizedAlways:
-                result = GrowingTKAuthorizationStatusAlways;
-                break;
-            case kCLAuthorizationStatusAuthorizedWhenInUse:
-                result = GrowingTKAuthorizationStatusWhenInUse;
-                break;
-            default:
-                break;
-        }
-    } else {
-        // Users disable location services by toggling the Location Services switch in Settings > Privacy.
-        result = GrowingTKAuthorizationStatusDisabled;
++ (void)startListenToLocationPermissionDidUpdate:(void(^)(GrowingTKAuthorizationStatus status))didUpdateBlock {
+    if (!didUpdateBlock) {
+        return;
     }
-    return result;
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        GrowingTKAuthorizationStatus result = GrowingTKAuthorizationStatusNotDetermined;
+        if ([CLLocationManager locationServicesEnabled]) {
+            CLAuthorizationStatus status = CLLocationManager.authorizationStatus;
+            switch (status) {
+                case kCLAuthorizationStatusNotDetermined:
+                    result = GrowingTKAuthorizationStatusNotDetermined;
+                    break;
+                case kCLAuthorizationStatusRestricted:
+                    result = GrowingTKAuthorizationStatusRestricted;
+                    break;
+                case kCLAuthorizationStatusDenied:
+                    result = GrowingTKAuthorizationStatusDenied;
+                    break;
+                case kCLAuthorizationStatusAuthorizedAlways:
+                    result = GrowingTKAuthorizationStatusAlways;
+                    break;
+                case kCLAuthorizationStatusAuthorizedWhenInUse:
+                    result = GrowingTKAuthorizationStatusWhenInUse;
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            // Users disable location services by toggling the Location Services switch in Settings > Privacy.
+            result = GrowingTKAuthorizationStatusDisabled;
+        }
+        
+        if (didUpdateBlock) {
+            didUpdateBlock(result);
+        }
+    });
 }
 
 + (GrowingTKAuthorizationStatus)pushPermission {

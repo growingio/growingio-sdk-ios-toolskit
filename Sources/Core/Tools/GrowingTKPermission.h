@@ -40,7 +40,7 @@ typedef NS_ENUM(NSUInteger, GrowingTKAuthorizationStatus) {
 #endif
 
 /// 地理位置权限
-+ (GrowingTKAuthorizationStatus)locationPermission;
++ (void)startListenToLocationPermissionDidUpdate:(void(^)(GrowingTKAuthorizationStatus status))didUpdateBlock;
 
 /// 推送权限
 + (GrowingTKAuthorizationStatus)pushPermission;

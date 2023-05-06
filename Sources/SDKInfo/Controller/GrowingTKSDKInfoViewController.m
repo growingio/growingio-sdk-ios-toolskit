@@ -188,36 +188,10 @@
     NSString *bundleIdentifier = [GrowingTKAppInfoUtil bundleIdentifier];
     NSString *bundleVersion = [GrowingTKAppInfoUtil bundleVersion];
     NSString *bundleShortVersionString = [GrowingTKAppInfoUtil bundleShortVersionString];
-    GrowingTKAuthorizationStatus locationPermission = [GrowingTKPermission locationPermission];
-
+    
+    GrowingTKAuthorizationStatus locationPermission = GrowingTKAuthorizationStatusNotDetermined;
 #if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
     self.networkPermission = GrowingTKLocalizedString(@"用户没有选择");
-    __weak typeof(self) weakSelf = self;
-    [GrowingTKPermission startListenToNetworkPermissionDidUpdate:^(GrowingTKAuthorizationStatus status) {
-        __strong typeof(weakSelf) self = weakSelf;
-        switch (status) {
-            case GrowingTKAuthorizationStatusNotDetermined:
-                self.networkPermission = GrowingTKLocalizedString(@"用户没有选择");
-                break;
-            case GrowingTKAuthorizationStatusRestricted:
-                self.networkPermission = GrowingTKLocalizedString(@"受限制 - 永不或WLAN");
-                break;
-            case GrowingTKAuthorizationStatusAuthorized:
-                self.networkPermission = GrowingTKLocalizedString(@"无线局域网与蜂窝数据");
-                break;
-            default:
-                break;
-        }
-
-        NSMutableDictionary *item = self.dataArray[3][@"array"][1];
-        [item setValue:self.networkPermission forKey:@"value"];
-
-        __weak typeof(self) weakSelf = self;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(weakSelf) self = weakSelf;
-            [self.tableView reloadData];
-        });
-    }];
 #endif
 
     GrowingTKAuthorizationStatus pushPermission = [GrowingTKPermission pushPermission];
@@ -253,7 +227,7 @@
         @{
             @"title": GrowingTKLocalizedString(@"权限信息"),
             @"array": @[
-                @{@"title": GrowingTKLocalizedString(@"地理位置权限"), @"value": @(locationPermission)},
+                @{@"title": GrowingTKLocalizedString(@"地理位置权限"), @"value": @(locationPermission)}.mutableCopy,
 #if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
                 @{@"title": GrowingTKLocalizedString(@"网络权限"), @"value": self.networkPermission}.mutableCopy,
 #endif
@@ -268,6 +242,46 @@
         }
     ];
     self.dataArray = dataArray;
+    
+    __weak typeof(self) weakSelf = self;
+    [GrowingTKPermission startListenToLocationPermissionDidUpdate:^(GrowingTKAuthorizationStatus status) {
+        __strong typeof(weakSelf) self = weakSelf;
+        NSMutableDictionary *item = self.dataArray[3][@"array"][0];
+        [item setValue:@(status) forKey:@"value"];
+
+        __weak typeof(self) weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) self = weakSelf;
+            [self.tableView reloadData];
+        });
+    }];
+#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
+    [GrowingTKPermission startListenToNetworkPermissionDidUpdate:^(GrowingTKAuthorizationStatus status) {
+        __strong typeof(weakSelf) self = weakSelf;
+        switch (status) {
+            case GrowingTKAuthorizationStatusNotDetermined:
+                self.networkPermission = GrowingTKLocalizedString(@"用户没有选择");
+                break;
+            case GrowingTKAuthorizationStatusRestricted:
+                self.networkPermission = GrowingTKLocalizedString(@"受限制 - 永不或WLAN");
+                break;
+            case GrowingTKAuthorizationStatusAuthorized:
+                self.networkPermission = GrowingTKLocalizedString(@"无线局域网与蜂窝数据");
+                break;
+            default:
+                break;
+        }
+
+        NSMutableDictionary *item = self.dataArray[3][@"array"][1];
+        [item setValue:self.networkPermission forKey:@"value"];
+
+        __weak typeof(self) weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) self = weakSelf;
+            [self.tableView reloadData];
+        });
+    }];
+#endif
 }
 
 - (UIImage *)snapshot {
