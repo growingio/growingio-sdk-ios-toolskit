@@ -44,6 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Tracker
 @property (nonatomic, copy, readonly) NSString *projectId;
+@property (nonatomic, copy, readonly) NSString *dataSourceId;
 @property (nonatomic, assign, readonly) BOOL debugEnabled;
 @property (nonatomic, assign, readonly) NSUInteger cellularDataLimit;
 @property (nonatomic, assign, readonly) NSTimeInterval dataUploadInterval;
@@ -58,9 +59,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 // AutoTracker
 @property (nonatomic, assign, readonly) float impressionScale;
-
-// CDP
-@property (nonatomic, copy, readonly) NSString *dataSourceId;
 
 // SDK 2.0
 @property (nonatomic, assign, readonly) float sampling;

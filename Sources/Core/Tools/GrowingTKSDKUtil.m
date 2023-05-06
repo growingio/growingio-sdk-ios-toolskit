@@ -45,6 +45,7 @@
 
 // Tracker
 @property (nonatomic, copy, readwrite) NSString *projectId;
+@property (nonatomic, copy, readwrite) NSString *dataSourceId;
 @property (nonatomic, assign, readwrite) BOOL debugEnabled;
 @property (nonatomic, assign, readwrite) NSUInteger cellularDataLimit;
 @property (nonatomic, assign, readwrite) NSTimeInterval dataUploadInterval;
@@ -59,9 +60,6 @@
 
 // AutoTracker
 @property (nonatomic, assign, readwrite) float impressionScale;
-
-// CDP
-@property (nonatomic, copy, readwrite) NSString *dataSourceId;
 
 // SDK 2.0
 @property (nonatomic, assign, readwrite) float sampling;
@@ -971,6 +969,7 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
                 }
             }
         }
+        return [self.sdk3rdConfiguration valueForKey:@"dataSourceId"] ?: @"";
     } else if (self.isSDK2ndGeneration) {
         Class cls = NSClassFromString(@"GrowingInstance");
         SEL selector = NSSelectorFromString(@"sharedInstance");
