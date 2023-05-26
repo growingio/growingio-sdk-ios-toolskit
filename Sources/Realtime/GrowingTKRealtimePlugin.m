@@ -200,6 +200,12 @@ static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSS
         if (eventDic && eventDic.count > 0) {
             globalSequenceId = eventDic[@"globalSequenceId"];
             timestamp = eventDic[@"timestamp"];
+            if ([globalSequenceId isKindOfClass:[NSString class]]) {
+                globalSequenceId = @(((NSString *)globalSequenceId).intValue);
+            }
+            if ([timestamp isKindOfClass:[NSString class]]) {
+                timestamp = @(((NSString *)timestamp).longLongValue);
+            }
             
             if ([eventType isEqualToString:@"PAGE"]) {
                 detail = eventDic[@"path"];
