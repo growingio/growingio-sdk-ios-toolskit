@@ -75,7 +75,10 @@
 
 - (NSNumber *)globalSequenceId {
     if (!_globalSequenceId) {
-        _globalSequenceId = self.dictionary[@"globalSequenceId"] ?: self.dictionary[@"gesid"];
+        NSNumber *v = self.dictionary[@"globalSequenceId"] ?: self.dictionary[@"gesid"];
+        if ([v isKindOfClass:[NSString class]]) {
+            _globalSequenceId = @(((NSString *)v).intValue);
+        }
     }
     return _globalSequenceId;
 }
@@ -108,7 +111,11 @@
 - (double)timestamp {
     if (!_timestamp) {
         NSNumber *t = self.dictionary[@"timestamp"] ?: self.dictionary[@"tm"];
-        _timestamp = t.doubleValue;
+        if ([t isKindOfClass:[NSString class]]) {
+            _timestamp = ((NSString *)t).doubleValue;
+        } else if ([t isKindOfClass:[NSNumber class]]) {
+            _timestamp = t.doubleValue;
+        }
     }
     return _timestamp;
 }
