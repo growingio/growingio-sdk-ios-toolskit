@@ -93,10 +93,14 @@ static GrowingRealToolsKit *instance = nil;
 }
 
 + (NSString *)version {
+#if SWIFT_PACKAGE
+    return @"-spm";
+#else
     // 兼容静态库方式集成
     NSBundle *imageBundle = [NSBundle growingtk_resourcesBundle:NSClassFromString(GrowingToolsKitName)
                                                      bundleName:GrowingToolsKitName];
     return imageBundle.infoDictionary[@"CFBundleShortVersionString"];
+#endif
 }
 
 @end
