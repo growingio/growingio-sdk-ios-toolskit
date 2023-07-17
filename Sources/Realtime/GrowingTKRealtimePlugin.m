@@ -179,7 +179,7 @@ static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSS
 
     if (event) {
         NSString *eventType = [event valueForKey:@"eventType"];
-        NSNumber *globalSequenceId = nil;
+        NSNumber *sequenceId = nil;
         NSNumber *timestamp = nil;
         NSString *detail = @"";
         BOOL isCustomEvent = NO;
@@ -198,10 +198,10 @@ static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSS
         NSData *jsonData = [rawJsonString dataUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *eventDic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
         if (eventDic && eventDic.count > 0) {
-            globalSequenceId = eventDic[@"globalSequenceId"];
+            sequenceId = eventDic[@"eventSequenceId"];
             timestamp = eventDic[@"timestamp"];
-            if ([globalSequenceId isKindOfClass:[NSString class]]) {
-                globalSequenceId = @(((NSString *)globalSequenceId).intValue);
+            if ([sequenceId isKindOfClass:[NSString class]]) {
+                sequenceId = @(((NSString *)sequenceId).intValue);
             }
             if ([timestamp isKindOfClass:[NSString class]]) {
                 timestamp = @(((NSString *)timestamp).longLongValue);
@@ -239,7 +239,7 @@ static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSS
         
         GrowingTKRealtimeEvent *eventEntity = [[GrowingTKRealtimeEvent alloc] init];
         eventEntity.eventType = eventType;
-        eventEntity.globalSequenceId = globalSequenceId;
+        eventEntity.sequenceId = sequenceId;
         eventEntity.detail = detail;
         eventEntity.timestamp = timestamp;
         eventEntity.isCustomEvent = isCustomEvent;
@@ -302,7 +302,7 @@ static void growingtk_sdk2ndEventTrack(NSInvocation *invocation, id obj, NSStrin
 
         GrowingTKRealtimeEvent *eventEntity = [[GrowingTKRealtimeEvent alloc] init];
         eventEntity.eventType = eventType;
-        eventEntity.globalSequenceId = gesid;
+        eventEntity.sequenceId = gesid;
         eventEntity.detail = detail;
         eventEntity.timestamp = timestamp;
         eventEntity.isCustomEvent = isCustomEvent;

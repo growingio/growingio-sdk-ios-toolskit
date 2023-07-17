@@ -29,7 +29,7 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
 @property (nonatomic, strong, readwrite) GrowingTKRealtimeEvent *event;
 @property (nonatomic, strong) NSArray<GrowingTKRealtimeEvent *> *events;
 @property (nonatomic, strong) UILabel *eventTypeLabel;
-@property (nonatomic, strong) UILabel *gesidLabel;
+@property (nonatomic, strong) UILabel *sequenceIdLabel;
 @property (nonatomic, strong) UIView *whiteBackgroundView;
 @property (nonatomic, strong) UIView *leftBackgroundView;
 
@@ -69,14 +69,14 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
         self.eventTypeLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.whiteBackgroundView addSubview:self.eventTypeLabel];
         
-        self.gesidLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        self.gesidLabel.textColor = UIColor.growingtk_white_1;
-        self.gesidLabel.font = [UIFont fontWithName:@"DBLCDTempBlack" size:GrowingTKSizeFrom750(20)];
-        self.gesidLabel.textAlignment = NSTextAlignmentCenter;
-        self.gesidLabel.numberOfLines = 0;
-        self.gesidLabel.adjustsFontSizeToFitWidth = YES;
-        self.gesidLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.leftBackgroundView addSubview:self.gesidLabel];
+        self.sequenceIdLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        self.sequenceIdLabel.textColor = UIColor.growingtk_white_1;
+        self.sequenceIdLabel.font = [UIFont fontWithName:@"DBLCDTempBlack" size:GrowingTKSizeFrom750(20)];
+        self.sequenceIdLabel.textAlignment = NSTextAlignmentCenter;
+        self.sequenceIdLabel.numberOfLines = 0;
+        self.sequenceIdLabel.adjustsFontSizeToFitWidth = YES;
+        self.sequenceIdLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.leftBackgroundView addSubview:self.sequenceIdLabel];
 
         [NSLayoutConstraint activateConstraints:@[
             [self.whiteBackgroundView.topAnchor constraintEqualToAnchor:self.topAnchor],
@@ -95,10 +95,10 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
             [self.leftBackgroundView.widthAnchor constraintEqualToConstant:height * 1.6f],
             [self.leftBackgroundView.heightAnchor constraintGreaterThanOrEqualToConstant:height],
             
-            [self.gesidLabel.leadingAnchor constraintEqualToAnchor:self.leftBackgroundView.leadingAnchor constant:corner - GrowingTKSizeFrom750(16)],
-            [self.gesidLabel.trailingAnchor constraintEqualToAnchor:self.leftBackgroundView.trailingAnchor constant:-corner],
-            [self.gesidLabel.topAnchor constraintEqualToAnchor:self.leftBackgroundView.topAnchor],
-            [self.gesidLabel.bottomAnchor constraintEqualToAnchor:self.leftBackgroundView.bottomAnchor]
+            [self.sequenceIdLabel.leadingAnchor constraintEqualToAnchor:self.leftBackgroundView.leadingAnchor constant:corner - GrowingTKSizeFrom750(16)],
+            [self.sequenceIdLabel.trailingAnchor constraintEqualToAnchor:self.leftBackgroundView.trailingAnchor constant:-corner],
+            [self.sequenceIdLabel.topAnchor constraintEqualToAnchor:self.leftBackgroundView.topAnchor],
+            [self.sequenceIdLabel.bottomAnchor constraintEqualToAnchor:self.leftBackgroundView.bottomAnchor]
         ]];
         
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction)];
@@ -115,7 +115,11 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
     
     GrowingTKRealtimeEvent *first = events.firstObject;
     GrowingTKRealtimeEvent *last = events.lastObject;
-    self.gesidLabel.text = [NSString stringWithFormat:@"%@\n-\n%@", first.globalSequenceId, last.globalSequenceId];
+    if (first.sequenceId != nil && last.sequenceId != nil) {
+        self.sequenceIdLabel.text = [NSString stringWithFormat:@"%@\n-\n%@", first.sequenceId, last.sequenceId];
+    } else {
+        self.sequenceIdLabel.text = @"-";
+    }
     
     NSMutableString *eventTypes = [NSMutableString string];
     for (GrowingTKRealtimeEvent *e in events) {
@@ -131,13 +135,13 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
 #pragma mark - Action
 
 - (void)tapAction {
-    NSMutableArray *gesids = [NSMutableArray array];
+    NSMutableArray *timestamps = [NSMutableArray array];
     for (GrowingTKRealtimeEvent *event in self.events) {
-        [gesids addObject:event.globalSequenceId];
+        [timestamps addObject:event.timestamp];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKShowEventsListNotification
                                                         object:nil
-                                                      userInfo:@{@"window" : self.window, @"gesids" : gesids.copy}];
+                                                      userInfo:@{@"window" : self.window, @"timestamps" : timestamps.copy}];
 }
 
 @end

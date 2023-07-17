@@ -24,7 +24,7 @@
 
 @interface GrowingTKEventsListTableViewCell ()
 
-@property (nonatomic, strong) UILabel *globalSequenceIdLabel;
+@property (nonatomic, strong) UILabel *sequenceIdLabel;
 @property (nonatomic, strong) UILabel *typeLabel;
 @property (nonatomic, strong) UILabel *pathLabel;
 @property (nonatomic, strong) UILabel *sendStatusLabel;
@@ -45,13 +45,13 @@
     if (self) {
         self.backgroundColor = UIColor.growingtk_white_1;
 
-        self.globalSequenceIdLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        self.globalSequenceIdLabel.textColor = UIColor.growingtk_black_2;
-        self.globalSequenceIdLabel.font = [UIFont systemFontOfSize:GrowingTKSizeFrom750(28)];
-        self.globalSequenceIdLabel.textAlignment = NSTextAlignmentCenter;
-        self.globalSequenceIdLabel.adjustsFontSizeToFitWidth = YES;
-        self.globalSequenceIdLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.contentView addSubview:self.globalSequenceIdLabel];
+        self.sequenceIdLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        self.sequenceIdLabel.textColor = UIColor.growingtk_black_2;
+        self.sequenceIdLabel.font = [UIFont systemFontOfSize:GrowingTKSizeFrom750(28)];
+        self.sequenceIdLabel.textAlignment = NSTextAlignmentCenter;
+        self.sequenceIdLabel.adjustsFontSizeToFitWidth = YES;
+        self.sequenceIdLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.contentView addSubview:self.sequenceIdLabel];
 
         self.typeLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         self.typeLabel.textColor = UIColor.growingtk_black_1;
@@ -90,11 +90,11 @@
 
         CGFloat margin = 3.0f;
         [NSLayoutConstraint activateConstraints:@[
-            [self.globalSequenceIdLabel.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor
+            [self.sequenceIdLabel.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor
                                                                      constant:margin],
-            [self.globalSequenceIdLabel.widthAnchor constraintEqualToConstant:GrowingTKSizeFrom750(90)],
-            [self.globalSequenceIdLabel.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
-            [self.typeLabel.leadingAnchor constraintEqualToAnchor:self.globalSequenceIdLabel.trailingAnchor
+            [self.sequenceIdLabel.widthAnchor constraintEqualToConstant:GrowingTKSizeFrom750(90)],
+            [self.sequenceIdLabel.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
+            [self.typeLabel.leadingAnchor constraintEqualToAnchor:self.sequenceIdLabel.trailingAnchor
                                                          constant:margin],
             [self.pathLabel.leadingAnchor constraintEqualToAnchor:self.typeLabel.leadingAnchor],
             [self.pathLabel.widthAnchor constraintEqualToAnchor:self.typeLabel.widthAnchor],
@@ -115,7 +115,7 @@
 #pragma mark - Public Method
 
 - (void)showEvent:(GrowingTKEventPersistence *)event {
-    self.globalSequenceIdLabel.text = [NSString stringWithFormat:@"%@", event.globalSequenceId];
+    self.sequenceIdLabel.text = [NSString stringWithFormat:@"%@", event.sequenceId ?: @"-"];
     self.typeLabel.text = event.eventType;
     
     self.pathLabel.text = event.path;

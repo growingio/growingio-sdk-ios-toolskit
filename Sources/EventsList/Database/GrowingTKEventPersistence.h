@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) BOOL isSend;
 
 // Common
-@property (nonatomic, copy, readonly) NSNumber *globalSequenceId;
+@property (nonatomic, copy, readonly) NSNumber *sequenceId;
 @property (nonatomic, copy, readonly) NSString *deviceId;
 @property (nonatomic, copy, readonly) NSString *sessionId;
 @property (nonatomic, copy, readonly) NSString *path;

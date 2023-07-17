@@ -188,15 +188,15 @@
     GrowingTKEventPersistence *event = ((NSArray *)dic[dic.allKeys.firstObject])[indexPath.row];
     [cell showEvent:event];
     
-    if (self.gesids.count > 0) {
-        if (self.gesids.count == 1) {
-            NSNumber *gesid = (NSNumber *)self.gesids.firstObject;
-            cell.backgroundColor = [event.globalSequenceId isEqualToNumber:gesid] ? [UIColor growingtk_colorWithHex:@"#FF9167" alpha:0.2f]
-                                                                                  : UIColor.growingtk_white_1;
+    if (self.timestamps.count > 0) {
+        if (self.timestamps.count == 1) {
+            double timestamp = ((NSNumber *)self.timestamps.firstObject).doubleValue;
+            cell.backgroundColor = event.timestamp == timestamp ? [UIColor growingtk_colorWithHex:@"#FF9167" alpha:0.2f]
+                                                                : UIColor.growingtk_white_1;
         } else {
             cell.backgroundColor = UIColor.growingtk_white_1;
-            for (NSNumber *gesid in self.gesids) {
-                if ([event.globalSequenceId isEqualToNumber:gesid]) {
+            for (NSNumber *timestamp in self.timestamps) {
+                if (event.timestamp == timestamp.doubleValue) {
                     cell.backgroundColor = [UIColor growingtk_colorWithHex:@"#FF9167" alpha:0.2f];
                     break;
                 }

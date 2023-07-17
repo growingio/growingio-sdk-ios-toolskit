@@ -23,10 +23,6 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 
-@interface GrowingTKViewNode ()
-
-@end
-
 @implementation GrowingTKViewNode
 
 #pragma mark - Swizzle
@@ -84,12 +80,13 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
                 _viewName = NSStringFromClass(_view.class);
                 _viewContent = [node valueForKey:@"viewContent"] ?: @"";
                 _path = [self pathForView:view];
-                _xPath = [node valueForKey:@"xPath"];
+                _xpath = [node valueForKey:@"xpath"];
+                _xindex = [node valueForKey:@"xindex"];
                 _index = ((NSNumber *)[node valueForKey:@"index"]).intValue;
                 _hasListParent = ((NSNumber *)[node valueForKey:@"hasListParent"]).boolValue;
                 
                 // unused
-                _originXPath = [node valueForKey:@"originXPath"];
+                _originxindex = [node valueForKey:@"originxindex"];
                 _nodeType = [node valueForKey:@"nodeType"];
                 _position = ((NSNumber *)[node valueForKey:@"position"]).intValue;
             }
@@ -105,15 +102,15 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
                 _viewName = NSStringFromClass(_view.class);
                 _viewContent = [element valueForKey:@"content"] ?: @"";
                 _path = [element valueForKey:@"page"];
-                _xPath = [element valueForKey:@"xpath"];
-                if (_xPath.length == 0) {
-                    _xPath = GrowingTKLocalizedString(@"当前SDK不支持此控件圈选");
+                _xpath = [element valueForKey:@"xpath"];
+                if (_xpath.length == 0) {
+                    _xpath = GrowingTKLocalizedString(@"当前SDK不支持此控件圈选");
                 }
                 _index = ((NSNumber *)[element valueForKey:@"index"]).intValue;
                 _hasListParent = _index >= 0;
                 
                 // unused
-                _originXPath = _xPath.copy;
+                _originxpath = _xpath.copy;
                 _nodeType = _viewName.copy;
                 _position = 0;
             }
@@ -132,7 +129,7 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
         _viewName = domain;
         _viewContent = nodeDic[@"v"] ?: @"";
         _path = h5Path;
-        _xPath = nodeDic[@"x"] ?: @"";
+        _xpath = nodeDic[@"x"] ?: @"";
         if (nodeDic[@"idx"]) {
             _index = ((NSNumber *)nodeDic[@"idx"]).intValue;
             _hasListParent = YES;
@@ -142,7 +139,7 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
         }
         
         // unused
-        _originXPath = _xPath.copy;
+        _originxpath = _xpath.copy;
         _nodeType = nodeDic[@"nodeType"] ?: @"";
         _position = 0;
     }
@@ -163,8 +160,11 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
     if (self.index >= 0) {
         [array addObject:[NSString stringWithFormat:@"%@: %@", GrowingTKLocalizedString(@"位置"), @(self.index)]];
     }
-    [array addObject:[NSString stringWithFormat:@"path: %@", self.path]];
-    [array addObject:[NSString stringWithFormat:@"xpath: %@", self.xPath]];
+    if (self.path && self.path.length > 0) {
+        [array addObject:[NSString stringWithFormat:@"path: %@", self.path]];
+    }
+    [array addObject:[NSString stringWithFormat:@"xpath: %@", self.xpath]];
+    [array addObject:[NSString stringWithFormat:@"xindex: %@", self.xindex]];
     return [array componentsJoinedByString:@"\n"];
 }
 
@@ -174,17 +174,27 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
     Class cls = NSClassFromString(@"GrowingPageManager");
     if (cls) {
         SEL selector = NSSelectorFromString(@"sharedInstance");
-        id pageManager = ((id(*)(id, SEL))objc_msgSend)(cls, selector);
-        if (pageManager) {
-            SEL selector2 = NSSelectorFromString(@"findPageByView:");
-            id page = ((id(*)(id, SEL, UIView *))objc_msgSend)(pageManager, selector2, view);
-            if (!page) {
-                SEL selector3 = NSSelectorFromString(@"currentPage");
-                page = ((id(*)(id, SEL))objc_msgSend)(pageManager, selector3);
+        if ([cls respondsToSelector:selector]) {
+            id pageManager = ((id(*)(id, SEL))objc_msgSend)(cls, selector);
+            if (pageManager) {
+                SEL selector2 = NSSelectorFromString(@"findPageByView:");
+                if ([pageManager respondsToSelector:selector2]) {
+                    id page = ((id(*)(id, SEL, UIView *))objc_msgSend)(pageManager, selector2, view);
+                    if (!page) {
+                        SEL selector3 = NSSelectorFromString(@"currentPage");
+                        if ([pageManager respondsToSelector:selector3]) {
+                            page = ((id(*)(id, SEL))objc_msgSend)(pageManager, selector3);
+                        }
+                    }
+                    if (page) {
+                        SEL selector4 = NSSelectorFromString(@"alias");
+                        if ([page respondsToSelector:selector4]) {
+                            NSString *alias = ((NSString * (*)(id, SEL)) objc_msgSend)(page, selector4);
+                            return alias ?: @"";
+                        }
+                    }
+                }
             }
-            SEL selector4 = NSSelectorFromString(@"path");
-            NSString *path = ((NSString * (*)(id, SEL)) objc_msgSend)(page, selector4);
-            return path ?: @"";
         }
     }
     return @"";

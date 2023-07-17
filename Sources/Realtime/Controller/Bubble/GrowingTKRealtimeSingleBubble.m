@@ -29,7 +29,7 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
 @property (nonatomic, strong, readwrite) GrowingTKRealtimeEvent *event;
 @property (nonatomic, strong) UILabel *eventTypeLabel;
 @property (nonatomic, strong) UILabel *detailLabel;
-@property (nonatomic, strong) UILabel *gesidLabel;
+@property (nonatomic, strong) UILabel *sequenceIdLabel;
 @property (nonatomic, strong) UIView *whiteBackgroundView;
 @property (nonatomic, strong) UIView *leftBackgroundView;
 
@@ -80,13 +80,13 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
         self.detailLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.whiteBackgroundView addSubview:self.detailLabel];
         
-        self.gesidLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        self.gesidLabel.textColor = UIColor.growingtk_white_1;
-        self.gesidLabel.font = [UIFont fontWithName:@"DBLCDTempBlack" size:GrowingTKSizeFrom750(20)];
-        self.gesidLabel.textAlignment = NSTextAlignmentCenter;
-        self.gesidLabel.adjustsFontSizeToFitWidth = YES;
-        self.gesidLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.leftBackgroundView addSubview:self.gesidLabel];
+        self.sequenceIdLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        self.sequenceIdLabel.textColor = UIColor.growingtk_white_1;
+        self.sequenceIdLabel.font = [UIFont fontWithName:@"DBLCDTempBlack" size:GrowingTKSizeFrom750(20)];
+        self.sequenceIdLabel.textAlignment = NSTextAlignmentCenter;
+        self.sequenceIdLabel.adjustsFontSizeToFitWidth = YES;
+        self.sequenceIdLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.leftBackgroundView addSubview:self.sequenceIdLabel];
         
         self.eventTypeLabelTopConstraint = [self.eventTypeLabel.topAnchor constraintEqualToAnchor:self.whiteBackgroundView.topAnchor constant:GrowingTKSizeFrom750(4)];
         self.eventTypeLabelCenterYConstraint = [self.eventTypeLabel.centerYAnchor constraintEqualToAnchor:self.whiteBackgroundView.centerYAnchor];
@@ -114,10 +114,10 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
             [self.leftBackgroundView.widthAnchor constraintEqualToConstant:height * 1.6f],
             [self.leftBackgroundView.heightAnchor constraintGreaterThanOrEqualToConstant:height],
             
-            [self.gesidLabel.leadingAnchor constraintEqualToAnchor:self.leftBackgroundView.leadingAnchor constant:corner - GrowingTKSizeFrom750(16)],
-            [self.gesidLabel.trailingAnchor constraintEqualToAnchor:self.leftBackgroundView.trailingAnchor constant:-corner],
-            [self.gesidLabel.topAnchor constraintEqualToAnchor:self.leftBackgroundView.topAnchor],
-            [self.gesidLabel.bottomAnchor constraintEqualToAnchor:self.leftBackgroundView.bottomAnchor]
+            [self.sequenceIdLabel.leadingAnchor constraintEqualToAnchor:self.leftBackgroundView.leadingAnchor constant:corner - GrowingTKSizeFrom750(16)],
+            [self.sequenceIdLabel.trailingAnchor constraintEqualToAnchor:self.leftBackgroundView.trailingAnchor constant:-corner],
+            [self.sequenceIdLabel.topAnchor constraintEqualToAnchor:self.leftBackgroundView.topAnchor],
+            [self.sequenceIdLabel.bottomAnchor constraintEqualToAnchor:self.leftBackgroundView.bottomAnchor]
         ]];
         
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction)];
@@ -130,7 +130,7 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
 
 - (void)configWithEvent:(GrowingTKRealtimeEvent *)event {
     self.event = event;
-    self.gesidLabel.text = [NSString stringWithFormat:@"%@", event.globalSequenceId];
+    self.sequenceIdLabel.text = [NSString stringWithFormat:@"%@", event.sequenceId ?: @"-"];
     self.eventTypeLabel.text = [NSString stringWithFormat:@"%@", event.eventType];
     self.detailLabel.text = [NSString stringWithFormat:@"%@", event.detail];
     
@@ -143,7 +143,7 @@ static CGFloat const DefaultBubbleHeight = 70.0f;
 - (void)tapAction {
     [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKShowEventsListNotification
                                                         object:nil
-                                                      userInfo:@{@"window" : self.window, @"gesids" : @[self.event.globalSequenceId.copy]}];
+                                                      userInfo:@{@"window" : self.window, @"timestamps" : @[self.event.timestamp.copy]}];
 }
 
 @end
