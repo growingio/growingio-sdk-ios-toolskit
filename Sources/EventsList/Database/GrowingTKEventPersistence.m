@@ -78,6 +78,8 @@
         NSNumber *v = self.dictionary[@"globalSequenceId"] ?: self.dictionary[@"gesid"];
         if ([v isKindOfClass:[NSString class]]) {
             _globalSequenceId = @(((NSString *)v).intValue);
+        } else if ([v isKindOfClass:[NSNumber class]]) {
+            _globalSequenceId = v;
         }
     }
     return _globalSequenceId;
