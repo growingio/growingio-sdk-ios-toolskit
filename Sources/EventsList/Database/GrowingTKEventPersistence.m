@@ -26,7 +26,7 @@
 @property (nonatomic, copy, readwrite) NSString *eventType;
 
 // Common
-@property (nonatomic, copy, readwrite) NSNumber *globalSequenceId;
+@property (nonatomic, copy, readwrite) NSNumber *sequenceId;
 @property (nonatomic, copy, readwrite) NSString *deviceId;
 @property (nonatomic, copy, readwrite) NSString *sessionId;
 @property (nonatomic, copy, readwrite) NSString *path;
@@ -73,16 +73,16 @@
     return _eventType;
 }
 
-- (NSNumber *)globalSequenceId {
-    if (!_globalSequenceId) {
-        NSNumber *v = self.dictionary[@"globalSequenceId"] ?: self.dictionary[@"gesid"];
+- (NSNumber *)sequenceId {
+    if (!_sequenceId) {
+        NSNumber *v = self.dictionary[@"eventSequenceId"] ?: self.dictionary[@"gesid"];
         if ([v isKindOfClass:[NSString class]]) {
-            _globalSequenceId = @(((NSString *)v).intValue);
+            _sequenceId = @(((NSString *)v).intValue);
         } else if ([v isKindOfClass:[NSNumber class]]) {
-            _globalSequenceId = v;
+            _sequenceId = v;
         }
     }
-    return _globalSequenceId;
+    return _sequenceId;
 }
 
 - (NSString *)deviceId {

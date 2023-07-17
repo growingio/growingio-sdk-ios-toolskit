@@ -28,9 +28,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *viewName;
 @property (nonatomic, copy, readonly) NSString *viewContent;
 @property (nonatomic, copy, readonly) NSString *path;
-@property (nonatomic, copy, readonly) NSString *xPath;
-@property (nonatomic, copy, readonly) NSString *originXPath;
-//可点击的父节点xpath
+@property (nonatomic, copy, readonly) NSString *xpath;
+@property (nonatomic, copy, readonly) NSString *xindex;
+@property (nonatomic, copy, readonly) NSString *originxindex;
+@property (nonatomic, copy, readonly) NSString *originxpath; // sdk 2.x
 @property (nonatomic, copy, readonly) NSString *nodeType;
 //如果有父节点，且父节点为列表，则index有值，和父节点一致，否则为-1
 @property (nonatomic, assign, readonly) int index;

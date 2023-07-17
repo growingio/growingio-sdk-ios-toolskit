@@ -84,7 +84,7 @@ static long long const kPopupInterval = 500LL;
         if (self.popup && self.lastBubbles.count > 0) {
             GrowingTKRealtimeEvent *last = self.lastBubbles.lastObject;
             if (last.isCustomEvent != event.isCustomEvent // 无埋点与埋点分离
-                || [last.globalSequenceId isEqualToNumber:@0]) { // 实时埋点开始提示
+                || [last.sequenceId isEqualToNumber:@0]) { // 实时埋点开始提示
                 self.popup(self.lastBubbles.copy);
                 [self.lastBubbles removeAllObjects];
             }

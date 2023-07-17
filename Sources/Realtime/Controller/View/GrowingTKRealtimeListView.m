@@ -78,7 +78,7 @@ static long long const kfadedInterval = 3000LL;
 - (void)start {
     GrowingTKRealtimeEvent *start = [[GrowingTKRealtimeEvent alloc] init];
     start.eventType = @"START";
-    start.globalSequenceId = @0;
+    start.sequenceId = @0;
     start.detail = GrowingTKLocalizedString(@"实时事件检测开始");
     start.timestamp = @(NSDate.date.timeIntervalSince1970 * 1000LL);
     

@@ -166,7 +166,7 @@
     GrowingTKEventsListViewController *controller = [[GrowingTKEventsListViewController alloc] init];
     UIWindow *window = [not.userInfo[@"window"] isKindOfClass:[UIWindow class]] ? not.userInfo[@"window"]
                                                                                 : [GrowingTKHomeWindow sharedInstance];
-    controller.gesids = not.userInfo[@"gesids"];
+    controller.timestamps = not.userInfo[@"timestamps"];
     [(UINavigationController *)window.rootViewController pushViewController:controller animated:YES];
 }
 
