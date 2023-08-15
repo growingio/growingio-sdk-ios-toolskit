@@ -314,9 +314,6 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
         if (NSClassFromString(@"GrowingImpressionTrack")) {
             [modules addObject:@"Impression"];
         }
-        if (NSClassFromString(@"GrowingProtobufModule")) {
-            [modules addObject:@"Protobuf"];
-        }
         return modules.copy;
     }
     return @[];
