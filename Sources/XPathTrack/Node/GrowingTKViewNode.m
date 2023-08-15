@@ -81,12 +81,12 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
                 _viewContent = [node valueForKey:@"viewContent"] ?: @"";
                 _path = [self pathForView:view];
                 _xpath = [node valueForKey:@"xpath"];
-                _xindex = [node valueForKey:@"xindex"];
+                _xcontent = [node valueForKey:@"xcontent"];
                 _index = ((NSNumber *)[node valueForKey:@"index"]).intValue;
                 _hasListParent = ((NSNumber *)[node valueForKey:@"hasListParent"]).boolValue;
                 
                 // unused
-                _originxindex = [node valueForKey:@"originxindex"];
+                _originxcontent = [node valueForKey:@"originxcontent"];
                 _nodeType = [node valueForKey:@"nodeType"];
                 _position = ((NSNumber *)[node valueForKey:@"position"]).intValue;
             }
@@ -164,7 +164,7 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
         [array addObject:[NSString stringWithFormat:@"path: %@", self.path]];
     }
     [array addObject:[NSString stringWithFormat:@"xpath: %@", self.xpath]];
-    [array addObject:[NSString stringWithFormat:@"xindex: %@", self.xindex]];
+    [array addObject:[NSString stringWithFormat:@"xcontent: %@", self.xcontent]];
     return [array componentsJoinedByString:@"\n"];
 }
 
