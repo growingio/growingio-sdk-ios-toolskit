@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.6
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 //
@@ -38,9 +38,8 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            name: "GrowingAPM",
             url: "https://github.com/growingio/growingio-sdk-ios-performance-ext.git",
-            .branch("master")
+            "0.0.15" ..< "1.0.0"
         ),
     ],
     targets: [
@@ -213,9 +212,10 @@ let package = Package(
             name: "GrowingToolsKit_APMCore",
             dependencies: [
                 "GrowingToolsKit_Core",
-                .product(name: "GrowingAPMCore", package: "GrowingAPM"),
+                .product(name: "GrowingAPMCore", package: "growingio-sdk-ios-performance-ext"),
             ],
             path: "Sources/APMCore",
+            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("."),
                 .headerSearchPath("../Core"),
@@ -227,7 +227,7 @@ let package = Package(
             name: "GrowingToolsKit_Plugin_CrashMonitor",
             dependencies: [
                 "GrowingToolsKit_APMCore",
-                .product(name: "GrowingAPMCrashMonitorModule", package: "GrowingAPM"),
+                .product(name: "GrowingAPMCrashMonitor", package: "growingio-sdk-ios-performance-ext"),
             ],
             path: "Sources/CrashMonitor",
             publicHeadersPath: "Public",
@@ -252,7 +252,7 @@ let package = Package(
             name: "GrowingToolsKit_Plugin_LaunchTime",
             dependencies: [
                 "GrowingToolsKit_APMCore",
-                .product(name: "GrowingAPMUIMonitor", package: "GrowingAPM"),
+                .product(name: "GrowingAPMUIMonitor", package: "growingio-sdk-ios-performance-ext"),
             ],
             path: "Sources/LaunchTime",
             publicHeadersPath: "Public",
