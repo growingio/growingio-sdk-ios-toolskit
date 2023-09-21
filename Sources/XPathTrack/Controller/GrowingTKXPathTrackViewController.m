@@ -178,6 +178,10 @@ static CGFloat const kInfoViewMargin = 24.0f;
         // WebView
         WKWebView *webView = (WKWebView *)node;
         [webView growingtk_nodeUpdateMask:YES point:self.circleView.center];
+        
+        //移除原生的mask
+        self.maskView.frame = CGRectZero;
+        [self removeMagnifier];
     }else {
         self.maskView.frame = node.growingNodeFrame;
         self.maskView.layer.borderColor = borderColor.CGColor;
@@ -236,7 +240,7 @@ static CGFloat const kInfoViewMargin = 24.0f;
             
             [self resetCircleViewFrame];
             self.circleView.alpha = 1.0f;
-            [self updateMask:nil];
+            [self removeMagnifier];
         } break;
 
         default:
