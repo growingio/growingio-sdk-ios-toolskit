@@ -130,6 +130,7 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
         _viewContent = nodeDic[@"v"] ?: @"";
         _path = h5Path;
         _xpath = nodeDic[@"x"] ?: @"";
+        _xcontent = nodeDic[@"xcontent"] ?: @"";
         if (nodeDic[@"idx"]) {
             _index = ((NSNumber *)nodeDic[@"idx"]).intValue;
             _hasListParent = YES;
@@ -164,7 +165,9 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
         [array addObject:[NSString stringWithFormat:@"path: %@", self.path]];
     }
     [array addObject:[NSString stringWithFormat:@"xpath: %@", self.xpath]];
-    [array addObject:[NSString stringWithFormat:@"xcontent: %@", self.xcontent]];
+    if (GrowingTKSDKUtil.sharedInstance.isSDK4thGeneration) {
+        [array addObject:[NSString stringWithFormat:@"xcontent: %@", self.xcontent]];
+    }
     return [array componentsJoinedByString:@"\n"];
 }
 

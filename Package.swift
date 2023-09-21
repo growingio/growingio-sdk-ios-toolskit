@@ -75,6 +75,7 @@ let package = Package(
             exclude: ["UseInRelease/GrowingTKUseInRelease.m"],
             resources: [
                 .process("Resources/gio_hybrid.min.js"),
+                .process("Resources/giokit_touch.js"),
             ],
             publicHeadersPath: "Public",
             cSettings: [

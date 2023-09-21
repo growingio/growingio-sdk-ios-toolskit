@@ -20,6 +20,7 @@
 #import "GrowingTKHybridJS.h"
 #import "GrowingTKDefine.h"
 #import "NSBundle+GrowingTK.h"
+#import "GrowingTKSDKUtil.h"
 
 @implementation GrowingTKHybridJS
 
@@ -27,8 +28,14 @@
     NSBundle *bundle = [NSBundle growingtk_resourcesBundle:NSClassFromString(GrowingToolsKitName)
                                                 bundleName:GrowingToolsKitName];
     NSString *jsPath = [bundle pathForResource:@"gio_hybrid.min" ofType:@"js"];
+    if (GrowingTKSDKUtil.sharedInstance.isSDK4thGeneration) {
+        jsPath = [bundle pathForResource:@"giokit_touch" ofType:@"js"];
+    }
     NSData *jsData = [NSData dataWithContentsOfFile:jsPath];
     NSString *jsString = [[NSString alloc] initWithData:jsData encoding:NSUTF8StringEncoding];
+    if (GrowingTKSDKUtil.sharedInstance.isSDK4thGeneration) {
+        jsString = [@"window.GiokitTouchJavascriptBridge={};" stringByAppendingString:jsString];
+    }
     return jsString;
 }
 

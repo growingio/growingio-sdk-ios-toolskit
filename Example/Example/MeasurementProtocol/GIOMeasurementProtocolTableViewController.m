@@ -25,7 +25,7 @@ typedef NS_ENUM(NSInteger, GIOMeasurementProtocolCount) { GIOAutoTrack = 0, GIOM
     [super viewDidLoad];
 #if defined(AUTOTRACKER)
 #if !defined(SDKCDP) && defined(SDK3rd)
-    self.growingPageAttributes = @{@"xxx" : @"111mmm"};
+//    self.growingPageAttributes = @{@"xxx" : @"111mmm"};
 #elif defined(SDK2nd)
     [Growing setPageVariable:@{@"xxx" : @"111mmm"} toViewController:self];
 #endif

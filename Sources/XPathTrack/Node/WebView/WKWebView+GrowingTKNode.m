@@ -28,6 +28,7 @@
 
 NSString *const GrowingTKWebViewNodeInfoNotification = @"GrowingTKWebViewNodeInfoNotification";
 static NSString *const GrowingTKWebViewBridge = @"GrowingToolsKit_WKWebView";
+static NSString *const GrowingTKWebViewBridgeV4 = @"GiokitTouchJavascriptBridge";
 
 @interface GrowingTKPrivateScriptMessageHandler : NSObject <WKScriptMessageHandler>
 
@@ -58,10 +59,16 @@ static void _growingtk_nodeUpdateMask(WKWebView *self, SEL _cmd, BOOL shouldMask
         }
 
         NSString *js = [NSString stringWithFormat:@"_gio_hybrid.hoverOn(%lf, %lf);", point.x, point.y];
+        if (GrowingTKSDKUtil.sharedInstance.isSDK4thGeneration) {
+            js = [NSString stringWithFormat:@"window.GiokitTouchJavascriptBridge.hoverOn(%lf, %lf, %lf);", self.frame.size.width, point.x, point.y];
+        }
         js = [NSString stringWithFormat:@"try { %@ } catch (e) { }", js];
         [self evaluateJavaScript:js completionHandler:nil];
     } else {
         NSString *js = @"_gio_hybrid.cancelHover();";
+        if (GrowingTKSDKUtil.sharedInstance.isSDK4thGeneration) {
+            js = @"window.GiokitTouchJavascriptBridge.cancelHover();";
+        }
         js = [NSString stringWithFormat:@"try { %@ } catch (e) { }", js];
         [self evaluateJavaScript:js completionHandler:nil];
     }
@@ -69,6 +76,9 @@ static void _growingtk_nodeUpdateMask(WKWebView *self, SEL _cmd, BOOL shouldMask
 
 static void _growingtk_nodeUpdateInfo(WKWebView *self, SEL _cmd) {
     NSString *js = [NSString stringWithFormat:@"_gio_hybrid.findElementAtPoint('');"];
+    if (GrowingTKSDKUtil.sharedInstance.isSDK4thGeneration) {
+        js = @"window.GiokitTouchJavascriptBridge.highLightElementAtPoint();";
+    }
     js = [NSString stringWithFormat:@"try { %@ } catch (e) { }", js];
     [self evaluateJavaScript:js completionHandler:nil];
 }
@@ -77,6 +87,8 @@ static void growingtk_webView_addScriptMessageHandler(WKUserContentController *c
     GrowingTKPrivateScriptMessageHandler *scriptMessageHandler = [GrowingTKPrivateScriptMessageHandler sharedInstance];
     [contentController removeScriptMessageHandlerForName:GrowingTKWebViewBridge];
     [contentController addScriptMessageHandler:scriptMessageHandler name:GrowingTKWebViewBridge];
+    [contentController removeScriptMessageHandlerForName:GrowingTKWebViewBridgeV4];
+    [contentController addScriptMessageHandler:scriptMessageHandler name:GrowingTKWebViewBridgeV4];
 }
 
 static void growingtk_webView_addUserScripts(WKUserContentController *contentController) {
@@ -85,7 +97,8 @@ static void growingtk_webView_addUserScripts(WKUserContentController *contentCon
 
         __block BOOL isContainCircleScript = NO;
         [userScripts enumerateObjectsUsingBlock:^(WKUserScript *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-            if ([obj.source containsString:@"start circle"]) {
+            if ([obj.source containsString:@"start circle"] ||
+                [obj.source containsString:@"GiokitTouch init"]) {
                 isContainCircleScript = YES;
                 *stop = YES;
             }
@@ -189,7 +202,8 @@ static BOOL growingtk_webView_addBridge(WKWebView *webView) {
 
 - (void)userContentController:(WKUserContentController *)userContentController
       didReceiveScriptMessage:(WKScriptMessage *)message {
-    if ([message.name isEqualToString:GrowingTKWebViewBridge]) {
+    if ([message.name isEqualToString:GrowingTKWebViewBridge] ||
+        [message.name isEqualToString:GrowingTKWebViewBridgeV4]) {
         NSData *jsonData = [message.body dataUsingEncoding:NSUTF8StringEncoding];
         id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData
                                                         options:NSJSONReadingMutableContainers
@@ -203,15 +217,35 @@ static BOOL growingtk_webView_addBridge(WKWebView *webView) {
         }
 
         NSDictionary *dic = (NSDictionary *)jsonObject;
-        NSString *type = dic[@"t"];
-        if (![type isEqualToString:@"snap"]) {
-            return;
+        NSDictionary *nodeDic;
+        NSString *domain;
+        NSString *h5Path;
+        if ([message.name isEqualToString:GrowingTKWebViewBridge]) {
+            NSString *type = dic[@"t"];
+            if (![type isEqualToString:@"snap"]) {
+                return;
+            }
+            NSArray *array = dic[@"e"];
+            nodeDic = array.firstObject;
+            domain = dic[@"d"] ?: @"";
+            h5Path = dic[@"p"] ?: @"";
+        } else if ([message.name isEqualToString:GrowingTKWebViewBridgeV4]) {
+            NSMutableDictionary *n = @{
+                @"x" : dic[@"skeleton"],
+                @"xcontent" : dic[@"xcontent"],
+            }.mutableCopy;
+            if (dic[@"content"]) {
+                n[@"v"] = dic[@"content"];
+            }
+            if (dic[@"index"]) {
+                n[@"idx"] = dic[@"index"];
+            }
+            nodeDic = n.copy;
+            domain = @"";
+            h5Path = @"";
         }
-
-        NSArray *array = dic[@"e"];
-        NSString *domain = dic[@"d"] ?: @"";
-        NSString *h5Path = dic[@"p"] ?: @"";
-        GrowingTKViewNode *node = [[GrowingTKViewNode alloc] initWithH5Node:array.firstObject
+        
+        GrowingTKViewNode *node = [[GrowingTKViewNode alloc] initWithH5Node:nodeDic
                                                                     webView:message.webView
                                                                      domain:domain
                                                                      h5Path:h5Path];
