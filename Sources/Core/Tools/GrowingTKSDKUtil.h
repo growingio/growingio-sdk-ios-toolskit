@@ -68,6 +68,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 
+- (BOOL)isSDK4thGeneration;
 - (BOOL)isSDK3rdGeneration;
 - (BOOL)isSDK2ndGeneration;
 - (BOOL)isSDKAutoTrack;

@@ -110,30 +110,30 @@
         [Growing setPeopleVariable:atts];
 #endif
         
-    } else if ([self.eventType isEqualToString:@"CONVERSION_VARIABLES"]) {
-#if defined(SDK3rd) && !defined(SDKCDP)
-        [[GrowingSDK sharedInstance] setConversionVariables:atts];
-        
-        GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
-        [builder setString:@"value" forKey:@"key"];
-        [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@"key2"];
-        [builder setString:@"CONVERSION_VARIABLES" forKey:@"type"];
-        [GrowingSDK.sharedInstance setConversionVariables:builder.build];
-#elif defined(SDK2nd)
-        [Growing setEvar:atts];
-#endif
-    } else if ([self.eventType isEqualToString:@"VISITOR_ATTRIBUTES"]) {
-#if defined(SDK3rd) && !defined(SDKCDP)
-        [[GrowingSDK sharedInstance] setVisitorAttributes:atts];
-        
-        GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
-        [builder setString:@"value" forKey:@"key"];
-        [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@"key2"];
-        [builder setString:@"VISITOR_ATTRIBUTES" forKey:@"type"];
-        [GrowingSDK.sharedInstance setVisitorAttributes:builder.build];
-#elif defined(SDK2nd)
-        [Growing setVisitor:atts];
-#endif
+//    } else if ([self.eventType isEqualToString:@"CONVERSION_VARIABLES"]) {
+//#if defined(SDK3rd) && !defined(SDKCDP)
+//        [[GrowingSDK sharedInstance] setConversionVariables:atts];
+//        
+//        GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+//        [builder setString:@"value" forKey:@"key"];
+//        [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@"key2"];
+//        [builder setString:@"CONVERSION_VARIABLES" forKey:@"type"];
+//        [GrowingSDK.sharedInstance setConversionVariables:builder.build];
+//#elif defined(SDK2nd)
+//        [Growing setEvar:atts];
+//#endif
+//    } else if ([self.eventType isEqualToString:@"VISITOR_ATTRIBUTES"]) {
+//#if defined(SDK3rd) && !defined(SDKCDP)
+//        [[GrowingSDK sharedInstance] setVisitorAttributes:atts];
+//        
+//        GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+//        [builder setString:@"value" forKey:@"key"];
+//        [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@"key2"];
+//        [builder setString:@"VISITOR_ATTRIBUTES" forKey:@"type"];
+//        [GrowingSDK.sharedInstance setVisitorAttributes:builder.build];
+//#elif defined(SDK2nd)
+//        [Growing setVisitor:atts];
+//#endif
     }
 
     NSLog(@"track %@ 事件，attributes:%@", self.eventType, atts);

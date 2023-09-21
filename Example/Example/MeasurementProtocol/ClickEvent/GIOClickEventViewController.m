@@ -24,7 +24,7 @@
     [super viewDidLoad];
 #if defined(AUTOTRACKER)
 #if !defined(SDKCDP) && defined(SDK3rd)
-    self.growingPageAttributes = @{@"greet": @"hello"};
+//    self.growingPageAttributes = @{@"greet": @"hello"};
 #elif defined(SDK2nd)
     [Growing setPageVariable:@{@"greet": @"hello"} toViewController:self];
 #endif
@@ -32,10 +32,10 @@
     
 #if defined(AUTOTRACKER)
 #if defined(SDK3rd)
-    self.growingPageIgnorePolicy = GrowingIgnoreSelf;
+//    self.growingPageIgnorePolicy = GrowingIgnoreSelf;
     self.segmentControl.growingUniqueTag = @"language-selector";
-    [self.sendEventButton growingTrackImpression:@"hello_track_impression"];
-    [self.view growingTrackImpression:@"self_view_imp_track" attributes:@{@"self_view_key": @"self_view_value"}];
+//    [self.sendEventButton growingTrackImpression:@"hello_track_impression"];
+//    [self.view growingTrackImpression:@"self_view_imp_track" attributes:@{@"self_view_key": @"self_view_value"}];
 #elif defined(SDK2nd)
     self.segmentControl.growingAttributesUniqueTag = @"language-selector";
     [self.sendEventButton growingImpTrack:@"hello_track_impression"];

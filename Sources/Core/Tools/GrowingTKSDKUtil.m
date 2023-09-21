@@ -279,6 +279,10 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 
 #pragma mark - Public Method
 
+- (BOOL)isSDK4thGeneration {
+    return NSClassFromString(@"GrowingWebCircleStatusView") != nil;
+}
+
 - (BOOL)isSDK3rdGeneration {
     return NSClassFromString(@"GrowingRealTracker") != nil;
 }
