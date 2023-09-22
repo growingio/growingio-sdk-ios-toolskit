@@ -75,7 +75,7 @@
 
 - (NSNumber *)sequenceId {
     if (!_sequenceId) {
-        NSNumber *v = self.dictionary[@"eventSequenceId"] ?: self.dictionary[@"gesid"];
+        NSNumber *v = self.dictionary[@"globalSequenceId"] ?: (self.dictionary[@"eventSequenceId"] ?: self.dictionary[@"gesid"]);
         if ([v isKindOfClass:[NSString class]]) {
             _sequenceId = @(((NSString *)v).intValue);
         } else if ([v isKindOfClass:[NSNumber class]]) {

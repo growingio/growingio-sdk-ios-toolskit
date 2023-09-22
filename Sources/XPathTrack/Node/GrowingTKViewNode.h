@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *xpath;
 @property (nonatomic, copy, readonly) NSString *xcontent;
 @property (nonatomic, copy, readonly) NSString *originxcontent;
-@property (nonatomic, copy, readonly) NSString *originxpath; // sdk 2.x
+@property (nonatomic, copy, readonly) NSString *originxpath; // sdk 2.x/3.x
 @property (nonatomic, copy, readonly) NSString *nodeType;
 //如果有父节点，且父节点为列表，则index有值，和父节点一致，否则为-1
 @property (nonatomic, assign, readonly) int index;

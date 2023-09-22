@@ -198,7 +198,7 @@ static void growingtk_eventTrack(NSInvocation *invocation, id obj, id event, NSS
         NSData *jsonData = [rawJsonString dataUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *eventDic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
         if (eventDic && eventDic.count > 0) {
-            sequenceId = eventDic[@"eventSequenceId"];
+            sequenceId = eventDic[@"globalSequenceId"] ?: eventDic[@"eventSequenceId"];
             timestamp = eventDic[@"timestamp"];
             if ([sequenceId isKindOfClass:[NSString class]]) {
                 sequenceId = @(((NSString *)sequenceId).intValue);
