@@ -39,7 +39,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/growingio/growingio-sdk-ios-performance-ext.git",
-            "0.0.15" ..< "1.0.0"
+            "1.0.0" ..< "2.0.0"
         ),
     ],
     targets: [
