@@ -80,7 +80,7 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
                 _viewName = NSStringFromClass(_view.class);
                 _viewContent = [node valueForKey:@"viewContent"] ?: @"";
                 _path = [self pathForView:view];
-                _xpath = [node valueForKey:@"xpath"];
+                _xpath = [node valueForKey:GrowingTKSDKUtil.sharedInstance.isSDK4thGeneration ? @"xpath" : @"xPath"];
                 _xcontent = [node valueForKey:@"xcontent"];
                 _index = ((NSNumber *)[node valueForKey:@"index"]).intValue;
                 _hasListParent = ((NSNumber *)[node valueForKey:@"hasListParent"]).boolValue;
@@ -191,13 +191,11 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
                         }
                     }
                     if (page) {
-                        if (GrowingTKSDKUtil.sharedInstance.isSDK4thGeneration) {
-                            SEL selector4 = GrowingTKSDKUtil.sharedInstance.isSDK4thGeneration ? NSSelectorFromString(@"alias")
-                                                                                               : NSSelectorFromString(@"path");
-                            if ([page respondsToSelector:selector4]) {
-                                NSString *alias = ((NSString * (*)(id, SEL)) objc_msgSend)(page, selector4);
-                                return alias ?: @"";
-                            }
+                        SEL selector4 = GrowingTKSDKUtil.sharedInstance.isSDK4thGeneration ? NSSelectorFromString(@"alias")
+                                                                                           : NSSelectorFromString(@"path");
+                        if ([page respondsToSelector:selector4]) {
+                            NSString *alias = ((NSString * (*)(id, SEL)) objc_msgSend)(page, selector4);
+                            return alias ?: @"";
                         }
                     }
                 }
