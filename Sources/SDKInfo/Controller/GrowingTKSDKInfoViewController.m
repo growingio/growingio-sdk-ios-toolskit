@@ -95,24 +95,27 @@
     NSMutableArray *sdkInfo = [NSMutableArray arrayWithArray:@[
         @{@"title":  GrowingTKLocalizedString(@"SDK"), @"value": sdk.isIntegrated ? sdk.nameDescription : GrowingTKLocalizedString(@"未集成")},
         @{@"title": GrowingTKLocalizedString(@"SDK版本号"), @"value": sdk.version},
-        @{@"title": GrowingTKLocalizedString(@"SDK初始化"), @"value": sdk.initializationDescription},
-        @{@"title":  GrowingTKLocalizedString(@"URL Scheme"), @"value": sdk.urlScheme.length > 0 ? sdk.urlScheme : GrowingTKLocalizedString(@"未配置")},
-        @{@"title":  GrowingTKLocalizedString(@"URL Schemes(InfoPlist)"), @"value": sdk.urlSchemesInInfoPlist.length > 0 ? sdk.urlSchemesInInfoPlist : GrowingTKLocalizedString(@"未配置")},
-        @{@"title": GrowingTKLocalizedString(@"适配URL Scheme"), @"value": GrowingTKLocalizedString(sdk.isAdaptToURLScheme ? @"YES" : @"NO")},
-        @{@"title": GrowingTKLocalizedString(@"适配Deep Link"), @"value": GrowingTKLocalizedString(sdk.isAdaptToDeepLink ? @"YES" : @"NO")}
+        @{@"title": GrowingTKLocalizedString(@"SDK初始化"), @"value": sdk.initializationDescription}
     ]];
 
     if (sdk.isInitialized) {
         [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"Project ID"), @"value": sdk.projectId}];
+        if (sdk.dataSourceId.length > 0) {
+            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"DataSource ID"), @"value": sdk.dataSourceId}];
+        }
+        NSString *dataCollectionServerHost = sdk.dataCollectionServerHost;
+        [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"ServerHost"), @"value": dataCollectionServerHost}];
+        [sdkInfo addObject:@{@"title":  GrowingTKLocalizedString(@"URL Scheme"), @"value": sdk.urlScheme.length > 0 ? sdk.urlScheme : GrowingTKLocalizedString(@"未配置")}];
+        [sdkInfo addObject:@{@"title":  GrowingTKLocalizedString(@"URL Schemes(InfoPlist)"), @"value": sdk.urlSchemesInInfoPlist.length > 0 ? sdk.urlSchemesInInfoPlist : GrowingTKLocalizedString(@"未配置")}];
+        [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"适配URL Scheme"), @"value": GrowingTKLocalizedString(sdk.isAdaptToURLScheme ? @"YES" : @"NO")}];
+        [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"适配Deep Link"), @"value": GrowingTKLocalizedString(sdk.isAdaptToDeepLink ? @"YES" : @"NO")}];
+        
         if (sdk.isSDK2ndGeneration) {
             [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"采样率"), @"value": [NSString stringWithFormat:@"%.3f%%", sdk.sampling * 100]}];
             [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"采集模式"), @"value": sdk.sdk2ndAspectMode}];
-            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"剪贴板权限"), @"value": GrowingTKLocalizedString(sdk.readClipBoardEnabled ? @"YES" : @"NO")}];
-            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"ASA 归因分析"), @"value": GrowingTKLocalizedString(sdk.asaEnabled ? @"YES" : @"NO")}];
         }
-
-        if (sdk.dataSourceId.length > 0) {
-            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"DataSource ID"), @"value": sdk.dataSourceId}];
+        if (sdk.isSDK4thGeneration) {
+            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"useProtobuf"), @"value": GrowingTKLocalizedString(sdk.useProtobuf ? @"YES" : @"NO")}];
         }
 
         [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"Device ID"), @"value": sdk.deviceId}];
@@ -157,9 +160,6 @@
         NSString *dataCollectionEnabled = sdk.dataCollectionEnabled ? @"YES" : @"NO";
         [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"是否采集数据"), @"value": dataCollectionEnabled}];
 
-        NSString *dataCollectionServerHost = sdk.dataCollectionServerHost;
-        [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"ServerHost"), @"value": dataCollectionServerHost}];
-
         if (sdk.isSDK3rdGeneration) {
             NSString *excludeEvent = sdk.excludeEventDescription;
             if (excludeEvent.length > 0) {
@@ -175,6 +175,18 @@
         if (sdk.isSDKAutoTrack) {
             NSString *impressionScale = [NSString stringWithFormat:@"%.f", sdk.impressionScale];
             [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"曝光事件比例因子"), @"value": impressionScale}];
+        }
+        
+        if (sdk.isSDK2ndGeneration) {
+            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"剪贴板权限"), @"value": GrowingTKLocalizedString(sdk.readClipBoardEnabled ? @"YES" : @"NO")}];
+            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"ASA 归因分析"), @"value": GrowingTKLocalizedString(sdk.asaEnabled ? @"YES" : @"NO")}];
+        } else if (sdk.isSDK3rdGeneration) {
+            if ([sdk.SDK3Modules containsObject:@"Advert"]) {
+                [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"剪贴板权限"), @"value": GrowingTKLocalizedString(sdk.readClipBoardEnabled ? @"YES" : @"NO")}];
+                [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"ASA 归因分析"), @"value": GrowingTKLocalizedString(sdk.asaEnabled ? @"YES" : @"NO")}];
+                [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"DeepLinkHost"), @"value": sdk.deepLinkHost.length > 0 ? sdk.deepLinkHost : GrowingTKLocalizedString(@"未配置")}];
+                [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"DeepLinkCallback"), @"value": GrowingTKLocalizedString(sdk.deepLinkCallback ? @"已配置" : @"未配置")}];
+            }
         }
     }
 

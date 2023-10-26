@@ -61,6 +61,15 @@
     
 #if defined(SDKADVERTMODULE)
     configuration.ASAEnabled = YES;
+    configuration.readClipboardEnabled = YES;
+    configuration.deepLinkHost = @"https://n.datayi.cn";
+    configuration.deepLinkCallback = ^(NSDictionary * _Nullable params, NSTimeInterval processTime, NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"error = %@", error);
+            return;
+        }
+        NSLog(@"deepLinkCallback params = %@, processTime = %f", params, processTime);
+    };
 #endif
     
 #if defined(SDKAPMMODULE)
