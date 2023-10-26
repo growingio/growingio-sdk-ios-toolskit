@@ -59,7 +59,7 @@
     configuration.dataCollectionServerHost = @"https://run.mocky.io/v3/08999138-a180-431d-a136-051f3c6bd306";
     configuration.dataSourceId = @"1234567890";
     
-#if defined(SDKADVERTMODULE)
+#if defined(SDKADSMODULE)
     configuration.ASAEnabled = YES;
     configuration.readClipboardEnabled = YES;
     configuration.deepLinkHost = @"https://n.datayi.cn";

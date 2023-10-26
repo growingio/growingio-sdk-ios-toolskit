@@ -184,7 +184,7 @@
             [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"剪贴板权限"), @"value": GrowingTKLocalizedString(sdk.readClipBoardEnabled ? @"YES" : @"NO")}];
             [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"ASA 归因分析"), @"value": GrowingTKLocalizedString(sdk.asaEnabled ? @"YES" : @"NO")}];
         } else if (sdk.isSDK3rdGeneration) {
-            if ([sdk.SDK3Modules containsObject:@"Advert"]) {
+            if ([sdk.SDK3Modules containsObject:@"Ads"]) {
                 [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"剪贴板权限"), @"value": GrowingTKLocalizedString(sdk.readClipBoardEnabled ? @"YES" : @"NO")}];
                 [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"ASA 归因分析"), @"value": GrowingTKLocalizedString(sdk.asaEnabled ? @"YES" : @"NO")}];
                 [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"DeepLinkHost"), @"value": sdk.deepLinkHost.length > 0 ? sdk.deepLinkHost : GrowingTKLocalizedString(@"未配置")}];
