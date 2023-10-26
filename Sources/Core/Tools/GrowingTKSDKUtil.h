@@ -66,6 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // SDK 4.0
 @property (nonatomic, assign, readonly) BOOL useProtobuf;
+@property (nonatomic, assign, readonly) BOOL autotrackEnabled;
 
 // SDK 2.0
 @property (nonatomic, assign, readonly) float sampling;

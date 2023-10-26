@@ -67,6 +67,7 @@
 
 // SDK 4.0
 @property (nonatomic, assign, readwrite) BOOL useProtobuf;
+@property (nonatomic, assign, readwrite) BOOL autotrackEnabled;
 
 // SDK 2.0
 @property (nonatomic, assign, readwrite) float sampling;
@@ -817,6 +818,15 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 - (BOOL)useProtobuf {
     if (self.isSDK4thGeneration) {
         return ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"useProtobuf"]).boolValue;
+    }
+    return NO;
+}
+
+- (BOOL)autotrackEnabled {
+    if (self.isSDKAutoTrack) {
+        if (self.isSDK4thGeneration) {
+            return ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"autotrackEnabled"]).boolValue;
+        }
     }
     return NO;
 }

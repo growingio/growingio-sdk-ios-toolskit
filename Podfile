@@ -10,7 +10,7 @@ workspace 'GrowingToolsKit.xcworkspace'
 target 'Example' do
   project 'Example/Example'
 # SDK 3.0
-  pod 'GrowingAnalytics-cdp/Autotracker'
+  pod 'GrowingAnalytics/Autotracker', '4.0.0-beta.1'
   pod 'GrowingAnalytics/Advert'
   pod 'GrowingAnalytics/APM'
 #  pod 'GrowingAPM'

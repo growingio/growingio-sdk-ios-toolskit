@@ -175,6 +175,9 @@
         if (sdk.isSDKAutoTrack) {
             NSString *impressionScale = [NSString stringWithFormat:@"%.f", sdk.impressionScale];
             [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"曝光事件比例因子"), @"value": impressionScale}];
+            if (sdk.isSDK4thGeneration) {
+                [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"无埋点开关"), @"value": GrowingTKLocalizedString(sdk.autotrackEnabled ? @"YES" : @"NO")}];
+            }
         }
         
         if (sdk.isSDK2ndGeneration) {
