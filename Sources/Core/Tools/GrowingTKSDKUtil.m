@@ -61,7 +61,7 @@
 // AutoTracker
 @property (nonatomic, assign, readwrite) float impressionScale;
 
-// Advert
+// Ads
 @property (nonatomic, copy, readwrite) NSString *deepLinkHost;
 @property (nonatomic, assign, readwrite) BOOL deepLinkCallback;
 
@@ -315,7 +315,7 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
     if (self.isSDK3rdGeneration) {
         NSMutableArray *modules = [NSMutableArray array];
         if (NSClassFromString(@"GrowingAdvertising")) {
-            [modules addObject:@"Advert"];
+            [modules addObject:@"Ads"];
         }
         if (NSClassFromString(@"GrowingAPMModule")) {
             [modules addObject:@"APM"];

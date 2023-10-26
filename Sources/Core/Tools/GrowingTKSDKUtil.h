@@ -60,7 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 // AutoTracker
 @property (nonatomic, assign, readonly) float impressionScale;
 
-// Advert
+// Ads
 @property (nonatomic, copy, readonly) NSString *deepLinkHost;
 @property (nonatomic, assign, readonly) BOOL deepLinkCallback;
 
