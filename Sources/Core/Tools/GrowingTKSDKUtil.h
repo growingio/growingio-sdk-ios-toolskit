@@ -60,6 +60,13 @@ NS_ASSUME_NONNULL_BEGIN
 // AutoTracker
 @property (nonatomic, assign, readonly) float impressionScale;
 
+// Advert
+@property (nonatomic, copy, readonly) NSString *deepLinkHost;
+@property (nonatomic, assign, readonly) BOOL deepLinkCallback;
+
+// SDK 4.0
+@property (nonatomic, assign, readonly) BOOL useProtobuf;
+
 // SDK 2.0
 @property (nonatomic, assign, readonly) float sampling;
 @property (nonatomic, copy, readonly) NSString *sdk2ndAspectMode;

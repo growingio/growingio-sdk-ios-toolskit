@@ -11,8 +11,8 @@ target 'Example' do
   project 'Example/Example'
 # SDK 3.0
   pod 'GrowingAnalytics-cdp/Autotracker'
-#  pod 'GrowingAnalytics/Advert'
-#  pod 'GrowingAnalytics/APM'
+  pod 'GrowingAnalytics/Advert'
+  pod 'GrowingAnalytics/APM'
 #  pod 'GrowingAPM'
 #  pod 'GrowingAnalytics/Hybrid'
 #  pod 'GrowingAnalytics/DISABLE_IDFA' #禁用idfa

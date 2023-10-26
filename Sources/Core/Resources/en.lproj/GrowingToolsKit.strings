@@ -102,6 +102,7 @@
     "事件属性过滤" = "IgnoreField";
     "曝光事件比例因子" = "ImpressionScale";
     "未集成" = "Not integrated";
+    "已配置" = "Configured";
     "未配置" = "Not configured";
     "集成模块" = "Modules";
     

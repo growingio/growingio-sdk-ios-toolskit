@@ -61,6 +61,13 @@
 // AutoTracker
 @property (nonatomic, assign, readwrite) float impressionScale;
 
+// Advert
+@property (nonatomic, copy, readwrite) NSString *deepLinkHost;
+@property (nonatomic, assign, readwrite) BOOL deepLinkCallback;
+
+// SDK 4.0
+@property (nonatomic, assign, readwrite) BOOL useProtobuf;
+
 // SDK 2.0
 @property (nonatomic, assign, readwrite) float sampling;
 @property (nonatomic, copy, readwrite) NSString *sdk2ndAspectMode;
@@ -785,6 +792,9 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 
 - (NSString *)projectId {
     if (self.isSDK3rdGeneration) {
+        if (self.isSDK4thGeneration) {
+            return [self.sdk3rdConfiguration valueForKey:@"accountId"] ?: @"";
+        }
         return [self.sdk3rdConfiguration valueForKey:@"projectId"] ?: @"";
     } else if (self.isSDK2ndGeneration) {
 #pragma clang diagnostic push
@@ -802,6 +812,13 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 #pragma clang diagnostic pop
     }
     return @"";
+}
+
+- (BOOL)useProtobuf {
+    if (self.isSDK4thGeneration) {
+        return ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"useProtobuf"]).boolValue;
+    }
+    return NO;
 }
 
 - (BOOL)debugEnabled {
@@ -1002,7 +1019,7 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 
 - (BOOL)readClipBoardEnabled {
     if (self.isSDK3rdGeneration) {
-        return NO;
+        return ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"readClipboardEnabled"]).boolValue;
     } else if (self.isSDK2ndGeneration) {
 #ifdef GROWING_SDK2nd
         // dangerous, may cause 'dyld: Symbol not found'
@@ -1015,13 +1032,27 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 
 - (BOOL)asaEnabled {
     if (self.isSDK3rdGeneration) {
-        return NO;
+        return ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"ASAEnabled"]).boolValue;
     } else if (self.isSDK2ndGeneration) {
 #ifdef GROWING_SDK2nd
         // dangerous, may cause 'dyld: Symbol not found'
         extern BOOL g_asaEnabled;
         return g_asaEnabled;
 #endif
+    }
+    return NO;
+}
+
+- (NSString *)deepLinkHost {
+    if (self.isSDK3rdGeneration) {
+        return [self.sdk3rdConfiguration valueForKey:@"deepLinkHost"] ?: @"";
+    }
+    return @"";
+}
+
+- (BOOL)deepLinkCallback {
+    if (self.isSDK3rdGeneration) {
+        return [self.sdk3rdConfiguration valueForKey:@"deepLinkCallback"] != nil;
     }
     return NO;
 }

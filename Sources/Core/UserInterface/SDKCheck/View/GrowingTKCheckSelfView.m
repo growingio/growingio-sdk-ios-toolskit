@@ -123,7 +123,7 @@ static CGFloat const CheckButtonHeight = 130.0f;
     }
 
     if (delay) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self refresh];
             [self insertNext:fromArray delay:YES];
         });
@@ -180,32 +180,8 @@ static CGFloat const CheckButtonHeight = 130.0f;
             @"title": GrowingTKLocalizedString(@"SDK初始化"),
             @"value": sdk.initializationDescription,
             @"bad": @(!(sdk.isInitialized))
-        }],
-        [NSMutableDictionary dictionaryWithDictionary:@{
-            @"check": @(0),
-            @"checkMessage": GrowingTKLocalizedString(@"正在获取URL Scheme配置"),
-            @"title": GrowingTKLocalizedString(@"URL Scheme"),
-            @"value": sdk.urlScheme.length > 0 ? sdk.urlScheme : GrowingTKLocalizedString(@"未配置"),
-            @"bad": @(sdk.urlScheme.length == 0)
-        }],
-        [NSMutableDictionary dictionaryWithDictionary:@{
-            @"check": @(0),
-            @"checkMessage": GrowingTKLocalizedString(@"是否适配URL Scheme"),
-            @"title": GrowingTKLocalizedString(@"适配URL Scheme"),
-            @"value": GrowingTKLocalizedString(sdk.isAdaptToURLScheme ? @"YES" : @"NO"),
-            @"bad": @(!sdk.isAdaptToURLScheme)
         }]
     ]];
-    
-    if (sdk.isSDK2ndGeneration) {
-        [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
-                    @"check": @(0),
-                    @"checkMessage": GrowingTKLocalizedString(@"是否适配Deep Link"),
-                    @"title": GrowingTKLocalizedString(@"适配Deep Link"),
-                    @"value": GrowingTKLocalizedString(sdk.isAdaptToDeepLink ? @"YES" : @"NO"),
-                    @"bad": @(!sdk.isAdaptToDeepLink)
-        }]];
-    }
 
     if (sdk.isInitialized) {
         [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
@@ -215,16 +191,6 @@ static CGFloat const CheckButtonHeight = 130.0f;
                      @"value": sdk.projectId
                  }]];
         
-        if (sdk.isSDK2ndGeneration) {
-            [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
-                         @"check": @(0),
-                         @"checkMessage": GrowingTKLocalizedString(@"正在获取采样率"),
-                         @"title": GrowingTKLocalizedString(@"采样率"),
-                         @"value": [NSString stringWithFormat:@"%.3f%%", sdk.sampling * 100],
-                         @"bad": @(sdk.sampling == 0)
-                     }]];
-        }
-
         if (sdk.dataSourceId.length > 0) {
             [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
                          @"check": @(0),
@@ -233,7 +199,7 @@ static CGFloat const CheckButtonHeight = 130.0f;
                          @"value": sdk.dataSourceId
                      }]];
         }
-
+        
         NSString *dataCollectionServerHost = sdk.dataCollectionServerHost;
         BOOL hostBad = (![GrowingTKUtil isIPAddress:dataCollectionServerHost]
                         && ![GrowingTKUtil isDomain:dataCollectionServerHost]);
@@ -244,6 +210,40 @@ static CGFloat const CheckButtonHeight = 130.0f;
                      @"value": dataCollectionServerHost,
                      @"bad": @(hostBad)
                  }]];
+        
+        [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
+            @"check": @(0),
+            @"checkMessage": GrowingTKLocalizedString(@"正在获取URL Scheme配置"),
+            @"title": GrowingTKLocalizedString(@"URL Scheme"),
+            @"value": sdk.urlScheme.length > 0 ? sdk.urlScheme : GrowingTKLocalizedString(@"未配置"),
+            @"bad": @(sdk.urlScheme.length == 0)
+        }]];
+        
+        [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
+            @"check": @(0),
+            @"checkMessage": GrowingTKLocalizedString(@"是否适配URL Scheme"),
+            @"title": GrowingTKLocalizedString(@"适配URL Scheme"),
+            @"value": GrowingTKLocalizedString(sdk.isAdaptToURLScheme ? @"YES" : @"NO"),
+            @"bad": @(!sdk.isAdaptToURLScheme)
+        }]];
+        
+        [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
+                    @"check": @(0),
+                    @"checkMessage": GrowingTKLocalizedString(@"是否适配Deep Link"),
+                    @"title": GrowingTKLocalizedString(@"适配Deep Link"),
+                    @"value": GrowingTKLocalizedString(sdk.isAdaptToDeepLink ? @"YES" : @"NO"),
+                    @"bad": @(!sdk.isAdaptToDeepLink)
+        }]];
+        
+        if (sdk.isSDK2ndGeneration) {
+            [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
+                         @"check": @(0),
+                         @"checkMessage": GrowingTKLocalizedString(@"正在获取采样率"),
+                         @"title": GrowingTKLocalizedString(@"采样率"),
+                         @"value": [NSString stringWithFormat:@"%.3f%%", sdk.sampling * 100],
+                         @"bad": @(sdk.sampling == 0)
+                     }]];
+        }
 
         NSString *debugEnabled = GrowingTKLocalizedString(sdk.debugEnabled ? @"YES" : @"NO");
         [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
