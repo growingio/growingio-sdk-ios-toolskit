@@ -104,21 +104,21 @@ TODO: Add long description of the pod here.
   s.subspec 'APMCore' do |apm|
     apm.source_files = 'Sources/APMCore/**/*{.h,.m,.c,.cpp,.mm}'
     apm.dependency 'GrowingToolsKit/Core'
-    apm.dependency 'GrowingAPM/Core', '~> 1.0.0'
+    apm.dependency 'GrowingAPM/Core'
   end
 
   s.subspec 'CrashMonitor' do |monitor|
     monitor.source_files = 'Sources/CrashMonitor/**/*{.h,.m,.c,.cpp,.mm}'
     monitor.public_header_files = 'Sources/CrashMonitor/Public/*.h'
     monitor.dependency 'GrowingToolsKit/APMCore'
-    monitor.dependency 'GrowingAPM/CrashMonitor', '~> 1.0.0'
+    monitor.dependency 'GrowingAPM/CrashMonitor'
   end
 
   s.subspec 'LaunchTime' do |monitor|
     monitor.source_files = 'Sources/LaunchTime/**/*{.h,.m,.c,.cpp,.mm}'
     monitor.public_header_files = 'Sources/LaunchTime/Public/*.h'
     monitor.dependency 'GrowingToolsKit/APMCore'
-    monitor.dependency 'GrowingAPM/UIMonitor', '~> 1.0.0'
+    monitor.dependency 'GrowingAPM/UIMonitor'
   end
 
   s.subspec 'Settings' do |settings|
