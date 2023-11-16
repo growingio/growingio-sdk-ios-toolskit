@@ -19,6 +19,7 @@
 
 #import "GrowingTKPermission.h"
 #import <UIKit/UIKit.h>
+#import <UserNotifications/UserNotifications.h>
 #import <CoreLocation/CLLocationManager.h>
 #import <AVFoundation/AVFoundation.h>
 #import <Photos/Photos.h>
@@ -107,10 +108,31 @@ static CTCellularData *cellularData;
     });
 }
 
-+ (GrowingTKAuthorizationStatus)pushPermission {
-    return UIApplication.sharedApplication.currentUserNotificationSettings.types == UIUserNotificationTypeNone
-               ? GrowingTKAuthorizationStatusDenied
-               : GrowingTKAuthorizationStatusAuthorized;
++ (void)startListenToPushPermissionDidUpdate:(void(^)(GrowingTKAuthorizationStatus status))didUpdateBlock {
+    if (!didUpdateBlock) {
+        return;
+    }
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
+        GrowingTKAuthorizationStatus result = GrowingTKAuthorizationStatusNotDetermined;
+        switch (settings.authorizationStatus) {
+            case UNAuthorizationStatusNotDetermined:
+                result = GrowingTKAuthorizationStatusNotDetermined;
+                break;
+            case UNAuthorizationStatusDenied:
+                result = GrowingTKAuthorizationStatusDenied;
+                break;
+            case UNAuthorizationStatusAuthorized:
+                result = GrowingTKAuthorizationStatusAuthorized;
+                break;
+            default:
+                break;
+        }
+        
+        if (didUpdateBlock) {
+            didUpdateBlock(result);
+        }
+    }];
 }
 
 + (GrowingTKAuthorizationStatus)cameraPermission {

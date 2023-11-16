@@ -28,7 +28,7 @@ target 'Example' do
   
 #  pod 'GrowingToolsKit/SDK30202', :path => './', :configurations => ['Debug']
 #  pod 'GrowingToolsKit/SDK2nd', :path => './', :configurations => ['Debug']
-  pod 'GrowingToolsKit/UseInRelease', :path => './'
+  pod 'GrowingToolsKit', :path => './', :configurations => ['Debug']
 
 end
 

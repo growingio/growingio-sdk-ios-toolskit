@@ -208,8 +208,7 @@
 #if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
     self.networkPermission = GrowingTKLocalizedString(@"用户没有选择");
 #endif
-
-    GrowingTKAuthorizationStatus pushPermission = [GrowingTKPermission pushPermission];
+    GrowingTKAuthorizationStatus pushPermission = GrowingTKAuthorizationStatusNotDetermined;
     GrowingTKAuthorizationStatus cameraPermission = [GrowingTKPermission cameraPermission];
     GrowingTKAuthorizationStatus audioPermission = [GrowingTKPermission audioPermission];
     GrowingTKAuthorizationStatus photoPermission = [GrowingTKPermission photoPermission];
@@ -246,7 +245,7 @@
 #if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
                 @{@"title": GrowingTKLocalizedString(@"网络权限"), @"value": self.networkPermission}.mutableCopy,
 #endif
-                @{@"title": GrowingTKLocalizedString(@"推送权限"), @"value": @(pushPermission)},
+                @{@"title": GrowingTKLocalizedString(@"推送权限"), @"value": @(pushPermission)}.mutableCopy,
                 @{@"title": GrowingTKLocalizedString(@"相机权限"), @"value": @(cameraPermission)},
                 @{@"title": GrowingTKLocalizedString(@"麦克风权限"), @"value": @(audioPermission)},
                 @{@"title": GrowingTKLocalizedString(@"相册权限"), @"value": @(photoPermission)},
@@ -297,6 +296,17 @@
         });
     }];
 #endif
+    [GrowingTKPermission startListenToPushPermissionDidUpdate:^(GrowingTKAuthorizationStatus status) {
+        __strong typeof(weakSelf) self = weakSelf;
+        NSMutableDictionary *item = self.dataArray[3][@"array"][2];
+        [item setValue:@(status) forKey:@"value"];
+
+        __weak typeof(self) weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) self = weakSelf;
+            [self.tableView reloadData];
+        });
+    }];
 }
 
 - (UIImage *)snapshot {

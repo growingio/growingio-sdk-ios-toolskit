@@ -110,7 +110,7 @@ static NSString *const kGrowingTKDirCommonPrefix = @"com.growingio.";
     return result;
 }
 
-static BOOL isExecuteVacuum() {
+static BOOL isExecuteVacuum(void) {
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     NSDate *beforeDate = [userDefault objectForKey:@"GrowingTKDatabaseVACUUM"];
     NSDate *nowDate = [NSDate date];

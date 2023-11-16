@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
+#import <UserNotifications/UserNotifications.h>
 #import <GrowingToolsKit/GrowingToolsKit.h>
 #import <Bugly/Bugly.h>
 
@@ -36,6 +37,11 @@
 #endif
     
     [Bugly startWithAppId:@"93004a21ca"];
+    
+    [UNUserNotificationCenter.currentNotificationCenter requestAuthorizationWithOptions:UNAuthorizationOptionAlert
+                                                                      completionHandler:^(BOOL granted, NSError * _Nullable error) {
+        
+    }];
     
     return YES;
 }
