@@ -87,6 +87,22 @@
     [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    if (self.tableHeaderView) {
+        UIView *view = self.tableHeaderView.superview;
+        if (view) {
+            [NSLayoutConstraint activateConstraints:@[
+                [_tableHeaderView.topAnchor constraintEqualToAnchor:view.topAnchor],
+                [_tableHeaderView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor],
+                [_tableHeaderView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor],
+                [_tableHeaderView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor]
+            ]];
+        }
+    }
+}
+
 - (void)viewWillTransitionToSize:(CGSize)size
        withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
@@ -264,12 +280,6 @@
             }];
             _tableHeaderView.translatesAutoresizingMaskIntoConstraints = NO;
             [tableHeaderView addSubview:_tableHeaderView];
-            [NSLayoutConstraint activateConstraints:@[
-                [_tableHeaderView.topAnchor constraintEqualToAnchor:tableHeaderView.topAnchor],
-                [_tableHeaderView.bottomAnchor constraintEqualToAnchor:tableHeaderView.bottomAnchor],
-                [_tableHeaderView.leadingAnchor constraintEqualToAnchor:tableHeaderView.leadingAnchor],
-                [_tableHeaderView.trailingAnchor constraintEqualToAnchor:tableHeaderView.trailingAnchor]
-            ]];
             _tableView.tableHeaderView = tableHeaderView;
         }
     }
