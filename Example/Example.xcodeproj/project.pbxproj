@@ -69,8 +69,6 @@
 		34083D1F2914F7DB00052FBE /* UIColor+Hex.m in Sources */ = {isa = PBXBuildFile; fileRef = 34083CC12914F7D800052FBE /* UIColor+Hex.m */; };
 		34083D202914F7DB00052FBE /* GIOConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 34083CC52914F7D800052FBE /* GIOConstants.m */; };
 		34083D212914F7DB00052FBE /* GIOScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34083CC62914F7D800052FBE /* GIOScanViewController.m */; };
-		34083D222914F7DB00052FBE /* GIOCrashMonitorTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 34083CCA2914F7D900052FBE /* GIOCrashMonitorTableViewController.mm */; };
-		34083D232914F7DB00052FBE /* Crasher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 34083CCB2914F7D900052FBE /* Crasher.mm */; };
 		34083D252914F7DB00052FBE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 34083CCE2914F7DA00052FBE /* main.m */; };
 		34083D262914F7DB00052FBE /* GIOVisitEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34083CD32914F7DA00052FBE /* GIOVisitEventViewController.m */; };
 		34083D272914F7DB00052FBE /* GIOMeasurementProtocolTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34083CD42914F7DA00052FBE /* GIOMeasurementProtocolTableViewController.m */; };
@@ -761,22 +759,22 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Example/Pods-Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GrowingAPM/GrowingAPM.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-cdp/GrowingAnalytics_cdp.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingToolsKit/GrowingToolsKit.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/LBXScan/LBXScan.framework",
-				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/SDCycleScrollView/SDCycleScrollView.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GrowingAPM.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GrowingAnalytics_cdp.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GrowingAnalytics.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GrowingToolsKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GrowingUtils.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LBXScan.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDCycleScrollView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 			);
@@ -822,10 +820,8 @@
 				34083D082914F7DB00052FBE /* GIOMultiViewController.m in Sources */,
 				34083D032914F7DB00052FBE /* GIOUICategoryViewController.m in Sources */,
 				34083D102914F7DB00052FBE /* GIOFoodTableViewCell.m in Sources */,
-				34083D222914F7DB00052FBE /* GIOCrashMonitorTableViewController.mm in Sources */,
 				34083D332914F7DB00052FBE /* GIOPageEventViewController.m in Sources */,
 				34083D0E2914F7DB00052FBE /* GIOLabelAttributeViewController.m in Sources */,
-				34083D232914F7DB00052FBE /* Crasher.mm in Sources */,
 				34083D0A2914F7DB00052FBE /* GIOChildsAddViewController.m in Sources */,
 				34083CFF2914F7DB00052FBE /* GIOCollectionViewController.m in Sources */,
 				34083D2C2914F7DB00052FBE /* GIOTrackTimerTableViewCell.m in Sources */,
