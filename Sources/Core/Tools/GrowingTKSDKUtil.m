@@ -402,7 +402,20 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 }
 
 - (void)ignoreViewController:(UIViewController *)viewController {
-    if (self.isSDK3rdGeneration) {
+    if (self.isSDK4thGeneration) {
+        {
+            SEL selector = NSSelectorFromString(@"setGrowingPageAlias:");
+            if ([viewController respondsToSelector:selector]) {
+                ((void (*)(id, SEL, NSString *))objc_msgSend)(viewController, selector, nil);
+            }
+        }
+        {
+            SEL selector = NSSelectorFromString(@"setGrowingPageAttributes:");
+            if ([viewController respondsToSelector:selector]) {
+                ((void (*)(id, SEL, NSDictionary *))objc_msgSend)(viewController, selector, nil);
+            }
+        }
+    } else if (self.isSDK3rdGeneration) {
         SEL selector = NSSelectorFromString(@"setGrowingPageIgnorePolicy:");
         if ([viewController respondsToSelector:selector]) {
             ((void (*)(id, SEL, NSUInteger))objc_msgSend)(viewController, selector, 3 /** GrowingIgnoreAll */);
