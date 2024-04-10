@@ -84,7 +84,7 @@
 }
 
 + (NSData *)uncompressData:(NSData *)data {
-    int maxOutputSize = 1024 * 1024;
+    int maxOutputSize = (int)data.length * 255;
     void *out_buff = malloc(maxOutputSize);
     int out_size = GROWTK_LZ4_uncompress_unknownOutputSize(data.bytes, out_buff, (int)data.length, maxOutputSize);
     if (out_size < 0) {
