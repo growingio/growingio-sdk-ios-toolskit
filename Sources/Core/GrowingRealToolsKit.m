@@ -34,13 +34,9 @@ NSString *const GrowingTKShowEventsListNotification = @"GrowingTKShowEventsListN
 
 NSString *const GrowingTKClearAllEventNotification = @"GrowingTKClearAllEventNotification";
 NSString *const GrowingTKClearAllRequestsNotification = @"GrowingTKClearAllRequestsNotification";
-NSString *const GrowingTKClearAllPerformanceDataNotification = @"GrowingTKClearAllPerformanceDataNotification";
 
 NSString *const GrowingTKRealtimeEventNotification = @"GrowingTKRealtimeEventNotification";
 NSString *const GrowingTKRealtimeStatusNotification = @"GrowingTKRealtimeStatusNotification";
-
-NSString *const GrowingTKLocalStorageKeyOpenCrashMonitor = @"GrowingTKOpenCrashMonitorPlugin";
-NSString *const GrowingTKLocalStorageKeyOpenLaunchTime = @"GrowingTKOpenLaunchTimePlugin";
 
 @interface GrowingRealToolsKit ()
 

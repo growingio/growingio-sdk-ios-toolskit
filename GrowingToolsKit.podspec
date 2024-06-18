@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'GrowingToolsKit'
-  s.version          = '2.0.2'
+  s.version          = '2.0.2-jb'
   s.summary          = 'GrowingToolsKit for iOS GrowingIO SDK'
   s.description      = <<-DESC
 TODO: Add long description of the pod here.
@@ -38,30 +38,6 @@ TODO: Add long description of the pod here.
     default.dependency 'GrowingToolsKit/NetFlow'
     default.dependency 'GrowingToolsKit/Realtime'
     default.dependency 'GrowingToolsKit/Settings'
-    default.dependency 'GrowingToolsKit/CrashMonitor'
-    default.dependency 'GrowingToolsKit/LaunchTime'
-  end
-
-  s.subspec 'SDK30202' do |sdk30202|
-    sdk30202.source_files = 'Sources/GrowingToolsKit/GrowingToolsKit{.h,.m}'
-    sdk30202.public_header_files = 'Sources/GrowingToolsKit/GrowingToolsKit.h'
-    sdk30202.dependency 'GrowingToolsKit/Default'
-    sdk30202.pod_target_xcconfig = {
-      'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_SDK30202=1',
-      'OTHER_LDFLAGS' => '-Wl,-U,_GrowingTrackerVersionName -Wl,-U,_GrowingTrackerVersionCode'
-    }
-    sdk30202.xcconfig = { 'ENABLE_BITCODE' => 'NO'}
-  end
-  
-  s.subspec 'SDK2nd' do |sdk2nd|
-    sdk2nd.source_files = 'Sources/GrowingToolsKit/GrowingToolsKit{.h,.m}'
-    sdk2nd.public_header_files = 'Sources/GrowingToolsKit/GrowingToolsKit.h'
-    sdk2nd.dependency 'GrowingToolsKit/Default'
-    sdk2nd.pod_target_xcconfig = {
-      'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_SDK2nd=1',
-      'OTHER_LDFLAGS' => '-Wl,-U,_g_GDPRFlag -Wl,-U,_g_readClipBoardEnable -Wl,-U,_g_asaEnabled'
-    }
-    sdk2nd.xcconfig = { 'ENABLE_BITCODE' => 'NO'}
   end
 
   s.subspec 'Core' do |core|
@@ -99,26 +75,6 @@ TODO: Add long description of the pod here.
     realtime.source_files = 'Sources/Realtime/**/*{.h,.m,.c,.cpp,.mm}'
     realtime.public_header_files = 'Sources/Realtime/Public/*.h'
     realtime.dependency 'GrowingToolsKit/Core'
-  end
-
-  s.subspec 'APMCore' do |apm|
-    apm.source_files = 'Sources/APMCore/**/*{.h,.m,.c,.cpp,.mm}'
-    apm.dependency 'GrowingToolsKit/Core'
-    apm.dependency 'GrowingAPM/Core'
-  end
-
-  s.subspec 'CrashMonitor' do |monitor|
-    monitor.source_files = 'Sources/CrashMonitor/**/*{.h,.m,.c,.cpp,.mm}'
-    monitor.public_header_files = 'Sources/CrashMonitor/Public/*.h'
-    monitor.dependency 'GrowingToolsKit/APMCore'
-    monitor.dependency 'GrowingAPM/CrashMonitor'
-  end
-
-  s.subspec 'LaunchTime' do |monitor|
-    monitor.source_files = 'Sources/LaunchTime/**/*{.h,.m,.c,.cpp,.mm}'
-    monitor.public_header_files = 'Sources/LaunchTime/Public/*.h'
-    monitor.dependency 'GrowingToolsKit/APMCore'
-    monitor.dependency 'GrowingAPM/UIMonitor'
   end
 
   s.subspec 'Settings' do |settings|
