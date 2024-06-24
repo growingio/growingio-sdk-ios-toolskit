@@ -22,6 +22,13 @@
 
 @implementation GrowingToolsKit
 
++ (void)load {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"GrowingToolsKit start");
+        [GrowingToolsKit start];
+    });
+}
+
 + (void)start {
     [GrowingRealToolsKit start];
 }
