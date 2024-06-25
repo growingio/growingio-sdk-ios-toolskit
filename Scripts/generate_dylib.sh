@@ -78,12 +78,12 @@ generateFramework() {
 	cd ${output_path}
 	cp $MAIN_FRAMEWORK_NAME ./${MAIN_FRAMEWORK_NAME}.dylib
 	install_name_tool -id @rpath/${MAIN_FRAMEWORK_NAME}.dylib ./${MAIN_FRAMEWORK_NAME}.dylib
-	open ../
 }
 
-# signDylib() {
-
-# }
+signDylib() {
+	codesign -s - --timestamp=none --force ./${MAIN_FRAMEWORK_NAME}.dylib
+	codesign -dvvv ./${MAIN_FRAMEWORK_NAME}.dylib
+}
 
 beginGenerate() {
 	logger -i "job: backup and modify podspec"
@@ -92,10 +92,11 @@ beginGenerate() {
 	generateProject
 	logger -i "job: generate framework"
 	generateFramework
-	# logger -i "job: sign dylib"
-	# signDylib
+	logger -i "job: sign dylib"
+	signDylib
 
 	echo "\033[36m[GrowingAnalytics] WINNER WINNER, CHICKEN DINNER!\033[0m"
+	open ../
 }
 
 main() {
