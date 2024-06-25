@@ -26,18 +26,26 @@
 }
 
 + (NSBundle *)growingtk_resourcesBundle:(Class)aClass bundleName:(nullable NSString *)bundleName {
-#if SWIFT_PACKAGE
-    return SWIFTPM_MODULE_BUNDLE;
-#else
-    // 这里的额外步骤是为了兼容静态集成和动态集成
-    NSBundle *bundle = [NSBundle growingtk_currentBundle:aClass];
-    if (!bundleName) {
-        bundleName = bundle.infoDictionary[@"CFBundleName"];
+//#if SWIFT_PACKAGE
+//    return SWIFTPM_MODULE_BUNDLE;
+//#else
+//    // 这里的额外步骤是为了兼容静态集成和动态集成
+//    NSBundle *bundle = [NSBundle growingtk_currentBundle:aClass];
+//    if (!bundleName) {
+//        bundleName = bundle.infoDictionary[@"CFBundleName"];
+//    }
+//    NSString *path =
+//        [bundle.resourcePath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.bundle", bundleName]];
+//    return [NSBundle bundleWithPath:path];
+//#endif
+    
+    //rootless
+    NSBundle *bundle = [[NSBundle alloc] initWithPath:@"/var/jb/Library/MobileSubstrate/DynamicLibraries/GrowingToolsKit.bundle"];
+    if (!bundle) {
+        //rootful
+        bundle = [[NSBundle alloc] initWithPath:@"/Library/MobileSubstrate/DynamicLibraries/GrowingToolsKit.bundle"];
     }
-    NSString *path =
-        [bundle.resourcePath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.bundle", bundleName]];
-    return [NSBundle bundleWithPath:path];
-#endif
+    return bundle;
 }
 
 + (NSBundle *)growingtk_localizedBundleWithFileName:(NSString *)fileName resourcesBundle:(NSBundle *)bundle {

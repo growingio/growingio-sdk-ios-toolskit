@@ -76,13 +76,34 @@ generateFramework() {
 	mkdir ${release_path}
 	cp -r ${iphone_os_archive_path}${framework_path_suffix} ${output_path}
 	cd ${output_path}
-	cp $MAIN_FRAMEWORK_NAME ./${MAIN_FRAMEWORK_NAME}.dylib
+	cp $MAIN_FRAMEWORK_NAME ../${MAIN_FRAMEWORK_NAME}.dylib
+	cp -r ${MAIN_FRAMEWORK_NAME}.bundle ../${MAIN_FRAMEWORK_NAME}.bundle
+	cd ..
 	install_name_tool -id @rpath/${MAIN_FRAMEWORK_NAME}.dylib ./${MAIN_FRAMEWORK_NAME}.dylib
 }
 
 signDylib() {
 	codesign -s - --timestamp=none --force ./${MAIN_FRAMEWORK_NAME}.dylib
 	codesign -dvvv ./${MAIN_FRAMEWORK_NAME}.dylib
+}
+
+createPlist() {
+	plist_path="./${MAIN_FRAMEWORK_NAME}.plist"
+cat > "$plist_path" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Filter</key>
+	<dict>
+		<key>Bundles</key>
+		<array>
+			<string>com.apple.UIKit</string>
+		</array>
+	</dict>
+</dict>
+</plist>
+EOF
 }
 
 beginGenerate() {
@@ -94,9 +115,11 @@ beginGenerate() {
 	generateFramework
 	logger -i "job: sign dylib"
 	signDylib
+	logger -i "job: create plist"
+	createPlist
 
 	echo "\033[36m[GrowingAnalytics] WINNER WINNER, CHICKEN DINNER!\033[0m"
-	open ../
+	open .
 }
 
 main() {

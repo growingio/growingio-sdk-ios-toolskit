@@ -19,11 +19,16 @@
 
 #import "GrowingToolsKit.h"
 #import "GrowingRealToolsKit.h"
+#import "GrowingTKAppInfoUtil.h"
 
 @implementation GrowingToolsKit
 
 + (void)load {
     dispatch_async(dispatch_get_main_queue(), ^{
+        NSString *bundleID = [GrowingTKAppInfoUtil bundleIdentifier];
+        if ([bundleID hasPrefix:@"com.apple"]) {
+            return;
+        }
         NSLog(@"GrowingToolsKit start");
         [GrowingToolsKit start];
     });
