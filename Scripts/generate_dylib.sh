@@ -106,6 +106,23 @@ cat > "$plist_path" <<EOF
 EOF
 }
 
+copyToDevice() {
+	user="root"
+
+	default_ip='10.10.20.240'
+	logger -i "please enter your device ip(default 10.10.20.240):"
+	read ip
+	ip=${ip:-$default_ip}
+
+	path="/Library/MobileSubstrate/DynamicLibraries"
+	if [ ! -f "$path" ]; then
+		#rootless
+	  	path="/var/jb/Library/MobileSubstrate/DynamicLibraries"
+	fi
+
+	scp -r ./${MAIN_FRAMEWORK_NAME}.dylib ./${MAIN_FRAMEWORK_NAME}.plist ./${MAIN_FRAMEWORK_NAME}.bundle $user@$ip:$path
+}
+
 beginGenerate() {
 	logger -i "job: backup and modify podspec"
 	copyAndModifyPodspec
@@ -117,9 +134,10 @@ beginGenerate() {
 	signDylib
 	logger -i "job: create plist"
 	createPlist
+	logger -i "job: copy to jailbroken device"
+	copyToDevice
 
 	echo "\033[36m[GrowingAnalytics] WINNER WINNER, CHICKEN DINNER!\033[0m"
-	open .
 }
 
 main() {
