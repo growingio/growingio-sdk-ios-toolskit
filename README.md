@@ -1,34 +1,12 @@
-![GrowingIO](https://www.growingio.com/vassets/images/home_v3/gio-logo-primary.svg)  
+1. 首先确保您的设备已经越狱，并已经安装 openssh
+2. 在仓库根目录执行：
 
-[![SDK Team Name](https://img.shields.io/badge/Team-SDK-orange.svg?style=flat)](https://github.com/growingio "SDK Team") [![Platform iOS](https://img.shields.io/badge/platform-iOS-brightgreen)]() [![License](https://img.shields.io/github/license/growingio/growingio-sdk-ios-toolskit)](https://github.com/growingio/growingio-sdk-ios-toolskit/blob/master/LICENSE)
+```shell
+sh ./Scripts/generate_dylib.sh -v | grep '\[GrowingAnalytics\]'
+```
 
+该命令将创建 tweak 所需的文件并自动注入到您的越狱设备中，期间需要您手动输入您设备的 ip 和 root 密码(默认密码一般是 alpine)
 
+3. （可选）使用 Choicy 插件进行注入控制，当前 GrowingToolsKit tweak 默认注入所有非系统应用
 
-## GrowingToolsKit
-
-GrowingToolsKit 旨在帮助用户提高集成 GrowingIO SDK 效率，在使用 SDK 的开发过程中，便于排查问题，为用户提供最好的埋点服务。
-
-- [集成文档](https://growingio.github.io/growingio-sdk-docs/docs/giokit/ios/integrate)
-
-- [功能介绍](https://growingio.github.io/growingio-sdk-docs/docs/giokit/ios)
-
-
-
-## Thanks
-
-[DoraemonKit](https://github.com/didi/DoraemonKit)
-
-[JRSwizzle](https://github.com/rentzsch/jrswizzle)
-
-[DeviceKit](https://github.com/devicekit/DeviceKit)
-
-[Toast](https://github.com/scalessec/Toast)
-
-[FMDB](https://github.com/ccgus/fmdb)
-
-
-
-## License
-
-All source code is licensed under the LICENSE-2.0 license. See [LICENSE](https://github.com/growingio/growingio-sdk-ios-toolskit/blob/master/LICENSE) for details.
-
+4. 接下来，使用 GrowingToolsKit 可对您手机安装的所有 app 进行 SDK 调试
