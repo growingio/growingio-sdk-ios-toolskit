@@ -34,7 +34,8 @@
     NSData *jsData = [NSData dataWithContentsOfFile:jsPath];
     NSString *jsString = [[NSString alloc] initWithData:jsData encoding:NSUTF8StringEncoding];
     if (GrowingTKSDKUtil.sharedInstance.isSDK4thGeneration) {
-        jsString = [@"window.GiokitTouchJavascriptBridge={};" stringByAppendingString:jsString];
+        NSString *hybrid = @"(function(){window.GiokitTouchJavascriptBridge={};$js_replacement})();";
+        jsString = [hybrid stringByReplacingOccurrencesOfString:@"$js_replacement" withString:jsString];
     }
     return jsString;
 }
