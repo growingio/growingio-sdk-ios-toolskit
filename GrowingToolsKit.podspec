@@ -37,6 +37,7 @@ TODO: Add long description of the pod here.
     default.dependency 'GrowingToolsKit/XPathTrack'
     default.dependency 'GrowingToolsKit/NetFlow'
     default.dependency 'GrowingToolsKit/Realtime'
+    default.dependency 'GrowingToolsKit/H5GioKit'
     default.dependency 'GrowingToolsKit/Settings'
   end
 
@@ -75,6 +76,12 @@ TODO: Add long description of the pod here.
     realtime.source_files = 'Sources/Realtime/**/*{.h,.m,.c,.cpp,.mm}'
     realtime.public_header_files = 'Sources/Realtime/Public/*.h'
     realtime.dependency 'GrowingToolsKit/Core'
+  end
+
+  s.subspec 'H5GioKit' do |h5GioKit|
+    h5GioKit.source_files = 'Sources/H5GioKit/**/*{.h,.m,.c,.cpp,.mm}'
+    h5GioKit.public_header_files = 'Sources/H5GioKit/Public/*.h'
+    h5GioKit.dependency 'GrowingToolsKit/Core'
   end
 
   s.subspec 'Settings' do |settings|

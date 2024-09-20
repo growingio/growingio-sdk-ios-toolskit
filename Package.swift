@@ -55,6 +55,7 @@ let package = Package(
                 "GrowingToolsKit_Plugin_XPathTrack",
                 "GrowingToolsKit_Plugin_NetFlow",
                 "GrowingToolsKit_Plugin_Realtime",
+                "GrowingToolsKit_Plugin_H5GioKit",
                 "GrowingToolsKit_Plugin_CrashMonitor",
                 "GrowingToolsKit_Plugin_LaunchTime",
                 "GrowingToolsKit_Plugin_Settings",
@@ -206,6 +207,21 @@ let package = Package(
                 .headerSearchPath("../Core/PluginCore"),
                 .headerSearchPath("../Core/UserInterface/Base/Controller"),
                 .headerSearchPath("../Core/UserInterface/Base/View"),
+                .headerSearchPath("../Core/Tools"),
+            ]
+        ),
+        .target(
+            name: "GrowingToolsKit_Plugin_H5GioKit",
+            dependencies: [
+                "GrowingToolsKit_Core",
+            ],
+            path: "Sources/H5GioKit",
+            publicHeadersPath: "Public",
+            cSettings: [
+                .headerSearchPath("."),
+                .headerSearchPath("../Core"),
+                .headerSearchPath("../Core/PluginCore"),
+                .headerSearchPath("../Core/UserInterface/Base/Controller"),
                 .headerSearchPath("../Core/Tools"),
             ]
         ),
