@@ -106,7 +106,7 @@ static void growingtk_webView_addUserScripts(WKUserContentController *contentCon
         if (!isContainCircleScript) {
             [contentController addUserScript:[[WKUserScript alloc] initWithSource:[GrowingTKHybridJS hybridJSCircleScript]
                                                                     injectionTime:WKUserScriptInjectionTimeAtDocumentEnd
-                                                                 forMainFrameOnly:NO]];
+                                                                 forMainFrameOnly:YES]];
         }
     } @catch (NSException *exception) {
     }

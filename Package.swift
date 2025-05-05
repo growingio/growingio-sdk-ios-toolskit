@@ -1,4 +1,4 @@
-// swift-tools-version:5.6
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 //
@@ -25,7 +25,7 @@ import PackageDescription
 let package = Package(
     name: "GrowingToolsKit",
     defaultLocalization: "en",
-    platforms: [.iOS(.v10)],
+    platforms: [.iOS(.v12)],
     products: [
         .library(
             name: "GrowingToolsKit",
@@ -55,6 +55,7 @@ let package = Package(
                 "GrowingToolsKit_Plugin_XPathTrack",
                 "GrowingToolsKit_Plugin_NetFlow",
                 "GrowingToolsKit_Plugin_Realtime",
+                "GrowingToolsKit_Plugin_H5GioKit",
                 "GrowingToolsKit_Plugin_CrashMonitor",
                 "GrowingToolsKit_Plugin_LaunchTime",
                 "GrowingToolsKit_Plugin_Settings",
@@ -206,6 +207,21 @@ let package = Package(
                 .headerSearchPath("../Core/PluginCore"),
                 .headerSearchPath("../Core/UserInterface/Base/Controller"),
                 .headerSearchPath("../Core/UserInterface/Base/View"),
+                .headerSearchPath("../Core/Tools"),
+            ]
+        ),
+        .target(
+            name: "GrowingToolsKit_Plugin_H5GioKit",
+            dependencies: [
+                "GrowingToolsKit_Core",
+            ],
+            path: "Sources/H5GioKit",
+            publicHeadersPath: "Public",
+            cSettings: [
+                .headerSearchPath("."),
+                .headerSearchPath("../Core"),
+                .headerSearchPath("../Core/PluginCore"),
+                .headerSearchPath("../Core/UserInterface/Base/Controller"),
                 .headerSearchPath("../Core/Tools"),
             ]
         ),
