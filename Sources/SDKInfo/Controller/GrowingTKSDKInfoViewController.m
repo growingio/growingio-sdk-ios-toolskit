@@ -157,10 +157,10 @@
         NSString *sessionInterval = [NSString stringWithFormat:@"%.fs", sdk.sessionInterval];
         [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"会话后台留存时长"), @"value": sessionInterval}];
 
-        NSString *dataCollectionEnabled = sdk.dataCollectionEnabled ? @"YES" : @"NO";
-        [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"是否采集数据"), @"value": dataCollectionEnabled}];
-
         if (sdk.isSDK3rdGeneration) {
+            NSString *dataCollectionEnabled = sdk.dataCollectionEnabled ? @"YES" : @"NO";
+            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"是否采集数据"), @"value": dataCollectionEnabled}];
+            
             NSString *excludeEvent = sdk.excludeEventDescription;
             if (excludeEvent.length > 0) {
                 [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"事件过滤"), @"value": excludeEvent}];
@@ -180,10 +180,7 @@
             }
         }
         
-        if (sdk.isSDK2ndGeneration) {
-            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"剪贴板权限"), @"value": GrowingTKLocalizedString(sdk.readClipBoardEnabled ? @"YES" : @"NO")}];
-            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"ASA 归因分析"), @"value": GrowingTKLocalizedString(sdk.asaEnabled ? @"YES" : @"NO")}];
-        } else if (sdk.isSDK3rdGeneration) {
+        if (sdk.isSDK3rdGeneration) {
             if ([sdk.SDK3Modules containsObject:@"Ads"]) {
                 [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"剪贴板权限"), @"value": GrowingTKLocalizedString(sdk.readClipBoardEnabled ? @"YES" : @"NO")}];
                 [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"ASA 归因分析"), @"value": GrowingTKLocalizedString(sdk.asaEnabled ? @"YES" : @"NO")}];

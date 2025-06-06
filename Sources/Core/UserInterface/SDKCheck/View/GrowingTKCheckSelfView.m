@@ -254,16 +254,16 @@ static CGFloat const CheckButtonHeight = 130.0f;
                      @"bad": @(sdk.debugEnabled)
                  }]];
 
-        NSString *dataCollectionEnabled = GrowingTKLocalizedString(sdk.dataCollectionEnabled ? @"YES" : @"NO");
-        [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
-                     @"check": @(0),
-                     @"checkMessage": GrowingTKLocalizedString(@"是否允许采集数据"),
-                     @"title": GrowingTKLocalizedString(@"是否采集数据"),
-                     @"value": dataCollectionEnabled,
-                     @"bad": @(!(sdk.dataCollectionEnabled))
-                 }]];
-        
         if (sdk.isSDK3rdGeneration) {
+            NSString *dataCollectionEnabled = GrowingTKLocalizedString(sdk.dataCollectionEnabled ? @"YES" : @"NO");
+            [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
+                         @"check": @(0),
+                         @"checkMessage": GrowingTKLocalizedString(@"是否允许采集数据"),
+                         @"title": GrowingTKLocalizedString(@"是否采集数据"),
+                         @"value": dataCollectionEnabled,
+                         @"bad": @(!(sdk.dataCollectionEnabled))
+                     }]];
+            
             [sdkInfo addObject:[NSMutableDictionary dictionaryWithDictionary:@{
                          @"check": @(0),
                          @"checkMessage": GrowingTKLocalizedString(@"检测集成模块"),

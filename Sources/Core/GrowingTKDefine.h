@@ -31,6 +31,7 @@
 @end
 
 FOUNDATION_EXTERN NSString *const GrowingToolsKitName;
+FOUNDATION_EXTERN NSString *const GrowingToolsKitBundleName;
 
 FOUNDATION_EXTERN NSString *const GrowingTKSetupDefaultPluginsNotification;
 FOUNDATION_EXTERN NSString *const GrowingTKHomeWillShowNotification;
@@ -40,13 +41,9 @@ FOUNDATION_EXTERN NSString *const GrowingTKShowEventsListNotification;
 
 FOUNDATION_EXTERN NSString *const GrowingTKClearAllEventNotification;
 FOUNDATION_EXTERN NSString *const GrowingTKClearAllRequestsNotification;
-FOUNDATION_EXTERN NSString *const GrowingTKClearAllPerformanceDataNotification;
 
 FOUNDATION_EXTERN NSString *const GrowingTKRealtimeEventNotification;
 FOUNDATION_EXTERN NSString *const GrowingTKRealtimeStatusNotification;
-
-FOUNDATION_EXTERN NSString *const GrowingTKLocalStorageKeyOpenCrashMonitor;
-FOUNDATION_EXTERN NSString *const GrowingTKLocalStorageKeyOpenLaunchTime;
 
 typedef NS_ENUM(NSUInteger, GrowingTKModule) {
     GrowingTKModulePlugins,

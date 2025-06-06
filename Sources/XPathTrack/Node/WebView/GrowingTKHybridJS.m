@@ -26,7 +26,7 @@
 
 + (NSString *)hybridJSCircleScript {
     NSBundle *bundle = [NSBundle growingtk_resourcesBundle:NSClassFromString(GrowingToolsKitName)
-                                                bundleName:GrowingToolsKitName];
+                                                bundleName:GrowingToolsKitBundleName];
     NSString *jsPath = [bundle pathForResource:@"gio_hybrid.min" ofType:@"js"];
     if (GrowingTKSDKUtil.sharedInstance.isSDK4thGeneration) {
         jsPath = [bundle pathForResource:@"giokit_touch" ofType:@"js"];

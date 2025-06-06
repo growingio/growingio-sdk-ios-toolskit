@@ -549,13 +549,6 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
                 return [NSString stringWithFormat:@"%@(%@)", version, code];
             }
             return version ?: @"";
-#ifdef GROWING_SDK30202
-        } else {
-            // dangerous, may cause 'dyld: Symbol not found'
-            extern NSString *const GrowingTrackerVersionName;
-            extern const int GrowingTrackerVersionCode;
-            return [NSString stringWithFormat:@"%@(%d)", GrowingTrackerVersionName, GrowingTrackerVersionCode];
-#endif
         }
     } else if (self.isSDK2ndGeneration) {
         Class cls = NSClassFromString(@"Growing");
@@ -893,11 +886,7 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
     if (self.isSDK3rdGeneration) {
         return ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"dataCollectionEnabled"]).boolValue;
     } else if (self.isSDK2ndGeneration) {
-#ifdef GROWING_SDK2nd
-        // dangerous, may cause 'dyld: Symbol not found'
-        extern BOOL g_GDPRFlag;
-        return !g_GDPRFlag;
-#endif
+        return YES; // 不支持
     }
     return NO;
 }
@@ -1044,11 +1033,7 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
     if (self.isSDK3rdGeneration) {
         return ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"readClipboardEnabled"]).boolValue;
     } else if (self.isSDK2ndGeneration) {
-#ifdef GROWING_SDK2nd
-        // dangerous, may cause 'dyld: Symbol not found'
-        extern BOOL g_readClipBoardEnable;
-        return g_readClipBoardEnable;
-#endif
+        return YES; // 不支持
     }
     return NO;
 }
@@ -1057,11 +1042,7 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
     if (self.isSDK3rdGeneration) {
         return ((NSNumber *)[self.sdk3rdConfiguration valueForKey:@"ASAEnabled"]).boolValue;
     } else if (self.isSDK2ndGeneration) {
-#ifdef GROWING_SDK2nd
-        // dangerous, may cause 'dyld: Symbol not found'
-        extern BOOL g_asaEnabled;
-        return g_asaEnabled;
-#endif
+        return YES; // 不支持
     }
     return NO;
 }
