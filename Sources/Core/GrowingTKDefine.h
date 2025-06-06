@@ -31,6 +31,7 @@
 @end
 
 FOUNDATION_EXTERN NSString *const GrowingToolsKitName;
+FOUNDATION_EXTERN NSString *const GrowingToolsKitBundleName;
 
 FOUNDATION_EXTERN NSString *const GrowingTKSetupDefaultPluginsNotification;
 FOUNDATION_EXTERN NSString *const GrowingTKHomeWillShowNotification;

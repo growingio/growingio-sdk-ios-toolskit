@@ -44,7 +44,7 @@ TODO: Add long description of the pod here.
     core.source_files = 'Sources/Core/**/*{.h,.m,.c,.cpp,.mm}'
     core.public_header_files = 'Sources/Core/Public/*.h'
     core.exclude_files = 'Sources/Core/UseInRelease/GrowingTKUseInRelease.m'
-    core.resource_bundles = {'GrowingToolsKit' => ['Sources/Core/Resources/**/*']}
+    core.resource_bundles = {'GrowingToolsKitResource' => ['Sources/Core/Resources/**/*']}
   end
   
   s.subspec 'SDKInfo' do |sdkInfo|

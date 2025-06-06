@@ -24,6 +24,7 @@
 #import "NSBundle+GrowingTK.h"
 
 NSString *const GrowingToolsKitName = @"GrowingToolsKit";
+NSString *const GrowingToolsKitBundleName = @"GrowingToolsKitResource";
 
 NSString *const GrowingTKSetupDefaultPluginsNotification = @"GrowingTKSetupDefaultPluginsNotification";
 
@@ -94,7 +95,7 @@ static GrowingRealToolsKit *instance = nil;
 #else
     // 兼容静态库方式集成
     NSBundle *imageBundle = [NSBundle growingtk_resourcesBundle:NSClassFromString(GrowingToolsKitName)
-                                                     bundleName:GrowingToolsKitName];
+                                                     bundleName:GrowingToolsKitBundleName];
     return imageBundle.infoDictionary[@"CFBundleShortVersionString"];
 #endif
 }
