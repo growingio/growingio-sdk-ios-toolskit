@@ -39,17 +39,6 @@ TODO: Add long description of the pod here.
     default.dependency 'GrowingToolsKit/Realtime'
     default.dependency 'GrowingToolsKit/Settings'
   end
-
-  s.subspec 'SDK30202' do |sdk30202|
-    sdk30202.source_files = 'Sources/GrowingToolsKit/GrowingToolsKit{.h,.m}'
-    sdk30202.public_header_files = 'Sources/GrowingToolsKit/GrowingToolsKit.h'
-    sdk30202.dependency 'GrowingToolsKit/Default'
-    sdk30202.pod_target_xcconfig = {
-      'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_SDK30202=1',
-      'OTHER_LDFLAGS' => '-Wl,-U,_GrowingTrackerVersionName -Wl,-U,_GrowingTrackerVersionCode'
-    }
-    sdk30202.xcconfig = { 'ENABLE_BITCODE' => 'NO'}
-  end
   
   s.subspec 'SDK2nd' do |sdk2nd|
     sdk2nd.source_files = 'Sources/GrowingToolsKit/GrowingToolsKit{.h,.m}'

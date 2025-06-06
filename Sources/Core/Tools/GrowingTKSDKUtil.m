@@ -549,13 +549,6 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
                 return [NSString stringWithFormat:@"%@(%@)", version, code];
             }
             return version ?: @"";
-#ifdef GROWING_SDK30202
-        } else {
-            // dangerous, may cause 'dyld: Symbol not found'
-            extern NSString *const GrowingTrackerVersionName;
-            extern const int GrowingTrackerVersionCode;
-            return [NSString stringWithFormat:@"%@(%d)", GrowingTrackerVersionName, GrowingTrackerVersionCode];
-#endif
         }
     } else if (self.isSDK2ndGeneration) {
         Class cls = NSClassFromString(@"Growing");
