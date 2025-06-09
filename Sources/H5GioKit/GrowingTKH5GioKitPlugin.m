@@ -64,7 +64,20 @@
         NSString *jsPath = @"https://assets.giocdn.com/sdk/webjs/giokit.min.js";
         NSString *cssPath = @"https://assets.giocdn.com/sdk/webjs/giokit.css";
 
-        NSString *js = [NSString stringWithFormat:@"javascript:(function(){try{var p=document.createElement('script');p.src='%@';p.type='text/javascript';p.onload=function(){var gioKit = new window.GioKit({cssHref: '%@'})};document.head.appendChild(p);}catch(e){}})()", jsPath, cssPath];
+        NSString *js = [NSString stringWithFormat:
+            @"javascript:(function() {\n"
+             "    try {\n"
+             "        var p = document.createElement('script');\n"
+             "        p.src = '%@';\n"
+             "        p.type = 'text/javascript';\n"
+             "        p.onload = function() {\n"
+             "            var gioKit = new window.GioKit({ cssHref: '%@' });\n"
+             "        };\n"
+             "        document.head.appendChild(p);\n"
+             "    } catch (e) {}\n"
+             "})()",
+            jsPath, cssPath
+        ];
         WKWebView *webView = webViews.lastObject;
         @try {
             [webView evaluateJavaScript:js completionHandler:nil];
