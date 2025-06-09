@@ -36,12 +36,7 @@ let package = Package(
             targets: ["GrowingToolsKit", "GrowingToolsKit_UseInRelease"]
         ),
     ],
-    dependencies: [
-        .package(
-            url: "https://github.com/growingio/growingio-sdk-ios-performance-ext.git",
-            "0.0.14" ..< "2.0.0"
-        ),
-    ],
+    dependencies: [],
     targets: [
         
         // MARK: - GrowingToolsKit Wrapper
@@ -56,8 +51,6 @@ let package = Package(
                 "GrowingToolsKit_Plugin_NetFlow",
                 "GrowingToolsKit_Plugin_Realtime",
                 "GrowingToolsKit_Plugin_H5GioKit",
-                "GrowingToolsKit_Plugin_CrashMonitor",
-                "GrowingToolsKit_Plugin_LaunchTime",
                 "GrowingToolsKit_Plugin_Settings",
             ],
             path: "Sources/GrowingToolsKit",
@@ -221,72 +214,8 @@ let package = Package(
                 .headerSearchPath("."),
                 .headerSearchPath("../Core"),
                 .headerSearchPath("../Core/PluginCore"),
-                .headerSearchPath("../Core/UserInterface/Base/Controller"),
-                .headerSearchPath("../Core/Tools"),
-            ]
-        ),
-        .target(
-            name: "GrowingToolsKit_APMCore",
-            dependencies: [
-                "GrowingToolsKit_Core",
-                .product(name: "GrowingAPMCore", package: "growingio-sdk-ios-performance-ext"),
-            ],
-            path: "Sources/APMCore",
-            publicHeadersPath: "Public",
-            cSettings: [
-                .headerSearchPath("."),
-                .headerSearchPath("../Core"),
                 .headerSearchPath("../Core/Categories/Foundation"),
-                .headerSearchPath("../Core/Tools"),
-            ]
-        ),
-        .target(
-            name: "GrowingToolsKit_Plugin_CrashMonitor",
-            dependencies: [
-                "GrowingToolsKit_APMCore",
-                .product(name: "GrowingAPMCrashMonitor", package: "growingio-sdk-ios-performance-ext"),
-            ],
-            path: "Sources/CrashMonitor",
-            publicHeadersPath: "Public",
-            cSettings: [
-                .headerSearchPath("."),
-                .headerSearchPath("Controller"),
-                .headerSearchPath("Controller/View"),
-                .headerSearchPath("Database"),
-                .headerSearchPath("../APMCore"),
-                .headerSearchPath("../Core"),
-                .headerSearchPath("../Core/Categories/Foundation"),
-                .headerSearchPath("../Core/Categories/UIKit"),
-                .headerSearchPath("../Core/Database"),
-                .headerSearchPath("../Core/Database/FMDB"),
-                .headerSearchPath("../Core/PluginCore"),
                 .headerSearchPath("../Core/UserInterface/Base/Controller"),
-                .headerSearchPath("../Core/UserInterface/Base/View"),
-                .headerSearchPath("../Core/Tools"),
-            ]
-        ),
-        .target(
-            name: "GrowingToolsKit_Plugin_LaunchTime",
-            dependencies: [
-                "GrowingToolsKit_APMCore",
-                .product(name: "GrowingAPMUIMonitor", package: "growingio-sdk-ios-performance-ext"),
-            ],
-            path: "Sources/LaunchTime",
-            publicHeadersPath: "Public",
-            cSettings: [
-                .headerSearchPath("."),
-                .headerSearchPath("Controller"),
-                .headerSearchPath("Controller/View"),
-                .headerSearchPath("Database"),
-                .headerSearchPath("../APMCore"),
-                .headerSearchPath("../Core"),
-                .headerSearchPath("../Core/Categories/Foundation"),
-                .headerSearchPath("../Core/Categories/UIKit"),
-                .headerSearchPath("../Core/Database"),
-                .headerSearchPath("../Core/Database/FMDB"),
-                .headerSearchPath("../Core/PluginCore"),
-                .headerSearchPath("../Core/UserInterface/Base/Controller"),
-                .headerSearchPath("../Core/UserInterface/Base/View"),
                 .headerSearchPath("../Core/Tools"),
             ]
         ),
