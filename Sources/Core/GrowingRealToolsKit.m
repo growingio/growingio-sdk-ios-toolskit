@@ -24,6 +24,7 @@
 #import "NSBundle+GrowingTK.h"
 
 NSString *const GrowingToolsKitName = @"GrowingToolsKit";
+NSString *const GrowingToolsKitBundleName = @"GrowingToolsKitResource";
 
 NSString *const GrowingTKSetupDefaultPluginsNotification = @"GrowingTKSetupDefaultPluginsNotification";
 
@@ -34,13 +35,9 @@ NSString *const GrowingTKShowEventsListNotification = @"GrowingTKShowEventsListN
 
 NSString *const GrowingTKClearAllEventNotification = @"GrowingTKClearAllEventNotification";
 NSString *const GrowingTKClearAllRequestsNotification = @"GrowingTKClearAllRequestsNotification";
-NSString *const GrowingTKClearAllPerformanceDataNotification = @"GrowingTKClearAllPerformanceDataNotification";
 
 NSString *const GrowingTKRealtimeEventNotification = @"GrowingTKRealtimeEventNotification";
 NSString *const GrowingTKRealtimeStatusNotification = @"GrowingTKRealtimeStatusNotification";
-
-NSString *const GrowingTKLocalStorageKeyOpenCrashMonitor = @"GrowingTKOpenCrashMonitorPlugin";
-NSString *const GrowingTKLocalStorageKeyOpenLaunchTime = @"GrowingTKOpenLaunchTimePlugin";
 
 @interface GrowingRealToolsKit ()
 
@@ -98,7 +95,7 @@ static GrowingRealToolsKit *instance = nil;
 #else
     // 兼容静态库方式集成
     NSBundle *imageBundle = [NSBundle growingtk_resourcesBundle:NSClassFromString(GrowingToolsKitName)
-                                                     bundleName:GrowingToolsKitName];
+                                                     bundleName:GrowingToolsKitBundleName];
     return imageBundle.infoDictionary[@"CFBundleShortVersionString"];
 #endif
 }
