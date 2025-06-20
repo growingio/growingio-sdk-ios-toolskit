@@ -105,6 +105,9 @@
     "已配置" = "Configured";
     "未配置" = "Not configured";
     "集成模块" = "Modules";
+    "无埋点开关" = "autotrackEnabled";
+    "剪贴板权限" = "readClipBoardEnabled";
+    "ASA 归因分析" = "asaEnabled";
     
     // #事件库
     "类型" = "TYPE";
