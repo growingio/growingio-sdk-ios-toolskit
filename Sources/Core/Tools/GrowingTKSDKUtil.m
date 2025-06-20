@@ -42,6 +42,8 @@
 @property (nonatomic, assign, readwrite) BOOL delayInitialized;
 @property (nonatomic, assign, readwrite, getter=isAdaptToURLScheme) BOOL adaptToURLScheme;
 @property (nonatomic, assign, readwrite, getter=isAdaptToDeepLink) BOOL adaptToDeepLink;
+@property (nonatomic, strong, readwrite, nullable) Class sceneDelegateClass;
+@property (nonatomic, copy, readwrite, nullable) NSString *sceneDelegateClassNameInInfoPlist;
 
 // Tracker
 @property (nonatomic, copy, readwrite) NSString *projectId;
@@ -442,19 +444,13 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 #pragma mark - Private Method
 
 - (Class)sceneDelegate {
-    NSDictionary *sceneManifest = [[NSBundle mainBundle] infoDictionary][@"UIApplicationSceneManifest"];
-    NSArray *rols = [sceneManifest objectForKey:@"UISceneConfigurations"][@"UIWindowSceneSessionRoleApplication"];
-    if (rols.count == 0) {
-        return nil;
+    Class class = self.sceneDelegateClass;
+    if (class) {
+        return class;
     }
-    for (NSDictionary *dic in rols) {
-        NSString *classname = dic[@"UISceneDelegateClassName"];
-        if (classname) {
-            Class cls = NSClassFromString(classname);
-            return cls;
-        }
-    }
-    return nil;
+    
+    NSString *className = self.sceneDelegateClassNameInInfoPlist;
+    return className ? NSClassFromString(className) : nil;
 }
 
 - (void)configDelayInitialized {
@@ -1080,6 +1076,34 @@ static id growingtk_valueForUndefinedKey(NSString *key) {
 #pragma clang diagnostic pop
     }
     return _sdk3rdConfiguration;
+}
+
+- (Class)sceneDelegateClass {
+    if (self.isSDK4thGeneration) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        SEL selector = NSSelectorFromString(@"sceneDelegateClass");
+        if (self.sdk3rdConfiguration && [self.sdk3rdConfiguration respondsToSelector:selector]) {
+            return [self.sdk3rdConfiguration valueForKey:@"sceneDelegateClass"];
+        }
+#pragma clang diagnostic pop
+    }
+    return nil;
+}
+
+- (NSString *)sceneDelegateClassNameInInfoPlist {
+    NSDictionary *sceneManifest = [[NSBundle mainBundle] infoDictionary][@"UIApplicationSceneManifest"];
+    NSArray *rols = [sceneManifest objectForKey:@"UISceneConfigurations"][@"UIWindowSceneSessionRoleApplication"];
+    if (rols.count == 0) {
+        return nil;
+    }
+    for (NSDictionary *dic in rols) {
+        NSString *classname = dic[@"UISceneDelegateClassName"];
+        if (classname) {
+            return classname;
+        }
+    }
+    return nil;
 }
 
 @end
