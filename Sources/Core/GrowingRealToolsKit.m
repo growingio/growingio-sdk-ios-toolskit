@@ -41,6 +41,9 @@ NSString *const GrowingTKRealtimeStatusNotification = @"GrowingTKRealtimeStatusN
 
 @interface GrowingRealToolsKit ()
 
+@property (nonatomic, assign) CGPoint position;
+@property (nonatomic, assign) BOOL autoDock;
+
 @end
 
 @implementation GrowingRealToolsKit
@@ -82,11 +85,28 @@ static GrowingRealToolsKit *instance = nil;
 
     [[GrowingTKPluginManager sharedInstance] setupDefaultPlugins];
     [[NSNotificationCenter defaultCenter] postNotificationName:GrowingTKSetupDefaultPluginsNotification object:nil];
-    [[self sharedInstance] initEntry:position autoDock:autoDock];
+    
+    [self sharedInstance].position = position;
+    [self sharedInstance].autoDock = autoDock;
+    
+    if (@available(iOS 13.0, *)) {
+        UIScene *scene = [[UIApplication sharedApplication].connectedScenes anyObject];
+        if (scene) {
+            [GrowingTKEntryWindow startWithPoint:position autoDock:autoDock];
+        } else {
+            [[NSNotificationCenter defaultCenter] addObserver:[self sharedInstance]
+                                                     selector:@selector(sceneWillConnect:)
+                                                         name:UISceneWillConnectNotification
+                                                       object:nil];
+        }
+    } else {
+        [GrowingTKEntryWindow startWithPoint:position autoDock:autoDock];
+    }
 }
 
-- (void)initEntry:(CGPoint)position autoDock:(BOOL)autoDock {
-    [GrowingTKEntryWindow startWithPoint:position autoDock:autoDock];
+- (void)sceneWillConnect:(NSNotification *)not {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [GrowingTKEntryWindow startWithPoint:self.position autoDock:self.autoDock];
 }
 
 + (NSString *)version {

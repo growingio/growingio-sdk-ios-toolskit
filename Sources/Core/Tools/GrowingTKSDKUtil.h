@@ -41,6 +41,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) BOOL delayInitialized;
 @property (nonatomic, assign, readonly, getter=isAdaptToURLScheme) BOOL adaptToURLScheme;
 @property (nonatomic, assign, readonly, getter=isAdaptToDeepLink) BOOL adaptToDeepLink;
+@property (nonatomic, strong, readonly, nullable) Class sceneDelegateClass;
+@property (nonatomic, copy, readonly, nullable) NSString *sceneDelegateClassNameInInfoPlist;
 
 // Tracker
 @property (nonatomic, copy, readonly) NSString *projectId;

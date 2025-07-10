@@ -110,12 +110,19 @@
         [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"适配URL Scheme"), @"value": GrowingTKLocalizedString(sdk.isAdaptToURLScheme ? @"YES" : @"NO")}];
         [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"适配Deep Link"), @"value": GrowingTKLocalizedString(sdk.isAdaptToDeepLink ? @"YES" : @"NO")}];
         
+        if (sdk.isSDK4thGeneration) {
+            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"SceneDelegateClass"), @"value": sdk.sceneDelegateClass ? NSStringFromClass(sdk.sceneDelegateClass) : GrowingTKLocalizedString(@"未配置")}];
+            [sdkInfo addObject:@{
+                @"title": GrowingTKLocalizedString(@"SceneDelegateClass(InfoPlist)"),
+                @"value": sdk.sceneDelegateClassNameInInfoPlist.length > 0 ? sdk.sceneDelegateClassNameInInfoPlist : GrowingTKLocalizedString(@"未配置")}];
+        }
+        
         if (sdk.isSDK2ndGeneration) {
             [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"采样率"), @"value": [NSString stringWithFormat:@"%.3f%%", sdk.sampling * 100]}];
             [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"采集模式"), @"value": sdk.sdk2ndAspectMode}];
         }
         if (sdk.isSDK4thGeneration) {
-            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"useProtobuf"), @"value": GrowingTKLocalizedString(sdk.useProtobuf ? @"YES" : @"NO")}];
+            [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"UseProtobuf"), @"value": GrowingTKLocalizedString(sdk.useProtobuf ? @"YES" : @"NO")}];
         }
 
         [sdkInfo addObject:@{@"title": GrowingTKLocalizedString(@"Device ID"), @"value": sdk.deviceId}];
